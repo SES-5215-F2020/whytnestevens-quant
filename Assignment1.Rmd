@@ -1,0 +1,19 @@
+---
+title: "Assignment 1"
+author: "Whytne Stevens"
+date: "9/5/2020"
+output: html_document
+---
+# Level 1 title
+
+Check Check
+
+## Level 2 title
+
+Check Check
+
+```{r}
+1 + 2 + 1 + 2
+```
+
+Yup!
