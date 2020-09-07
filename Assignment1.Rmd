@@ -4,16 +4,66 @@ author: "Whytne Stevens"
 date: "9/5/2020"
 output: html_document
 ---
-# Level 1 title
 
-Check Check
+I am interested in looking at how one's profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to Texas. I have selected the following variables to explore this question:
 
-## Level 2 title
+Race (RAC3P) (categorical)
 
-Check Check
+Sex (SEX) (categorical)
 
-```{r}
-1 + 2 + 1 + 2
+Standard Occupational Classification (SOCP) (categorical)
+
+English ability (ENG) (categorical)
+
+Income (PINCP) (continuous)
+
+Work hours per week (WKHP) (continuous)
+
+Income-to-poverty ratio (POVPIP) (continuous)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
-Yup!
+```{r load libraries}
+library(tidycensus)
+library(tidyverse)
+```
+
+```{r load person-level microdata variables}
+person_vars_2018 <- pums_variables %>%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %>%
+  filter(level == "person", year == 2018, survey == "acs1")
+```
+
+```{r load ACS area variables}
+area_vars_2018 <- load_variables(2018, "acs1")
+```
+
+```{r load person-level data, results= 'hide'}
+person_data <- get_pums(variables = c("RAC3P", 
+                                      "SEX",
+                                      "SOCP",
+                                      "ENG",                          
+                                      "PINCP", 
+                                      "WKHP", 
+                                      "POVPIP"),
+                        state = "TX",
+                        year = 2018, 
+                        survey = "acs1",
+                        recode = TRUE) %>%
+  filter(PINCP > 0) %>%
+  filter(POVPIP > 0) %>%
+  select(RAC3P_label, SEX_label, SOCP_label, ENG_label, PINCP, WKHP, POVPIP)
+```
+
+```{r load person_data}
+ head(person_data, 1)
+ tail(person_data, 11)
+```
+
+```{r write_csv}
+write_csv(person_data, "assignmentonedata.csv")
+```
+

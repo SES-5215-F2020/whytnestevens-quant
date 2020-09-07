@@ -369,17 +369,56 @@ summary {
 </div>
 
 
-<div id="level-1-title" class="section level1">
-<h1>Level 1 title</h1>
-<p>Check Check</p>
-<div id="level-2-title" class="section level2">
-<h2>Level 2 title</h2>
-<p>Check Check</p>
-<pre class="r"><code>1 + 2 + 1 + 2</code></pre>
-<pre><code>## [1] 6</code></pre>
-<p>Yup!</p>
-</div>
-</div>
+<p>I am interested in looking at how one’s profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to Texas. I have selected the following variables to explore this question:</p>
+<p>Race (RAC3P) (categorical)</p>
+<p>Sex (SEX) (categorical)</p>
+<p>Standard Occupational Classification (SOCP) (categorical)</p>
+<p>English ability (ENG) (categorical)</p>
+<p>Income (PINCP) (continuous)</p>
+<p>Work hours per week (WKHP) (continuous)</p>
+<p>Income-to-poverty ratio (POVPIP) (continuous)</p>
+<pre class="r"><code>library(tidycensus)
+library(tidyverse)</code></pre>
+<pre class="r"><code>person_vars_2018 &lt;- pums_variables %&gt;%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %&gt;%
+  filter(level == &quot;person&quot;, year == 2018, survey == &quot;acs1&quot;)</code></pre>
+<pre class="r"><code>area_vars_2018 &lt;- load_variables(2018, &quot;acs1&quot;)</code></pre>
+<pre class="r"><code>person_data &lt;- get_pums(variables = c(&quot;RAC3P&quot;, 
+                                      &quot;SEX&quot;,
+                                      &quot;SOCP&quot;,
+                                      &quot;ENG&quot;,                          
+                                      &quot;PINCP&quot;, 
+                                      &quot;WKHP&quot;, 
+                                      &quot;POVPIP&quot;),
+                        state = &quot;TX&quot;,
+                        year = 2018, 
+                        survey = &quot;acs1&quot;,
+                        recode = TRUE) %&gt;%
+  filter(PINCP &gt; 0) %&gt;%
+  filter(POVPIP &gt; 0) %&gt;%
+  select(RAC3P_label, SEX_label, SOCP_label, ENG_label, PINCP, WKHP, POVPIP)</code></pre>
+<pre class="r"><code> head(person_data, 1)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   RAC3P_label SEX_label SOCP_label       ENG_label            PINCP  WKHP POVPIP
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 White alone Male      EAT-Waiters And~ N/A (less than 5 ye~ 10000    30     77</code></pre>
+<pre class="r"><code> tail(person_data, 11)</code></pre>
+<pre><code>## # A tibble: 11 x 7
+##    RAC3P_label     SEX_label SOCP_label        ENG_label      PINCP  WKHP POVPIP
+##    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 White alone     Male      RPR-Precision In~ Very well     123000    55    501
+##  2 White alone     Female    OFF-Tellers       Very well      21800    40    501
+##  3 White alone     Male      FFF-Logging Work~ N/A (less th~  45000    45    227
+##  4 White alone     Female    OFF-Secretaries ~ N/A (less th~  15000    20    117
+##  5 White alone     Male      &lt;NA&gt;              N/A (less th~  47590     0    436
+##  6 White alone     Female    &lt;NA&gt;              N/A (less th~  17000     0    436
+##  7 White; America~ Female    EDU-Elementary A~ N/A (less th~  55000    60    421
+##  8 White alone     Male      MGR-Medical And ~ N/A (less th~  24000    40    501
+##  9 White alone     Female    MED-Registered N~ N/A (less th~  66000    40    501
+## 10 White alone     Female    MED-Registered N~ N/A (less th~ 117000    36    501
+## 11 White alone     Female    MGR-Property, Re~ N/A (less th~  45000    40    261</code></pre>
+<pre class="r"><code>write_csv(person_data, &quot;assignmentonedata.csv&quot;)</code></pre>
 
 
 
