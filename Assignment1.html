@@ -403,21 +403,21 @@ library(tidyverse)</code></pre>
 ##   RAC3P_label SEX_label SOCP_label       ENG_label            PINCP  WKHP POVPIP
 ##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 White alone Male      EAT-Waiters And~ N/A (less than 5 ye~ 10000    30     77</code></pre>
-<pre class="r"><code> tail(person_data, 11)</code></pre>
-<pre><code>## # A tibble: 11 x 7
-##    RAC3P_label     SEX_label SOCP_label        ENG_label      PINCP  WKHP POVPIP
-##    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 White alone     Male      RPR-Precision In~ Very well     123000    55    501
-##  2 White alone     Female    OFF-Tellers       Very well      21800    40    501
-##  3 White alone     Male      FFF-Logging Work~ N/A (less th~  45000    45    227
-##  4 White alone     Female    OFF-Secretaries ~ N/A (less th~  15000    20    117
-##  5 White alone     Male      &lt;NA&gt;              N/A (less th~  47590     0    436
-##  6 White alone     Female    &lt;NA&gt;              N/A (less th~  17000     0    436
-##  7 White; America~ Female    EDU-Elementary A~ N/A (less th~  55000    60    421
-##  8 White alone     Male      MGR-Medical And ~ N/A (less th~  24000    40    501
-##  9 White alone     Female    MED-Registered N~ N/A (less th~  66000    40    501
-## 10 White alone     Female    MED-Registered N~ N/A (less th~ 117000    36    501
-## 11 White alone     Female    MGR-Property, Re~ N/A (less th~  45000    40    261</code></pre>
+<pre class="r"><code> tail(person_data, 178810)</code></pre>
+<pre><code>## # A tibble: 178,810 x 7
+##    RAC3P_label     SEX_label SOCP_label      ENG_label        PINCP  WKHP POVPIP
+##    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 White alone     Male      EAT-Waiters An~ N/A (less than ~ 10000    30     77
+##  2 Black or Afric~ Male      MGR-Constructi~ N/A (less than ~   800    72      6
+##  3 White alone     Male      &lt;NA&gt;            N/A (less than ~ 13200     0    101
+##  4 White alone     Male      &lt;NA&gt;            N/A (less than ~ 20400     0    173
+##  5 White alone     Female    &lt;NA&gt;            N/A (less than ~  9000     0     69
+##  6 Black or Afric~ Male      PRD-Other Asse~ N/A (less than ~ 21000    40    161
+##  7 Black or Afric~ Female    &lt;NA&gt;            N/A (less than ~  8600     0     66
+##  8 White alone     Female    &lt;NA&gt;            N/A (less than ~  9000     0     70
+##  9 White alone     Female    &lt;NA&gt;            N/A (less than ~  8400     0     65
+## 10 White alone     Female    CLN-Janitors A~ N/A (less than ~ 17200     6    133
+## # ... with 178,800 more rows</code></pre>
 <pre class="r"><code>write_csv(person_data, &quot;assignmentonedata.csv&quot;)</code></pre>
 
 
