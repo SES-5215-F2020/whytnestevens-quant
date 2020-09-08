@@ -60,7 +60,7 @@ person_data <- get_pums(variables = c("RAC3P",
 
 ```{r load person_data}
  head(person_data, 1)
- tail(person_data, 11)
+ tail(person_data, 178810)
 ```
 
 ```{r write_csv}
