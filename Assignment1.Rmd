@@ -13,8 +13,6 @@ Sex (SEX) (categorical)
 
 Standard Occupational Classification (SOCP) (categorical)
 
-Citizenship Status (CIT) (categorical)
-
 English ability (ENG) (categorical)
 
 Language other than English spoken at home (LANX) (categorical)
@@ -55,14 +53,13 @@ dallas_county <- c("02301", "02302", "02303", "02304", "02308", "02317", "02318"
 ## Filtering and Mutating Data for Better Clarity
 For the SOCP variables, I noticed that for some of the observations this field were empty, as noted by an N/A entry. To get rid of these fields, I mutated the SOCP variable to be a numeric variable, where N/A was equal to zero, and then filtered for all SOCP values greater then zero. The N/A values didn't have information on the person's occupation or unemployment status, thus they don't provide me with useful information for my guiding question. 
 
-Also for the person data, I added PUMA as a variable and filtered this new variable by equating it to Dallas county. Once I ran the R chunk again, the number of observations was reduced to 523, effectively narrowing down the dataset.
+Also for the person data, I added PUMA as a variable and filtered this new variable by equating it to Dallas county. Once I ran the R chunk again, the number of observations was reduced to 486, effectively narrowing down the dataset.
 
 ```{r load person-level data, results= 'hide'}
 person_data <- get_pums(variables = c("PUMA",
                                       "RAC1P",
                                       "SEX",
                                       "SOCP",
-                                      "CIT",
                                       "LANX",
                                       "ENG", 
                                       "PINCP", 
@@ -71,21 +68,21 @@ person_data <- get_pums(variables = c("PUMA",
                         state = "TX",
                         year = 2018, 
                         survey = "acs1",
-                        recode = TRUE) %>%
+                        recode = TRUE) %>% 
   mutate(SOCP = as.numeric(SOCP)) %>% 
   filter(PUMA == dallas_county,
          PINCP > 0,
          SOCP > 0,
          WKHP > 0,
          POVPIP > 0) %>%
-  select(RAC1P_label, SEX_label, SOCP_label, CIT_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)
+  select(RAC1P_label, SEX_label, SOCP_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)
 ```
 ## Setting Up the Table
 Once I loaded my data I then created my table with the r load person_data function and then defined it with these commands:
 
 ```{r load person_data}
  head(person_data, 1)
- tail(person_data, 523)
+ tail(person_data, 486)
 ```
 ## Saving Data
 Lastly, I saved my data to a csv file:
