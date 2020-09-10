@@ -369,11 +369,15 @@ summary {
 </div>
 
 
-<p>I am interested in looking at how one’s profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to Texas. I have selected the following variables to explore this question:</p>
+<div id="assignment-1" class="section level1">
+<h1>Assignment 1</h1>
+<p>I am interested in looking at how one’s profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to person level data for Dallas County, Texas from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:</p>
 <p>Race (RAC3P) (categorical)</p>
 <p>Sex (SEX) (categorical)</p>
 <p>Standard Occupational Classification (SOCP) (categorical)</p>
+<p>Citizenship Status (CIT) (categorical)</p>
 <p>English ability (ENG) (categorical)</p>
+<p>Language other than English spoken at home (LANX) (categorical)</p>
 <p>Income (PINCP) (continuous)</p>
 <p>Work hours per week (WKHP) (continuous)</p>
 <p>Income-to-poverty ratio (POVPIP) (continuous)</p>
@@ -384,10 +388,22 @@ library(tidyverse)</code></pre>
            var_label, data_type, level) %&gt;%
   filter(level == &quot;person&quot;, year == 2018, survey == &quot;acs1&quot;)</code></pre>
 <pre class="r"><code>area_vars_2018 &lt;- load_variables(2018, &quot;acs1&quot;)</code></pre>
-<pre class="r"><code>person_data &lt;- get_pums(variables = c(&quot;RAC3P&quot;, 
+<div id="defining-dallas-county" class="section level2">
+<h2>Defining Dallas County</h2>
+<p>Because the initial number of observations was ~117,000, I wanted to narrow my dataset even more to just Dallas county. After asking classmates how to do this for person level data, Ryan Johnson and Mary Geschwindt offered ideas on some workarounds since they were interested in county level analysis as well. First, I went and found the PUMAs geographic codes that corresponded with Dallas County. Afterwards, I created a new value where I defined Dallas County based on these codes:</p>
+<pre class="r"><code>dallas_county &lt;- c(&quot;02301&quot;, &quot;02302&quot;, &quot;02303&quot;, &quot;02304&quot;, &quot;02308&quot;, &quot;02317&quot;, &quot;02318&quot;, &quot;02319&quot;, &quot;02320&quot;, &quot;02321&quot;, &quot;02322&quot;)</code></pre>
+</div>
+<div id="filtering-and-mutating-data-for-better-clarity" class="section level2">
+<h2>Filtering and Mutating Data for Better Clarity</h2>
+<p>For the SOCP variables, I noticed that for some of the observations this field were empty, as noted by an N/A entry. To get rid of these fields, I mutated the SOCP variable to be a numeric variable, where N/A was equal to zero, and then filtered for all SOCP values greater then zero. The N/A values didn’t have information on the person’s occupation or unemployment status, thus they don’t provide me with useful information for my guiding question.</p>
+<p>Also for the person data, I added PUMA as a variable and filtered this new variable by equating it to Dallas county. Once I ran the R chunk again, the number of observations was reduced to 523, effectively narrowing down the dataset.</p>
+<pre class="r"><code>person_data &lt;- get_pums(variables = c(&quot;PUMA&quot;,
+                                      &quot;RAC1P&quot;,
                                       &quot;SEX&quot;,
                                       &quot;SOCP&quot;,
-                                      &quot;ENG&quot;,                          
+                                      &quot;CIT&quot;,
+                                      &quot;LANX&quot;,
+                                      &quot;ENG&quot;, 
                                       &quot;PINCP&quot;, 
                                       &quot;WKHP&quot;, 
                                       &quot;POVPIP&quot;),
@@ -395,30 +411,45 @@ library(tidyverse)</code></pre>
                         year = 2018, 
                         survey = &quot;acs1&quot;,
                         recode = TRUE) %&gt;%
-  filter(PINCP &gt; 0) %&gt;%
-  filter(POVPIP &gt; 0) %&gt;%
-  select(RAC3P_label, SEX_label, SOCP_label, ENG_label, PINCP, WKHP, POVPIP)</code></pre>
+  mutate(SOCP = as.numeric(SOCP)) %&gt;% 
+  filter(PUMA == dallas_county,
+         PINCP &gt; 0,
+         SOCP &gt; 0,
+         WKHP &gt; 0,
+         POVPIP &gt; 0) %&gt;%
+  select(RAC1P_label, SEX_label, SOCP_label, CIT_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)</code></pre>
+</div>
+<div id="setting-up-the-table" class="section level2">
+<h2>Setting Up the Table</h2>
+<p>Once I loaded my data I then created my table with the r load person_data function and then defined it with these commands:</p>
 <pre class="r"><code> head(person_data, 1)</code></pre>
-<pre><code>## # A tibble: 1 x 7
-##   RAC3P_label SEX_label SOCP_label       ENG_label            PINCP  WKHP POVPIP
-##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1 White alone Male      EAT-Waiters And~ N/A (less than 5 ye~ 10000    30     77</code></pre>
-<pre class="r"><code> tail(person_data, 178810)</code></pre>
-<pre><code>## # A tibble: 178,810 x 7
-##    RAC3P_label     SEX_label SOCP_label      ENG_label        PINCP  WKHP POVPIP
-##    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 White alone     Male      EAT-Waiters An~ N/A (less than ~ 10000    30     77
-##  2 Black or Afric~ Male      MGR-Constructi~ N/A (less than ~   800    72      6
-##  3 White alone     Male      &lt;NA&gt;            N/A (less than ~ 13200     0    101
-##  4 White alone     Male      &lt;NA&gt;            N/A (less than ~ 20400     0    173
-##  5 White alone     Female    &lt;NA&gt;            N/A (less than ~  9000     0     69
-##  6 Black or Afric~ Male      PRD-Other Asse~ N/A (less than ~ 21000    40    161
-##  7 Black or Afric~ Female    &lt;NA&gt;            N/A (less than ~  8600     0     66
-##  8 White alone     Female    &lt;NA&gt;            N/A (less than ~  9000     0     70
-##  9 White alone     Female    &lt;NA&gt;            N/A (less than ~  8400     0     65
-## 10 White alone     Female    CLN-Janitors A~ N/A (less than ~ 17200     6    133
-## # ... with 178,800 more rows</code></pre>
+<pre><code>## # A tibble: 1 x 9
+##   RAC1P_label SEX_label SOCP_label CIT_label ENG_label LANX_label PINCP  WKHP
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 White alone Female    FIN-Accou~ Not a ci~ Well      Yes, spea~ 30000    40
+## # ... with 1 more variable: POVPIP &lt;dbl&gt;</code></pre>
+<pre class="r"><code> tail(person_data, 523)</code></pre>
+<pre><code>## # A tibble: 523 x 9
+##    RAC1P_label SEX_label SOCP_label CIT_label ENG_label LANX_label PINCP  WKHP
+##    &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+##  1 White alone Female    FIN-Accou~ Not a ci~ Well      Yes, spea~ 30000    40
+##  2 White alone Male      TRN-Stock~ Born in ~ N/A (les~ No, speak~ 17000    40
+##  3 Black or A~ Female    OFF-Bookk~ Born in ~ N/A (les~ No, speak~ 50000    40
+##  4 White alone Male      TRN-Clean~ Born in ~ N/A (les~ No, speak~ 20000    40
+##  5 White alone Female    EDU-Teach~ Born abr~ Very well Yes, spea~ 18300    40
+##  6 White alone Female    SAL-Real ~ Born in ~ N/A (les~ No, speak~ 49100    10
+##  7 White alone Male      CON-Const~ Not a ci~ Well      Yes, spea~ 60000    50
+##  8 White alone Female    BUS-Manag~ Born in ~ N/A (les~ No, speak~ 18100     1
+##  9 Black or A~ Female    TRN-Bus D~ Born in ~ N/A (les~ No, speak~ 70000    57
+## 10 White alone Male      CON-Const~ Born in ~ Very well Yes, spea~ 10000    40
+## # ... with 513 more rows, and 1 more variable: POVPIP &lt;dbl&gt;</code></pre>
+</div>
+<div id="saving-data" class="section level2">
+<h2>Saving Data</h2>
+<p>Lastly, I saved my data to a csv file:</p>
 <pre class="r"><code>write_csv(person_data, &quot;assignmentonedata.csv&quot;)</code></pre>
+</div>
+</div>
 
 
 

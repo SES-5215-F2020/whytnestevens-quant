@@ -4,8 +4,8 @@ author: "Whytne Stevens"
 date: "9/5/2020"
 output: html_document
 ---
-
-I am interested in looking at how one's profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to Texas. I have selected the following variables to explore this question:
+# Assignment 1
+I am interested in looking at how one's profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to person level data for Dallas County, Texas  from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:
 
 Race (RAC3P) (categorical)
 
@@ -13,7 +13,11 @@ Sex (SEX) (categorical)
 
 Standard Occupational Classification (SOCP) (categorical)
 
+Citizenship Status (CIT) (categorical)
+
 English ability (ENG) (categorical)
+
+Language other than English spoken at home (LANX) (categorical)
 
 Income (PINCP) (continuous)
 
@@ -41,11 +45,26 @@ person_vars_2018 <- pums_variables %>%
 area_vars_2018 <- load_variables(2018, "acs1")
 ```
 
+## Defining Dallas County
+Because the initial number of observations was ~117,000, I wanted to narrow my dataset even more to just Dallas county. After asking classmates how to do this for person level data, Ryan Johnson and Mary Geschwindt offered ideas on some workarounds since they were interested in county level analysis as well. First, I went and found the PUMAs geographic codes that corresponded with Dallas County. Afterwards, I created a new value where I defined Dallas County based on these codes:
+
+```{r message=FALSE, results='hide'}
+dallas_county <- c("02301", "02302", "02303", "02304", "02308", "02317", "02318", "02319", "02320", "02321", "02322")
+```
+
+## Filtering and Mutating Data for Better Clarity
+For the SOCP variables, I noticed that for some of the observations this field were empty, as noted by an N/A entry. To get rid of these fields, I mutated the SOCP variable to be a numeric variable, where N/A was equal to zero, and then filtered for all SOCP values greater then zero. The N/A values didn't have information on the person's occupation or unemployment status, thus they don't provide me with useful information for my guiding question. 
+
+Also for the person data, I added PUMA as a variable and filtered this new variable by equating it to Dallas county. Once I ran the R chunk again, the number of observations was reduced to 523, effectively narrowing down the dataset.
+
 ```{r load person-level data, results= 'hide'}
-person_data <- get_pums(variables = c("RAC3P", 
+person_data <- get_pums(variables = c("PUMA",
+                                      "RAC1P",
                                       "SEX",
                                       "SOCP",
-                                      "ENG",                          
+                                      "CIT",
+                                      "LANX",
+                                      "ENG", 
                                       "PINCP", 
                                       "WKHP", 
                                       "POVPIP"),
@@ -53,16 +72,23 @@ person_data <- get_pums(variables = c("RAC3P",
                         year = 2018, 
                         survey = "acs1",
                         recode = TRUE) %>%
-  filter(PINCP > 0) %>%
-  filter(POVPIP > 0) %>%
-  select(RAC3P_label, SEX_label, SOCP_label, ENG_label, PINCP, WKHP, POVPIP)
+  mutate(SOCP = as.numeric(SOCP)) %>% 
+  filter(PUMA == dallas_county,
+         PINCP > 0,
+         SOCP > 0,
+         WKHP > 0,
+         POVPIP > 0) %>%
+  select(RAC1P_label, SEX_label, SOCP_label, CIT_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)
 ```
+## Setting Up the Table
+Once I loaded my data I then created my table with the r load person_data function and then defined it with these commands:
 
 ```{r load person_data}
  head(person_data, 1)
- tail(person_data, 178810)
+ tail(person_data, 523)
 ```
-
+## Saving Data
+Lastly, I saved my data to a csv file:
 ```{r write_csv}
 write_csv(person_data, "assignmentonedata.csv")
 ```
