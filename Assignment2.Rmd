@@ -1,0 +1,205 @@
+---
+title: "Assignment2"
+author: "Whytne Stevens"
+date: "9/8/2020"
+output: html_document
+---
+# Assignment 2
+I am interested in looking at how one's profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to person level data for Dallas County, Texas  from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:
+
+Race (RAC3P) (categorical)
+
+Sex (SEX) (categorical)
+
+Standard Occupational Classification (SOCP) (categorical)
+
+English ability (ENG) (categorical)
+
+Language other than English spoken at home (LANX) (categorical)
+
+Income (PINCP) (continuous)
+
+Work hours per week (WKHP) (continuous)
+
+Income-to-poverty ratio (POVPIP) (continuous)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+```{r load libraries}
+library(ggplot2)
+library(tidycensus)
+library(tidyverse)
+```
+
+```{r load person-level microdata variables}
+person_vars_2018 <- pums_variables %>%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %>%
+  filter(level == "person", year == 2018, survey == "acs1")
+```
+
+```{r load ACS area variables}
+area_vars_2018 <- load_variables(2018, "acs1")
+```
+
+```{r message=FALSE, results='hide'}
+dallas_county <- c("02301", "02302", "02303", "02304", "02308", "02317", "02318", "02319", "02320", "02321", "02322")
+```
+
+```{r load person-level data, results= 'hide'}
+person_data <- get_pums(variables = c("PUMA",
+                                      "RAC1P",
+                                      "SEX",
+                                      "SOCP",
+                                      "LANX",
+                                      "ENG", 
+                                      "PINCP", 
+                                      "WKHP", 
+                                      "POVPIP"),
+                        state = "TX",
+                        year = 2018, 
+                        survey = "acs1",
+                        recode = TRUE) %>% 
+  mutate(SOCP = as.numeric(SOCP)) %>% 
+  filter(PUMA == dallas_county,
+         PINCP > 0,
+         SOCP > 0,
+         WKHP > 0,
+         POVPIP > 0) %>%
+  select(RAC1P_label, SEX_label, SOCP_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)
+```
+```{r}
+ggplot(person_data, 
+       aes(x = POVPIP,
+           y = PINCP,
+           color = ENG_label)) +
+  geom_point() +
+  scale_x_continuous(name = "Income-to-poverty ratio",
+                     breaks = seq(0, 500, by = 50),
+                     labels = paste(seq(0, 500, by = 50), "%", sep = "")) +
+  scale_y_continuous(name = "Total person's income",
+                     breaks = seq(200, 500000, by = 50000)) +
+  scale_color_discrete(name = "English language ability/proficiency",
+                       labels = c("N/A (less than 5 years old/speaks only English)",
+                                  "Very well",
+                                  "Well",
+                                  "Not well",
+                                  "Not at all")) +
+  theme_bw() 
+```
+```{r}
+ggplot(person_data, aes(x = RAC1P_label, fill = ENG_label)) +
+  geom_bar() +
+  scale_y_continuous(name = "English language ability/proficiency") +
+  scale_x_discrete(name = "Race",
+                       labels = c("White alone",
+                                  "Black or African American alone",
+                                  "American Indian alone",
+                                  "American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races",
+                                  "Asian alone",
+                                  "Two or More Races",
+                                  "Some Other Race alone")) +
+  scale_fill_discrete(name = element_blank(),
+                        labels = c("N/A (less than 5 years old/speaks only English)",
+                                  "Very well",
+                                  "Well",
+                                  "Not well",
+                                  "Not at all")) +
+  theme_bw() 
+
+```
+
+```{r}
+ggplot(person_data, 
+       aes(x = ENG_label,
+           y = PINCP)) +
+  geom_point() +
+  scale_x_discrete(name = "English language ability/proficiency",
+                        labels = c("N/A (less than 5 years old/speaks only English)",
+                                  "Very well",
+                                  "Well",
+                                  "Not well",
+                                  "Not at all")) +
+  scale_y_continuous(name = "Total person's income",
+                     breaks = seq(200, 500000, by = 50000)) +
+  theme_bw()
+```
+
+```{r}
+ggplot(person_data, 
+       aes(x = ENG_label,
+           y = POVPIP)) +
+  geom_point() +
+  scale_x_discrete(name = "English language ability/proficiency",
+                        labels = c("N/A (less than 5 years old/speaks only English)",
+                                  "Very well",
+                                  "Well",
+                                  "Not well",
+                                  "Not at all")) +
+  scale_y_continuous (name = "Income-to-poverty ratio",
+                     breaks = seq(0, 500, by = 50)) +
+  theme_bw()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
