@@ -33,6 +33,9 @@ library(tidycensus)
 library(tidyverse)
 ```
 
+
+
+
 ```{r load person-level microdata variables}
 person_vars_2018 <- pums_variables %>%
   distinct(year, survey, var_code, 
@@ -40,13 +43,22 @@ person_vars_2018 <- pums_variables %>%
   filter(level == "person", year == 2018, survey == "acs1")
 ```
 
+
+
+
 ```{r load ACS area variables}
 area_vars_2018 <- load_variables(2018, "acs1")
 ```
 
+
+
+
 ```{r message=FALSE, results='hide'}
 dallas_county <- c("02301", "02302", "02303", "02304", "02308", "02317", "02318", "02319", "02320", "02321", "02322")
 ```
+
+
+
 
 ```{r load person-level data, results= 'hide'}
 person_data <- get_pums(variables = c("PUMA",
@@ -70,6 +82,203 @@ person_data <- get_pums(variables = c("PUMA",
          POVPIP > 0) %>%
   select(RAC1P_label, SEX_label, SOCP_label, ENG_label, LANX_label, PINCP, WKHP, POVPIP)
 ```
+
+
+```{r read_csv}
+person_data <- read_csv("assignmentonedata.csv")
+```
+
+
+# Distributions of my Continuous Variables
+
+## Total person's income
+
+```{r}
+PINCP_summary <- summary(person_data$PINCP)
+
+PINCP_summary
+```
+
+```{r}
+conf_int <- t.test(person_data$PINCP)
+
+conf_int
+```
+
+
+```{r}
+ggplot(person_data, aes(x = PINCP)) +
+  geom_histogram()
+```
+
+
+## Hours worked per week
+```{r}
+WKHP_summary <- summary(person_data$WKHP)
+
+WKHP_summary
+```
+
+```{r}
+conf_int <- t.test(person_data$WKHP)
+
+conf_int
+```
+
+
+```{r}
+ggplot(person_data, aes(x = WKHP)) +
+  geom_histogram()
+```
+
+## Income to poverty ratio
+```{r}
+POVPIP_summary <- summary(person_data$POVPIP)
+
+POVPIP_summary
+```
+
+
+```{r}
+conf_int <- t.test(person_data$POVPIP)
+
+conf_int
+```
+
+```{r}
+ggplot(person_data, aes(x = POVPIP)) +
+  geom_histogram()
+```
+
+
+
+
+# Proportions of my Categorial Variables
+
+## Race
+
+```{r}
+unique(person_data$RAC1P_label)
+```
+
+```{r}
+table(person_data$RAC1P_label)
+```
+
+```{r}
+table(person_data$RAC1P_label) / sum(table(person_data$RAC1P_label))
+```
+
+```{r}
+mean(person_data$RAC1P_label == "Black or African American alone")
+```
+
+```{r}
+t.test(person_data$RAC1P_label == "Black or African American alone")
+```
+
+
+
+## Sex
+
+```{r}
+unique(person_data$SEX_label)
+```
+
+```{r}
+table(person_data$SEX_label)
+```
+
+```{r}
+table(person_data$SEX_label) / sum(table(person_data$SEX_label))
+```
+
+```{r}
+mean(person_data$SEX_label == "Female")
+```
+
+```{r}
+t.test(person_data$SEX_label == "Female")
+```
+
+
+## Occupation
+
+```{r}
+unique(person_data$SOCP_label)
+```
+
+```{r}
+table(person_data$SOCP_label)
+```
+
+```{r}
+table(person_data$SOCP_label) / sum(table(person_data$SOCP_label))
+```
+
+```{r}
+mean(person_data$SOCP_label == "MGR-Social And Community Service Managers")
+```
+
+```{r}
+t.test(person_data$SOCP_label == "MGR-Social And Community Service Managers")
+```
+
+
+## Language other than English spoken at home
+
+```{r}
+unique(person_data$LANX_label)
+```
+
+```{r}
+table(person_data$LANX_label)
+```
+
+```{r}
+table(person_data$LANX_label) / sum(table(person_data$LANX_label))
+```
+
+```{r}
+mean(person_data$LANX_label == "Yes, speaks another language")
+```
+
+```{r}
+t.test(person_data$LANX_label == "Yes, speaks another language")
+```
+
+
+## English language proficiency
+
+```{r}
+unique(person_data$ENG_label)
+```
+
+```{r}
+table(person_data$ENG_label)
+```
+
+```{r}
+table(person_data$ENG_label) / sum(table(person_data$ENG_label))
+```
+
+```{r}
+mean(person_data$ENG_label == "Not well")
+```
+
+```{r}
+t.test(person_data$ENG_label == "Not well")
+```
+
+
+
+
+
+
+
+
+
+
 ```{r}
 ggplot(person_data, 
        aes(x = POVPIP,
@@ -89,6 +298,9 @@ ggplot(person_data,
                                   "Not at all")) +
   theme_bw() 
 ```
+
+
+
 ```{r}
 ggplot(person_data, aes(x = RAC1P_label, fill = ENG_label)) +
   geom_bar() +
@@ -111,6 +323,9 @@ ggplot(person_data, aes(x = RAC1P_label, fill = ENG_label)) +
 
 ```
 
+
+
+
 ```{r}
 ggplot(person_data, 
        aes(x = ENG_label,
@@ -127,6 +342,9 @@ ggplot(person_data,
   theme_bw()
 ```
 
+
+
+
 ```{r}
 ggplot(person_data, 
        aes(x = ENG_label,
@@ -142,64 +360,6 @@ ggplot(person_data,
                      breaks = seq(0, 500, by = 50)) +
   theme_bw()
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
