@@ -5,7 +5,7 @@ date: "9/8/2020"
 output: html_document
 ---
 # Assignment 2
-I am interested in looking at how one's profession and English language might effect their income and income to poverty ratio. I am narrowing down my analysis to person level data for Dallas County, Texas  from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:
+Continuing with the variables and data used in Assignment 1, I am now looking at the distributions and proportions of these variables, which are listed below:
 
 Race (RAC3P) (categorical)
 
@@ -31,6 +31,7 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 library(ggplot2)
 library(tidycensus)
 library(tidyverse)
+library(ggthemes)
 ```
 
 
@@ -90,6 +91,8 @@ person_data <- read_csv("assignmentonedata.csv")
 
 
 # Distributions of my Continuous Variables
+For each of my continuous variables (total person's income, hours worked per week, and income to poverty ratio) below, I calculated the sample men, median, standard deviation, and interquartile ranges. I also calculated the 95-percent confidence interval for the mean of each of these variables and created a histogram to show that distribution
+
 
 ## Total person's income
 
@@ -98,18 +101,63 @@ PINCP_summary <- summary(person_data$PINCP)
 
 PINCP_summary
 ```
-
 ```{r}
-conf_int <- t.test(person_data$PINCP)
-
-conf_int
+paste("The sample mean for total person's income is",
+      prettyNum(mean(person_data$PINCP), digits = 1), "USD.")
+paste("The sample median for total person's income is",
+      prettyNum(median(person_data$PINCP), digits = 1), "USD.")  
+paste("The sample standard deviation for total person's income is",
+      prettyNum(sd(person_data$PINCP), digits = 1), "USD.")
+paste("The sample interquartile range for total person's income is",
+      quantile(person_data$PINCP)["25%"], "to", quantile(person_data$PINCP)["75%"], "USD.")
 ```
 
 
 ```{r}
-ggplot(person_data, aes(x = PINCP)) +
+conf_int_pincp <- t.test(person_data$PINCP)
+
+conf_int_pincp
+```
+
+```{r}
+paste("The 95-percent confidence interval for total person's income is",
+      prettyNum(conf_int_pincp$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_pincp$conf.int[2], digits = 1), "USD.")
+```
+
+
+```{r}
+hist_pincp <-ggplot(person_data, aes(x = PINCP)) +
   geom_histogram()
+
+hist_pincp
 ```
+
+```{r}
+hist_pincp + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Total person's income (USD)") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 490000, y = 150, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_pincp$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_pincp$conf.int[2], digits = 1),
+                         "USD.",
+                         "\nSample mean:", 
+                         prettyNum(mean(PINCP_summary), digits = 1), "USD.",
+                         "\nSample median:",
+                         prettyNum(median(PINCP_summary), digits = 1), "USD.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(PINCP_summary), digits = 1), "USD.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(PINCP_summary)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(PINCP_summary)["75%"], digits = 1),
+                         "USD."),
+           hjust = 1, vjust = 1) 
+```
+
 
 
 ## Hours worked per week
@@ -118,17 +166,59 @@ WKHP_summary <- summary(person_data$WKHP)
 
 WKHP_summary
 ```
-
 ```{r}
-conf_int <- t.test(person_data$WKHP)
-
-conf_int
+paste("The sample mean for hours worked per week is",
+      prettyNum(mean(person_data$WKHP), digits = 1), "hours per week.")
+paste("The sample median for hours worked per week is",
+      prettyNum(median(person_data$WKHP), digits = 1), "hours per week.")  
+paste("The sample standard deviation for hours worked per week is",
+      prettyNum(sd(person_data$WKHP), digits = 1), "hours per week.")
+paste("The sample interquartile range for hours worked per week is",
+      quantile(person_data$WKHP)["25%"], "to", quantile(person_data$WKHP)["75%"], "hours per week.")
 ```
 
 
 ```{r}
-ggplot(person_data, aes(x = WKHP)) +
+conf_int_wkhp <- t.test(person_data$WKHP)
+
+conf_int_wkhp
+```
+
+```{r}
+paste("The 95-percent confidence interval for hours worked per week  is",
+      prettyNum(conf_int_wkhp$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_wkhp$conf.int[2], digits = 1), "hours per week.")
+```
+
+```{r}
+hist_wkhp <- ggplot(person_data, aes(x = WKHP)) +
   geom_histogram()
+hist_wkhp
+```
+
+```{r}
+hist_wkhp + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 100, y = 275, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_wkhp$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_wkhp$conf.int[2], digits = 1),
+                         "hours per week.",
+                         "\nSample mean:", 
+                         prettyNum(mean(WKHP_summary), digits = 1), "hours per week.",
+                         "\nSample median:",
+                         prettyNum(median(WKHP_summary), digits = 1), "hours per week.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(WKHP_summary), digits = 1), "hours per week.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(WKHP_summary)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(WKHP_summary)["75%"], digits = 1),
+                         "hours per week."),
+           hjust = 1, vjust = 1) 
 ```
 
 ## Income to poverty ratio
@@ -138,22 +228,65 @@ POVPIP_summary <- summary(person_data$POVPIP)
 POVPIP_summary
 ```
 
-
 ```{r}
-conf_int <- t.test(person_data$POVPIP)
-
-conf_int
+paste("The sample mean for income to poverty ratio is",
+      prettyNum(mean(person_data$POVPIP), digits = 1), ".")
+paste("The sample median for income to poverty ratio is",
+      prettyNum(median(person_data$POVPIP), digits = 1), ".")  
+paste("The sample standard deviation for income to poverty ratio is",
+      prettyNum(sd(person_data$POVPIP), digits = 1), ".")
+paste("The sample interquartile range for income to poverty ratio is",
+      quantile(person_data$POVPIP)["25%"], "to", quantile(person_data$POVPIP)["75%"], ".")
 ```
 
 ```{r}
-ggplot(person_data, aes(x = POVPIP)) +
+conf_int_povpip <- t.test(person_data$POVPIP)
+
+conf_int_povpip
+```
+
+```{r}
+paste("The 95-percent confidence interval for income to poverty ratio is",
+      prettyNum(conf_int_povpip$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_povpip$conf.int[2], digits = 1), ".")
+```
+
+```{r}
+hist_povpip <- ggplot(person_data, aes(x = POVPIP)) +
   geom_histogram()
+hist_povpip
 ```
 
+
+```{r}
+hist_povpip + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Income to poverty ratio") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 100, y = 200, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_povpip$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_povpip$conf.int[2], digits = 1),
+                         "hours per week.",
+                         "\nSample mean:", 
+                         prettyNum(mean(POVPIP_summary), digits = 1), ".",
+                         "\nSample median:",
+                         prettyNum(median(POVPIP_summary), digits = 1), ".",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(POVPIP_summary), digits = 1), ".", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(POVPIP_summary)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(POVPIP_summary)["75%"], digits = 1),
+                         "."),
+           hjust = 0, vjust = 1) 
+```
 
 
 
 # Proportions of my Categorial Variables
+As for my categorical variables (race, sex, occupation, English language proficiency, and whether or not someone speaks a language besides English at home) below, I calculated the distribution of each by looking at the number observation in each variable category, converted the number of these observations to proportions, and calculated the 95-percent confidence interval for each of these proportions as well.
 
 ## Race
 
@@ -163,6 +296,7 @@ unique(person_data$RAC1P_label)
 
 ```{r}
 table(person_data$RAC1P_label)
+knitr::kable(table(person_data$RAC1P_label), caption = "Frequency Counts for RAC1P Variable")
 ```
 
 ```{r}
@@ -177,6 +311,58 @@ mean(person_data$RAC1P_label == "Black or African American alone")
 t.test(person_data$RAC1P_label == "Black or African American alone")
 ```
 
+```{r}
+tenures1 <- unique(person_data$RAC1P_label)
+tenures1
+```
+
+
+
+```{r}
+white <- t.test(person_data$RAC1P_label == tenures1[1])
+black <- t.test(person_data$RAC1P_label == tenures1[2])
+asian <- t.test(person_data$RAC1P_label == tenures1[3])
+two_or_more_race <-  t.test(person_data$RAC1P_label == tenures1[4])
+some_other_race_alone <-  t.test(person_data$RAC1P_label == tenures1[5])
+amer_ind_alone <- t.test(person_data$RAC1P_label == tenures1[6])
+amer_ind_ala_native_tribes_spec_or_not_spec <-  t.test(person_data$RAC1P_label == tenures1[7])
+nat_hawaiian_and_oth_pac_is_alone <-  t.test(person_data$RAC1P_label == tenures1[8])
+shares <- tibble(Tenure = c("White alone", 
+                            "Black or African American alone", 
+                            "Asian alone",
+                            "Two or More Races",
+                            "Some Other Race alone",                                                                                                    
+                            "American Indian alone",                                                                                                    
+                            "American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races",
+                            "Native Hawaiian and Other Pacific Islander alone"),
+                 `Share` = c(white$estimate, 
+                             black$estimate,
+                             asian$estimate,
+                             two_or_more_race$estimate,
+                             some_other_race_alone$estimate,
+                             amer_ind_alone$estimate,
+                             amer_ind_ala_native_tribes_spec_or_not_spec$estimate,
+                             nat_hawaiian_and_oth_pac_is_alone$estimate),
+                 Low = c(white$conf.int[1],
+                         black$conf.int[1],
+                         asian$conf.int[1],
+                         two_or_more_race$conf.int[1],
+                         some_other_race_alone$conf.int[1],
+                         amer_ind_alone$conf.int[1],
+                         amer_ind_ala_native_tribes_spec_or_not_spec$conf.int[1],
+                         nat_hawaiian_and_oth_pac_is_alone$conf.int[1]),
+                 High = c(white$conf.int[2],
+                         black$conf.int[2],
+                         asian$conf.int[2],
+                         two_or_more_race$conf.int[2],
+                         some_other_race_alone$conf.int[2],
+                         amer_ind_alone$conf.int[2],
+                         amer_ind_ala_native_tribes_spec_or_not_spec$conf.int[2],
+                         nat_hawaiian_and_oth_pac_is_alone$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for RAC1P variable")
+```
+
+
 
 
 ## Sex
@@ -187,6 +373,7 @@ unique(person_data$SEX_label)
 
 ```{r}
 table(person_data$SEX_label)
+knitr::kable(table(person_data$SEX_label), caption = "Frequency Counts for SEX Variable")
 ```
 
 ```{r}
@@ -201,6 +388,28 @@ mean(person_data$SEX_label == "Female")
 t.test(person_data$SEX_label == "Female")
 ```
 
+```{r}
+tenures2 <- unique(person_data$SEX_label)
+tenures2
+```
+
+
+
+```{r}
+female <- t.test(person_data$SEX_label == tenures2[1])
+male <- t.test(person_data$SEX_label == tenures2[2])
+shares <- tibble(Tenure = c("Female", 
+                            "Male"),
+                 `Share` = c(female$estimate, 
+                             male$estimate),
+                 Low = c(female$conf.int[1],
+                         male$conf.int[1]),
+                 High = c(female$conf.int[2],
+                          male$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for SEX variable")
+```
+
+
 
 ## Occupation
 
@@ -210,11 +419,13 @@ unique(person_data$SOCP_label)
 
 ```{r}
 table(person_data$SOCP_label)
+knitr::kable(table(person_data$SOCP_label), caption = "Frequency Counts for SOCP Variable")
 ```
 
 ```{r}
 table(person_data$SOCP_label) / sum(table(person_data$SOCP_label))
 ```
+
 
 ```{r}
 mean(person_data$SOCP_label == "MGR-Social And Community Service Managers")
@@ -223,7 +434,7 @@ mean(person_data$SOCP_label == "MGR-Social And Community Service Managers")
 ```{r}
 t.test(person_data$SOCP_label == "MGR-Social And Community Service Managers")
 ```
-
+Due to the number of occupations listed, I did not do a Proportions and 95-percent confidence intervals table for this variable
 
 ## Language other than English spoken at home
 
@@ -233,6 +444,7 @@ unique(person_data$LANX_label)
 
 ```{r}
 table(person_data$LANX_label)
+knitr::kable(table(person_data$LANX_label), caption = "Frequency Counts for LANX Variable")
 ```
 
 ```{r}
@@ -247,6 +459,28 @@ mean(person_data$LANX_label == "Yes, speaks another language")
 t.test(person_data$LANX_label == "Yes, speaks another language")
 ```
 
+```{r}
+tenures3 <- unique(person_data$LANX_label)
+tenures3
+```
+
+
+
+```{r}
+yes <- t.test(person_data$LANX_label == tenures3[1])
+no <- t.test(person_data$LANX_label == tenures3[2])
+shares <- tibble(Tenure = c("Yes, speaks another language", 
+                            "No, speaks only English"),
+                 `Share` = c(yes$estimate, 
+                             no$estimate),
+                 Low = c(yes$conf.int[1],
+                         no$conf.int[1]),
+                 High = c(yes$conf.int[2],
+                          no$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for LANX variable")
+```
+
+
 
 ## English language proficiency
 
@@ -256,6 +490,7 @@ unique(person_data$ENG_label)
 
 ```{r}
 table(person_data$ENG_label)
+knitr::kable(table(person_data$ENG_label), caption = "Frequency Counts for ENG Variable")
 ```
 
 ```{r}
@@ -271,95 +506,67 @@ t.test(person_data$ENG_label == "Not well")
 ```
 
 
-
-
-
-
-
-
-
-
 ```{r}
-ggplot(person_data, 
-       aes(x = POVPIP,
-           y = PINCP,
-           color = ENG_label)) +
-  geom_point() +
-  scale_x_continuous(name = "Income-to-poverty ratio",
-                     breaks = seq(0, 500, by = 50),
-                     labels = paste(seq(0, 500, by = 50), "%", sep = "")) +
-  scale_y_continuous(name = "Total person's income",
-                     breaks = seq(200, 500000, by = 50000)) +
-  scale_color_discrete(name = "English language ability/proficiency",
-                       labels = c("N/A (less than 5 years old/speaks only English)",
-                                  "Very well",
-                                  "Well",
-                                  "Not well",
-                                  "Not at all")) +
-  theme_bw() 
+tenures4 <- unique(person_data$ENG_label)
+tenures4
 ```
 
 
 
 ```{r}
-ggplot(person_data, aes(x = RAC1P_label, fill = ENG_label)) +
-  geom_bar() +
-  scale_y_continuous(name = "English language ability/proficiency") +
-  scale_x_discrete(name = "Race",
-                       labels = c("White alone",
-                                  "Black or African American alone",
-                                  "American Indian alone",
-                                  "American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races",
-                                  "Asian alone",
-                                  "Two or More Races",
-                                  "Some Other Race alone")) +
-  scale_fill_discrete(name = element_blank(),
-                        labels = c("N/A (less than 5 years old/speaks only English)",
-                                  "Very well",
-                                  "Well",
-                                  "Not well",
-                                  "Not at all")) +
-  theme_bw() 
-
+well <- t.test(person_data$ENG_label == tenures4[1])
+lessthan5years_onlyspeakseng <- t.test(person_data$ENG_label == tenures4[2])
+very_well <- t.test(person_data$ENG_label == tenures4[3])
+not_at_all <-  t.test(person_data$ENG_label == tenures4[4])
+not_well <-  t.test(person_data$ENG_label == tenures4[5])
+shares <- tibble(Tenure = c("Well", 
+                            "N/A (less than 5 years old/speaks only English)", 
+                            "Very well",
+                            "Not at all",
+                            "Not well"),
+                 `Share` = c(well$estimate, 
+                             lessthan5years_onlyspeakseng$estimate,
+                             very_well$estimate,
+                             not_at_all$estimate,
+                             not_well$estimate),
+                 Low = c(well$conf.int[1],
+                         lessthan5years_onlyspeakseng$conf.int[1],
+                         very_well$conf.int[1],
+                         not_at_all$conf.int[1],
+                         not_well$conf.int[1]),
+                 High = c(well$conf.int[2],
+                         lessthan5years_onlyspeakseng$conf.int[2],
+                         very_well$conf.int[2],
+                         not_at_all$conf.int[2],
+                         not_well$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for ENG variable")
 ```
-
-
-
 
 ```{r}
-ggplot(person_data, 
-       aes(x = ENG_label,
-           y = PINCP)) +
-  geom_point() +
-  scale_x_discrete(name = "English language ability/proficiency",
-                        labels = c("N/A (less than 5 years old/speaks only English)",
-                                  "Very well",
-                                  "Well",
-                                  "Not well",
-                                  "Not at all")) +
-  scale_y_continuous(name = "Total person's income",
-                     breaks = seq(200, 500000, by = 50000)) +
-  theme_bw()
+tenures4 <- ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_bw() +
+  scale_x_discrete(labels = c("Well", 
+                            "N/A (less than 5 years old/speaks only English)", 
+                            "Very well",
+                            "Not at all",
+                            "Not well")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
 ```
 
 
 
 
-```{r}
-ggplot(person_data, 
-       aes(x = ENG_label,
-           y = POVPIP)) +
-  geom_point() +
-  scale_x_discrete(name = "English language ability/proficiency",
-                        labels = c("N/A (less than 5 years old/speaks only English)",
-                                  "Very well",
-                                  "Well",
-                                  "Not well",
-                                  "Not at all")) +
-  scale_y_continuous (name = "Income-to-poverty ratio",
-                     breaks = seq(0, 500, by = 50)) +
-  theme_bw()
-```
+
+
+
+
+
+
+
 
 
 
