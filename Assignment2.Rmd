@@ -361,7 +361,28 @@ shares <- tibble(Tenure = c("White alone",
                          nat_hawaiian_and_oth_pac_is_alone$conf.int[2]))
 knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for RAC1P variable")
 ```
+```{r load tenures1}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  scale_x_discrete(labels = c("White alone", 
+                            "Black or \nAfrican American alone", 
+                            "Asian alone",
+                            "Two or \nMore Races",
+                            "Some Other \nRace alone",                                                                                                    
+                            "American Indian \nalone",                                                                                                    
+                            "American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races",
+                            "Native Hawaiian and Other Pacific Islander alone")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%"))
+```
+I noticed that the chart above does not include the following racial groups because the proportions and 95-percent confidence intervals are below 0.01:
 
+American Indian alone
+American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races
+Native Hawaiian and Other Pacific Islander alone
 
 
 
@@ -410,6 +431,17 @@ knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals 
 ```
 
 
+```{r load tenures2}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  scale_x_discrete(labels = c("Female", 
+                            "Male")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
 
 ## Occupation
 
@@ -480,6 +512,20 @@ shares <- tibble(Tenure = c("Yes, speaks another language",
 knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for LANX variable")
 ```
 
+```{r load tenures3}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  scale_x_discrete(labels = c("Yes, speaks another language", 
+                            "No, speaks only English")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
+
+
+
 
 
 ## English language proficiency
@@ -542,13 +588,13 @@ shares <- tibble(Tenure = c("Well",
 knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for ENG variable")
 ```
 
-```{r}
-tenures4 <- ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+```{r load tenures4}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
   geom_bar(stat = "identity") +
   geom_errorbar(width = 0.5) +
-  theme_bw() +
+  theme_solarized_2() +
   scale_x_discrete(labels = c("Well", 
-                            "N/A (less than 5 years old/speaks only English)", 
+                            "N/A \n(less than 5 years old/\nspeaks only English)", 
                             "Very well",
                             "Not at all",
                             "Not well")) +
