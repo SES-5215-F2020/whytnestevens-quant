@@ -1,0 +1,820 @@
+---
+title: "Assignment3"
+author: "Whytne Stevens"
+date: "9/19/2020"
+output: html_document
+---
+# Assignment 3
+For this assignment, I altered my original data set to make the analysis and this assignment much easier. For more information on this, I created a new markdown file, which can be found here: https://ses-5215-f2020.github.io/whytnestevens-quant/Assignment1and2-VariableChanges
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load libraries}
+library(ggplot2)
+library(tidycensus)
+library(ggthemes)
+library(tidyverse)
+```
+
+```{r load data, results='hide'}
+person_data_new <- read.csv("persondatanew.csv") %>%
+  mutate(struct_type = case_when(
+    ENG_label=="N/A - \nOnly Speaks English"~"N/A (less than 5 years old/speaks only English)",
+    HHL_label=="Asian and Pacific Island languages"~"Asian and \nPacific Island languages",
+    HHL_label=="Other Indo-European languages" ~ "Other Indo-\nEuropean languages",
+    COW_label=="Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions" ~ "Employee of a private \nfor-profit company/business",
+    COW_label=="Employee of a private not-for-profit, tax-exempt, or charitable organization" ~ "Employee of a private \nnot-for-profit organization",
+    COW_label=="Federal government employee" ~ "Federal government \nemployee",
+    COW_label=="Local government employee (city, county, etc.)" ~ "Local government \nemployee",
+    COW_label=="Self-employed in own incorporated business, professional practice or farm"~"Self-employed in own \nincorporated business",
+    COW_label=="Self-employed in own not incorporated business, professional practice, or farm" ~ "Self-employed in own \nnot incorporated business",
+    COW_label=="Working without pay in family business or farm" ~ "Working without pay \nin family business or farm"))
+```
+
+# Relationships between two continuous variables
+Below are the correlation tests and associated scatterplots with my continuous variables: 
+
+Income (PINCP)
+Work hours per week (WKHP)
+Income to Poverty Ratio (POVPIP)
+
+## Correlation between Total person's income (PINCP) and Hours worked per week (WKHP) with scatterplots
+```{r}
+correlation <- cor.test(person_data_new$PINCP, person_data_new$WKHP)
+
+correlation
+```
+
+
+``` {r}
+ggplot(person_data_new, aes(x = PINCP, y = WKHP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Total person's income (USD)") +
+  scale_y_continuous(name = "Hours worked per week", 
+                     breaks = seq(0, 100, by = 10),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 100, by = 10),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 100, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+
+``` {r}
+ggplot(person_data_new, aes(x = WKHP, y = PINCP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 500000, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+
+```
+
+## Correlation between Total person's income (PINCP) and Income to poverty ratio (POVPIP) with scatterplots
+```{r}
+correlation <- cor.test(person_data_new$PINCP, person_data_new$POVPIP)
+
+correlation
+```
+
+``` {r}
+ggplot(person_data_new, aes(x = PINCP, y = POVPIP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Total person's income (USD)") +
+  scale_y_continuous(name = "Income to Poverty ratio", 
+                     breaks = seq(0, 510, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 510, by = 50),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 510, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+
+``` {r}
+ggplot(person_data_new, aes(x = POVPIP, y = PINCP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Income to Poverty ratio") +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 500000, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+## Correlation between Income to poverty ratio (POVPIP) and Hours worked per week (WKHP) with scatterplots
+```{r}
+correlation <- cor.test(person_data_new$POVPIP, person_data_new$WKHP)
+
+correlation
+```
+
+``` {r}
+ggplot(person_data_new, aes(x = POVPIP, y = WKHP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Income to Poverty ratio") +
+  scale_y_continuous(name = "Hours worked per week", 
+                     breaks = seq(0, 100, by = 10),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 100, by = 10),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 100, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+
+``` {r}
+ggplot(person_data_new, aes(x = WKHP, y = POVPIP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_solarized_2() +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Income to Poverty ratio", 
+                     breaks = seq(0, 510, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 510, by = 50),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 510, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+
+# Relationships between a continuous variable and a binary variable
+Below are the correlation tests and associated violin plots with my continuous variables and binary categorical variables: 
+
+Income (PINCP) (continuous)
+Work hours per week (WKHP) (continuous)
+Income to Poverty Ratio (POVPIP) (continuous)
+Food Stamps (FS) (Categorical)
+
+## Total Person's Income (PINCP) (continuous) and Food Stamps (FS) (Categorical)
+```{r}
+difference = t.test(PINCP ~ FS_label == "Yes",
+                    data = person_data_new)
+
+difference
+```
+
+
+```{r}
+difference = t.test(PINCP ~ FS_label == "No",
+                    data = person_data_new)
+
+difference
+```
+
+```{r}
+ggplot(person_data_new, aes(x = FS_label, y = PINCP)) +
+  geom_violin() +
+  theme_solarized_2() +
+  scale_x_discrete(name = "Does this person take part in the \nSupplemental Nutrition Assistance Program (SNAP)?",
+                   labels = c("Yes", "No")) +
+ scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 1.5, y = 400000,  size = 3,
+           label = paste("Difference in means\n(95% confidence):\n$",
+                         prettyNum(abs(difference$conf.int[2]), 
+                                   digits = 0), " to $",
+                         prettyNum(abs(difference$conf.int[1]), 
+                                   digits = 0),
+                         sep = "")) +
+  annotate(geom = "text", x = 1, y = difference$estimate[1], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[1], digits = 0))) +
+  annotate(geom = "text", x = 2, y = difference$estimate[2], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[2], digits = 0)))
+```
+
+## Hours worked per week (WKHP) (continuous) and Food Stamps (FS) (Categorical)
+```{r}
+difference = t.test(WKHP ~ FS_label == "Yes",
+                    data = person_data_new)
+
+difference
+```
+
+
+```{r}
+difference = t.test(WKHP ~ FS_label == "No",
+                    data = person_data_new)
+
+difference
+```
+
+
+```{r}
+ggplot(person_data_new, aes(x = FS_label, y = WKHP)) +
+  geom_violin() +
+  theme_solarized_2() +
+  scale_x_discrete(name = "Does this person take part in the \nSupplemental Nutrition Assistance Program (SNAP)",
+                   labels = c("Yes", "No"))  +
+ scale_y_continuous(name = "Hours worked per week", 
+                     breaks = seq(0, 100, by = 10),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 100, by = 10),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 1.5, y = 90,  size = 3,
+           label = paste("Difference in means\n(95% confidence):\n$",
+                         prettyNum(abs(difference$conf.int[2]), 
+                                   digits = 0), " to $",
+                         prettyNum(abs(difference$conf.int[1]), 
+                                   digits = 0),
+                         sep = "")) +
+  annotate(geom = "text", x = 1, y = difference$estimate[1], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[1], digits = 0))) +
+  annotate(geom = "text", x = 2, y = difference$estimate[2], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[2], digits = 0)))
+```
+
+## Income to Poverty Ratio (POVPIP) (continuous) and Food Stamps (FS) (Categorical)
+
+```{r}
+difference = t.test(POVPIP ~ FS_label == "Yes",
+                    data = person_data_new)
+
+difference
+```
+
+
+```{r}
+difference = t.test(POVPIP ~ FS_label == "No",
+                    data = person_data_new)
+
+difference
+```
+
+
+```{r}
+ggplot(person_data_new, aes(x = FS_label, y = POVPIP)) +
+  geom_violin() +
+  theme_solarized_2() +
+  scale_x_discrete(name = "Does this person take part in the \nSupplemental Nutrition Assistance Program (SNAP)?",
+                   labels = c("Yes", "No"))  +
+ scale_y_continuous(name = "Income to Poverty Ratio", 
+                     breaks = seq(0, 510, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 510, by = 50),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 1.65, y = 450,  size = 3,
+           label = paste("Difference in means\n(95% confidence):\n$",
+                         prettyNum(abs(difference$conf.int[2]), 
+                                   digits = 0), " to $",
+                         prettyNum(abs(difference$conf.int[1]), 
+                                   digits = 0),
+                         sep = "")) +
+  annotate(geom = "text", x = 1, y = difference$estimate[1], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[1], digits = 0))) +
+  annotate(geom = "text", x = 2, y = difference$estimate[2], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[2], digits = 0)))
+```
+
+
+
+
+# Relationships between a continuous variable and a categorical variable (three or more levels)
+
+Below are the ANOVA tests, Tukey’s Honestly Significant Difference tests, and associated box plots with my continuous variables and binary categorical variables: 
+
+Income (PINCP) (continuous)
+Work hours per week (WKHP) (continuous)
+Income to Poverty Ratio (POVPIP) (continuous)
+Class of Worker (COW) (categorical)
+English ability (ENG) (categorical)
+Household Language (HHL) (categorical)
+
+## Total Person's Income (PINCP) (continuous) and Class of Worker (COW) (categorical)
+
+```{r}
+anova_pincp_cow <- aov(PINCP ~ COW_label, data = person_data_new)
+
+summary(anova_pincp_cow)
+```
+```{r}
+differences <- TukeyHSD(anova_pincp_cow)
+
+as_tibble(cbind(pair = row.names(differences$COW_label),
+                differences$RAC1P_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = COW_label, y = PINCP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "Class of Worker") +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ",")))
+```
+
+## Total Person's Income (PINCP) (continuous) and Household Language (HHL) (categorical)
+
+```{r}
+anova_pincp_hhl <- aov(PINCP ~ HHL_label, data = person_data_new)
+
+summary(anova_pincp_hhl)
+```
+```{r}
+differences <- TukeyHSD(anova_pincp_hhl)
+
+as_tibble(cbind(pair = row.names(differences$HHL_label),
+                differences$HHL_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = HHL_label, y = PINCP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "Household Language") +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ",")))
+```
+
+## Total Person's Income (PINCP) (continuous) and English ability (ENG) (categorical)
+
+```{r}
+anova_pincp_eng<- aov(PINCP ~ ENG_label, data = person_data_new)
+
+summary(anova_pincp_eng)
+```
+```{r}
+differences <- TukeyHSD(anova_pincp_eng)
+
+as_tibble(cbind(pair = row.names(differences$ENG_label),
+                differences$ENG_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = ENG_label, y = PINCP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "English Language Proficiency") +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ",")))
+```
+
+
+
+## Income to Poverty Ratio (POVPIP) (continuous) and Class of Worker (COW) (categorical)
+
+```{r}
+anova_povpip_cow <- aov(POVPIP ~ COW_label, data = person_data_new)
+
+summary(anova_povpip_cow)
+```
+
+```{r}
+differences <- TukeyHSD(anova_povpip_cow)
+
+as_tibble(cbind(pair = row.names(differences$COW_label),
+                differences$COW_label))
+```
+
+
+```{r}
+ggplot(person_data_new, aes(x = COW_label, y = POVPIP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "Class of Worker") +
+  scale_y_continuous(name = "Income to Poverty Ratio", 
+                     breaks = seq(0, 600, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 600, by = 50),
+                                              big.mark = ",")))
+```
+
+
+## Income to Poverty Ratio (POVPIP) (continuous) and Household Language (HHL) (categorical)
+
+```{r}
+anova_povpip_hhl<- aov(POVPIP ~ HHL_label, data = person_data_new)
+
+summary(anova_povpip_hhl)
+```
+```{r}
+differences <- TukeyHSD(anova_povpip_hhl)
+
+as_tibble(cbind(pair = row.names(differences$HHL_label),
+                differences$HHL_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = HHL_label, y = POVPIP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "Household Language") +
+  scale_y_continuous(name = "Income to Poverty Ratio", 
+                     breaks = seq(0, 600, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 600, by = 50),
+                                              big.mark = ",")))
+```
+
+## Income to Poverty Ratio (POVPIP) (continuous) and English ability (ENG) (categorical)
+
+```{r}
+anova_povpip_eng <- aov(POVPIP ~ ENG_label, data = person_data_new)
+
+summary(anova_povpip_eng)
+```
+
+```{r}
+differences <- TukeyHSD(anova_povpip_eng)
+
+as_tibble(cbind(pair = row.names(differences$ENG_label),
+                differences$ENG_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = ENG_label, y = POVPIP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "English Language Proficiency") +
+  scale_y_continuous(name = "Income to Poverty Ratio", 
+                     breaks = seq(0, 600, by = 50),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 600, by = 50),
+                                              big.mark = ",")))
+```
+
+
+## Work hours per week (WKHP) (continuous) and Class of Worker (COW) (categorical)
+
+```{r}
+anova_wkhp_cow<- aov(WKHP ~ COW_label, data = person_data_new)
+
+summary(anova_wkhp_cow)
+```
+
+```{r}
+differences <- TukeyHSD(anova_wkhp_cow)
+
+as_tibble(cbind(pair = row.names(differences$COW_label),
+                differences$COW_label))
+```
+
+```{r}
+ggplot(person_data_new, aes(x = COW_label, y = WKHP)) +
+  geom_boxplot() +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 4)) +
+  scale_x_discrete(name = "Class of Worker") +
+  scale_y_continuous(name = "Hours Worked per Week", 
+                     breaks = seq(0, 100, by = 10),
+                     labels = paste("", 
+                                    prettyNum(seq(0, 100, by = 10),
+                                              big.mark = ",")))
+```
+
+## Work hours per week (WKHP) (continuous) and Household Language (HHL) (categorical)
+```{r}
+anova_wkhp_hhl <- aov(WKHP ~ HHL_label, data = person_data_new)
+
+summary(anova_wkhp_hhl)
+```
+
+## Work hours per week (WKHP) (continuous) and English ability (ENG) (categorical)
+```{r}
+anova_wkhp_eng <- aov(WKHP ~ ENG_label, data = person_data_new)
+
+summary(anova_wkhp_eng)
+```
+
+# Relationships between two categorical variables
+Below are the Chi-Square tests for my categorical variables: 
+
+Class of Worker (COW) (categorical)
+
+English ability (ENG) (categorical)
+
+Household Language (HHL) (categorical)
+
+Food Stamps (FS)(Categorical)
+
+## Class of Worker (COW) (categorical) and English ability (ENG) (categorical)
+
+
+```{r}
+chi_sq_cow_eng <- chisq.test(person_data_new$COW_label, person_data_new$ENG_label == 
+                       "N/A (less than 5 years old/speaks only English)") 
+
+chi_sq_cow_eng
+```
+```{r}
+chi_sq_cow_eng$observed
+```
+
+```{r}
+chi_sq_cow_eng$expected
+```
+
+
+```{r}
+chi_sq_cow_eng2 <- chisq.test(person_data_new$COW_label, person_data_new$ENG_label == 
+                       "Very well") 
+
+chi_sq_cow_eng2
+```
+
+
+```{r}
+chi_sq_cow_eng3 <- chisq.test(person_data_new$COW_label, person_data_new$ENG_label == 
+                       "Well") 
+
+chi_sq_cow_eng3
+```
+
+```{r}
+chi_sq_cow_eng4 <- chisq.test(person_data_new$COW_label, person_data_new$ENG_label == 
+                       "Not well") 
+
+chi_sq_cow_eng4
+```
+
+```{r}
+chi_sq_cow_eng5 <- chisq.test(person_data_new$COW_label, person_data_new$ENG_label == 
+                       "Not at all") 
+
+chi_sq_cow_eng5
+```
+
+
+## Class of Worker (COW) (categorical) and Household Language (HHL) (categorical)
+
+
+```{r}
+chi_sq_cow_hhl <- chisq.test(person_data_new$COW_label, person_data_new$HHL_label == 
+                       "Asian and Pacific Island languages") 
+
+chi_sq_cow_hhl
+```
+
+
+```{r}
+chi_sq_cow_hhl2 <- chisq.test(person_data_new$COW_label, person_data_new$HHL_label == 
+                       "English only") 
+
+chi_sq_cow_hhl2
+```
+
+```{r}
+chi_sq_cow_hhl2$observed
+```
+
+```{r}
+chi_sq_cow_hhl2$expected
+```
+
+
+```{r}
+chi_sq_cow_hhl3 <- chisq.test(person_data_new$COW_label, person_data_new$HHL_label == 
+                       "Other Indo-European languages") 
+
+chi_sq_cow_hhl3
+```
+
+```{r}
+chi_sq_cow_hhl4 <- chisq.test(person_data_new$COW_label, person_data_new$HHL_label == 
+                       "Other language") 
+
+chi_sq_cow_hhl4
+```
+
+```{r}
+chi_sq_cow_hhl5 <- chisq.test(person_data_new$COW_label, person_data_new$HHL_label == 
+                       "Spanish") 
+
+chi_sq_cow_hhl5
+```
+
+
+## Class of Worker (COW) (categorical) and Food Stamps (FS)(Categorical)
+
+
+```{r}
+chi_sq_cow_fs <- chisq.test(person_data_new$COW_label, person_data_new$FS_label == 
+                       "No") 
+
+chi_sq_cow_fs
+```
+
+
+```{r}
+chi_sq_cow_fs2 <- chisq.test(person_data_new$COW_label, person_data_new$FS_label == 
+                       "Yes") 
+
+chi_sq_cow_fs2
+```
+
+
+## English ability (ENG) (categorical) and Household Language (HHL) (categorical)
+
+
+```{r}
+chi_sq_eng_hhl <- chisq.test(person_data_new$ENG_label, person_data_new$HHL_label == 
+                       "Asian and Pacific Island languages") 
+
+chi_sq_eng_hhl
+```
+
+```{r}
+chi_sq_eng_hhl$observed
+```
+
+```{r}
+chi_sq_eng_hhl$expected
+```
+
+
+```{r}
+chi_sq_eng_hhl2 <- chisq.test(person_data_new$ENG_label, person_data_new$HHL_label == 
+                       "English only") 
+
+chi_sq_eng_hhl2
+```
+```{r}
+chi_sq_eng_hhl2$observed
+```
+
+```{r}
+chi_sq_eng_hhl2$expected
+```
+
+
+```{r}
+chi_sq_eng_hhl3 <- chisq.test(person_data_new$ENG_label, person_data_new$HHL_label == 
+                       "Other Indo-European languages") 
+
+chi_sq_eng_hhl3
+```
+
+```{r}
+chi_sq_eng_hhl3$observed
+```
+
+```{r}
+chi_sq_eng_hhl3$expected
+```
+
+
+```{r}
+chi_sq_eng_hhl4 <- chisq.test(person_data_new$ENG_label, person_data_new$HHL_label == 
+                       "Other language") 
+
+chi_sq_eng_hhl4
+```
+
+```{r}
+chi_sq_eng_hhl4$observed
+```
+
+```{r}
+chi_sq_eng_hhl4$expected
+```
+
+
+```{r}
+chi_sq_eng_hhl5 <- chisq.test(person_data_new$ENG_label, person_data_new$HHL_label == 
+                       "Spanish") 
+
+chi_sq_eng_hhl5
+```
+```{r}
+chi_sq_eng_hhl5$observed
+```
+
+```{r}
+chi_sq_eng_hhl5$expected
+```
+
+
+
+
+
+
+## English ability (ENG) (categorical) and Food Stamps (FS)(Categorical)
+
+
+
+```{r}
+chi_sq_eng_fs <- chisq.test(person_data_new$ENG_label, person_data_new$FS_label == 
+                       "No") 
+
+chi_sq_eng_fs
+```
+
+
+```{r}
+chi_sq_eng_fs2 <- chisq.test(person_data_new$ENG_label, person_data_new$FS_label == 
+                       "Yes") 
+
+chi_sq_eng_fs2
+```
+```{r}
+chi_sq_eng_fs2$observed
+```
+
+```{r}
+chi_sq_eng_fs2$expected
+```
+
+
+
+## Household Language (HHL) (categorical)and Food Stamps (FS)(Categorical)
+
+
+```{r}
+chi_sq_hhl_fs <- chisq.test(person_data_new$HHL_label, person_data_new$FS_label == 
+                       "No") 
+
+chi_sq_hhl_fs
+```
+
+
+```{r}
+chi_sq_hhl_fs2 <- chisq.test(person_data_new$HHL_label, person_data_new$FS_label == 
+                       "Yes") 
+
+chi_sq_hhl_fs2
+```
+```{r}
+chi_sq_hhl_fs2$observed
+```
+
+```{r}
+chi_sq_hhl_fs2$expected
+```
+
+
+
+
+
+
+
+
+
+
+

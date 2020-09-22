@@ -16,9 +16,9 @@ Household Language (HHL) (categorical)
 
 Food Stamps (FS)(Categorical)
 
-Income (PINCP) (continuous)
+Total Person's Income (PINCP) (continuous)
 
-Work hours per week (WKHP) (continuous)
+Hours worked per week (WKHP) (continuous)
 
 Income to Poverty Ratio (POVPIP) (continuous)
 
@@ -30,7 +30,7 @@ Adjustment factor for income and earnings dollar amounts (6 implied decimal plac
 In place of the specific occupation variable, I used class of worker since this simplifies the occupations to the type of employee a person is as opposed to their particular occupation, therefore simplifying my analysis added food stamps to better understand who might be receiving public assistance of some sort since public assistance is usually used as an indicator of some type of financial hardship if not poverty. I also added household language as I wanted to see if there are some correlations there as it relates to languages and income/poverty. As for the variables I took away, race, sex, and specific occupation weren't necessarily adding to my analysis and if anything were complicating it further, particularly the specific occupation and race variables.
 
 # Set Up and Data Output
-I also set everything below as in Assignment 1
+I also set up everything below as in Assignment 1
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)

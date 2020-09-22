@@ -376,8 +376,8 @@ summary {
 <p>English ability (ENG) (categorical)</p>
 <p>Household Language (HHL) (categorical)</p>
 <p>Food Stamps (FS)(Categorical)</p>
-<p>Income (PINCP) (continuous)</p>
-<p>Work hours per week (WKHP) (continuous)</p>
+<p>Total Person’s Income (PINCP) (continuous)</p>
+<p>Hours worked per week (WKHP) (continuous)</p>
 <p>Income to Poverty Ratio (POVPIP) (continuous)</p>
 <p>Adjustment factor for income and earnings dollar amounts (6 implied decimal places) (ADJINC)(Continuous)*</p>
 <p>*used for PINCP Variable</p>
@@ -388,7 +388,7 @@ summary {
 </div>
 <div id="set-up-and-data-output" class="section level1">
 <h1>Set Up and Data Output</h1>
-<p>I also set everything below as in Assignment 1</p>
+<p>I also set up everything below as in Assignment 1</p>
 <pre class="r"><code>library(tidycensus)
 library(tidyverse)</code></pre>
 <pre class="r"><code>person_vars_2018 &lt;- pums_variables %&gt;%
@@ -421,7 +421,7 @@ library(tidyverse)</code></pre>
 ##   &lt;chr&gt;                          &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 Employee of a private for-pro~ Spanish   Well      No       30000    40    118</code></pre>
 <pre class="r"><code> tail(person_data_new, 596)</code></pre>
-<pre><code>## # A tibble: 596 x 7
+<pre><code>## # A tibble: 557 x 7
 ##    COW_label            HHL_label    ENG_label      FS_label  PINCP  WKHP POVPIP
 ##    &lt;chr&gt;                &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
 ##  1 Employee of a priva~ Spanish      Well           No        30000    40    118
@@ -434,7 +434,7 @@ library(tidyverse)</code></pre>
 ##  8 Employee of a priva~ Spanish      Well           No        60000    50    240
 ##  9 Self-employed in ow~ English only N/A (less tha~ No        18100     1    501
 ## 10 Employee of a priva~ English only N/A (less tha~ No        85000    48    501
-## # ... with 586 more rows</code></pre>
+## # ... with 547 more rows</code></pre>
 <div id="saving-data" class="section level2">
 <h2>Saving Data</h2>
 <p>Lastly, I saved my data to a csv file:</p>
