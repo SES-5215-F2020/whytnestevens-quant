@@ -2,7 +2,13 @@
 title: "Assignment 1 and 2 - Variable Changes"
 author: "Whytne Stevens"
 date: "9/19/2020"
-output: html_document
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
 ---
 # Assignment 1 and 2 - Variable Changes
 While working on assignment 3 I realized I needed to change some of my variables due to overly detailed variables that were making my analysis more complex.I still am interested in looking at whether there's a connection between one's profession, English language proficiency,household language and their income and income to poverty ratio. I stll narrowed down my analysis to person level data for Dallas County, Texas  from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:
@@ -37,7 +43,9 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
 ```{r load libraries}
+library(ggplot2)
 library(tidycensus)
+library(ggthemes)
 library(tidyverse)
 ```
 
@@ -87,4 +95,533 @@ Lastly, I saved my data to a csv file:
 ```{r write_csv}
 write_csv(person_data_new, "persondatanew.csv")
 ```
+
+
+
+# Part two
+
+
+```{r read_csv}
+person_data_new <- read_csv("persondatanew.csv")
+```
+
+
+# Distributions of my Continuous Variables
+For each of my continuous variables (total person's income, hours worked per week, and income to poverty ratio) below, I calculated the sample men, median, standard deviation, and interquartile ranges. I also calculated the 95-percent confidence interval for the mean of each of these variables and created a histogram to show that distribution
+
+
+## Total person's income
+
+```{r}
+PINCP_summary2 <- summary(person_data_new$PINCP)
+
+PINCP_summary2
+```
+```{r}
+paste("The sample mean for total person's income is",
+      prettyNum(mean(person_data_new$PINCP), digits = 1), "USD.")
+paste("The sample median for total person's income is",
+      prettyNum(median(person_data_new$PINCP), digits = 1), "USD.")  
+paste("The sample standard deviation for total person's income is",
+      prettyNum(sd(person_data_new$PINCP), digits = 1), "USD.")
+paste("The sample interquartile range for total person's income is",
+      quantile(person_data_new$PINCP)["25%"], "to", quantile(person_data_new$PINCP)["75%"], "USD.")
+```
+
+
+```{r}
+conf_int_pincp2 <- t.test(person_data_new$PINCP)
+
+conf_int_pincp2
+```
+
+```{r}
+paste("The 95-percent confidence interval for total person's income is",
+      prettyNum(conf_int_pincp2$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_pincp2$conf.int[2], digits = 1), "USD.")
+```
+
+
+```{r}
+hist_pincp2 <-ggplot(person_data_new, aes(x = PINCP)) +
+  geom_histogram()
+
+hist_pincp2
+```
+
+```{r}
+hist_pincp2 + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Total person's income (USD)") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 490000, y = 150, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_pincp2$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_pincp2$conf.int[2], digits = 1),
+                         "USD.",
+                         "\nSample mean:", 
+                         prettyNum(mean(PINCP_summary2), digits = 1), "USD.",
+                         "\nSample median:",
+                         prettyNum(median(PINCP_summary2), digits = 1), "USD.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(PINCP_summary2), digits = 1), "USD.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(PINCP_summary2)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(PINCP_summary2)["75%"], digits = 1),
+                         "USD."),
+           hjust = 1, vjust = 1) 
+```
+
+
+
+## Hours worked per week
+```{r}
+WKHP_summary2 <- summary(person_data_new$WKHP)
+
+WKHP_summary2
+```
+```{r}
+paste("The sample mean for hours worked per week is",
+      prettyNum(mean(person_data_new$WKHP), digits = 1), "hours per week.")
+paste("The sample median for hours worked per week is",
+      prettyNum(median(person_data_new$WKHP), digits = 1), "hours per week.")  
+paste("The sample standard deviation for hours worked per week is",
+      prettyNum(sd(person_data_new$WKHP), digits = 1), "hours per week.")
+paste("The sample interquartile range for hours worked per week is",
+      quantile(person_data_new$WKHP)["25%"], "to", quantile(person_data_new$WKHP)["75%"], "hours per week.")
+```
+
+
+```{r}
+conf_int_wkhp2 <- t.test(person_data_new$WKHP)
+
+conf_int_wkhp2
+```
+
+```{r}
+paste("The 95-percent confidence interval for hours worked per week  is",
+      prettyNum(conf_int_wkhp2$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_wkhp2$conf.int[2], digits = 1), "hours per week.")
+```
+
+```{r}
+hist_wkhp2 <- ggplot(person_data_new, aes(x = WKHP)) +
+  geom_histogram()
+hist_wkhp2
+```
+
+```{r}
+hist_wkhp2 + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 100, y = 275, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_wkhp2$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_wkhp2$conf.int[2], digits = 1),
+                         "hours per week.",
+                         "\nSample mean:", 
+                         prettyNum(mean(WKHP_summary2), digits = 1), "hours per week.",
+                         "\nSample median:",
+                         prettyNum(median(WKHP_summary2), digits = 1), "hours per week.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(WKHP_summary2), digits = 1), "hours per week.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(WKHP_summary2)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(WKHP_summary2)["75%"], digits = 1),
+                         "hours per week."),
+           hjust = 1, vjust = 1) 
+```
+
+## Income to poverty ratio
+```{r}
+POVPIP_summary2 <- summary(person_data_new$POVPIP)
+
+POVPIP_summary2
+```
+
+```{r}
+paste("The sample mean for income to poverty ratio is",
+      prettyNum(mean(person_data_new$POVPIP), digits = 1), ".")
+paste("The sample median for income to poverty ratio is",
+      prettyNum(median(person_data_new$POVPIP), digits = 1), ".")  
+paste("The sample standard deviation for income to poverty ratio is",
+      prettyNum(sd(person_data_new$POVPIP), digits = 1), ".")
+paste("The sample interquartile range for income to poverty ratio is",
+      quantile(person_data_new$POVPIP)["25%"], "to", quantile(person_data_new$POVPIP)["75%"], ".")
+```
+
+```{r}
+conf_int_povpip2 <- t.test(person_data_new$POVPIP)
+
+conf_int_povpip2
+```
+
+```{r}
+paste("The 95-percent confidence interval for income to poverty ratio is",
+      prettyNum(conf_int_povpip2$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_povpip2$conf.int[2], digits = 1), ".")
+```
+
+```{r}
+hist_povpip2 <- ggplot(person_data_new, aes(x = POVPIP)) +
+  geom_histogram()
+hist_povpip2
+```
+
+
+```{r}
+hist_povpip2 + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Income to poverty ratio") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 100, y = 200, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_povpip2$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_povpip2$conf.int[2], digits = 1),
+                         "hours per week.",
+                         "\nSample mean:", 
+                         prettyNum(mean(POVPIP_summary2), digits = 1), ".",
+                         "\nSample median:",
+                         prettyNum(median(POVPIP_summary2), digits = 1), ".",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(POVPIP_summary2), digits = 1), ".", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(POVPIP_summary2)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(POVPIP_summary2)["75%"], digits = 1),
+                         "."),
+           hjust = 0, vjust = 1) 
+```
+
+
+
+# Proportions of my Categorial Variables
+As for my categorical variables (class of worker, household language, English language proficiency, and whether or not someone receives food stamps) below, I calculated the distribution of each by looking at the number observation in each variable category, converted the number of these observations to proportions, and calculated the 95-percent confidence interval for each of these proportions as well.
+
+## Class of Worker (COW)
+
+```{r}
+unique(person_data_new$COW_label)
+```
+
+```{r}
+table(person_data_new$COW_label)
+knitr::kable(table(person_data_new$COW_label), caption = "Frequency Counts for COW Variable")
+```
+
+```{r}
+table(person_data_new$COW_label) / sum(table(person_data_new$COW_label))
+```
+
+```{r}
+mean(person_data_new$COW_label == "Employee of a private not-for-profit, tax-exempt, or charitable organization")
+```
+
+```{r}
+t.test(person_data_new$COW_label == "Employee of a private not-for-profit, tax-exempt, or charitable organization")
+```
+
+```{r}
+tenures1new <- unique(person_data_new$COW_label)
+tenures1new
+```
+
+
+
+```{r}
+forprofitemp <- t.test(person_data_new$COW_label == tenures1new[1])
+localgovemp <- t.test(person_data_new$COW_label == tenures1new[2])
+nonprofitemp <- t.test(person_data_new$COW_label == tenures1new[3])
+selfemp_inc <-  t.test(person_data_new$COW_label == tenures1new[4])
+selfemp_notinc <-  t.test(person_data_new$COW_label == tenures1new[5])
+stategovemp <- t.test(person_data_new$COW_label == tenures1new[6])
+fedgovemp <-  t.test(person_data_new$COW_label == tenures1new[7])
+worknopay <-  t.test(person_data_new$COW_label == tenures1new[8])
+shares <- tibble(Tenure = c("Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions",
+                            "Local government employee (city, county, etc.)",                                                          
+                            "Employee of a private not-for-profit, tax-exempt, or charitable organization",                               
+                            "Self-employed in own not incorporated business, professional practice, or farm",                            
+                            "Self-employed in own incorporated business, professional practice or farm",                                   
+                            "State government employee",                                                                                   
+                            "Federal government employee",                                                                                
+                            "Working without pay in family business or farm"),
+                 `Share` = c(forprofitemp$estimate, 
+                             localgovemp$estimate,
+                             nonprofitemp$estimate,
+                             selfemp_inc$estimate,
+                             selfemp_notinc$estimate,
+                             stategovemp$estimate,
+                             fedgovemp$estimate,
+                             worknopay$estimate),
+                 Low = c(forprofitemp$conf.int[1],
+                         localgovemp$conf.int[1],
+                         nonprofitemp$conf.int[1],
+                         selfemp_inc$conf.int[1],
+                         selfemp_notinc$conf.int[1],
+                         stategovemp$conf.int[1],
+                         fedgovemp$conf.int[1],
+                         worknopay$conf.int[1]),
+                 High = c(forprofitemp$conf.int[2],
+                         localgovemp$conf.int[2],
+                         nonprofitemp$conf.int[2],
+                         selfemp_inc$conf.int[2],
+                         selfemp_notinc$conf.int[2],
+                         stategovemp$conf.int[2],
+                         fedgovemp$conf.int[2],
+                         worknopay$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for COW variable")
+```
+
+
+```{r load tenures1new}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 5)) +
+  scale_x_discrete(name = "Class of Worker",
+                   labels = c("Employee \nof a private \nfor-profit \ncompany",
+                  "Employee \nof a private \nnot-for-profit \norganization", 
+                   "Federal \ngovernment \nemployee",
+                   "Local \ngovernment \nemployee",
+                   "Self-employed \nin own \ninc. \nbusiness",
+                   "Self-employed \nin own \nnot inc. \nbusiness",
+                   "State \ngovernment \nemployee",
+                  "Working \nw/o pay in \nfamily business \nor farm")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%"))
+```
+I noticed that the chart above does not include the following racial groups because the proportions and 95-percent confidence intervals are below 0.01:
+
+American Indian alone
+American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races
+Native Hawaiian and Other Pacific Islander alone
+
+
+
+## Household Language (HHL)
+
+```{r}
+unique(person_data_new$HHL_label)
+```
+
+```{r}
+table(person_data_new$HHL_label)
+knitr::kable(table(person_data_new$HHL_label), caption = "Frequency Counts for HHL Variable")
+```
+
+```{r}
+table(person_data_new$HHL_label) / sum(table(person_data_new$HHL_label))
+```
+
+```{r}
+mean(person_data_new$HHL_label == "Asian and Pacific Island languages")
+```
+
+```{r}
+t.test(person_data_new$HHL_label == "Asian and Pacific Island languages")
+```
+
+```{r}
+tenures2new <- unique(person_data_new$HHL_label)
+tenures2new
+```
+
+
+
+```{r}
+spanish <- t.test(person_data_new$HHL_label == tenures2new[1])
+english <- t.test(person_data_new$HHL_label == tenures2new[2])
+other_indo_european_lang <- t.test(person_data_new$HHL_label == tenures2new[3])
+asian_pi_lang <- t.test(person_data_new$HHL_label == tenures2new[4])
+other_lang <- t.test(person_data_new$HHL_label == tenures2new[5])
+na_vacant <- t.test(person_data_new$HHL_label == tenures2new[6])
+shares <- tibble(Tenure = c("Spanish",
+                            "English only",
+                            "Other Indo-European languages",
+                            "Asian and Pacific Island languages",
+                            "Other language",
+                            "N/A (GQ/vacant)"),
+                 `Share` = c(spanish$estimate,
+                             english$estimate,
+                             other_indo_european_lang$estimate,
+                             asian_pi_lang$estimate,
+                             other_lang$estimate,
+                             na_vacant$estimate),
+                 Low = c(spanish$conf.int[1],
+                         english$conf.int[1],
+                         other_indo_european_lang$conf.int[1],
+                         asian_pi_lang$conf.int[1],
+                         other_lang$conf.int[1],
+                         na_vacant$conf.int[1]),
+                 High = c(spanish$conf.int[2],
+                         english$conf.int[2],
+                         other_indo_european_lang$conf.int[2],
+                         asian_pi_lang$conf.int[2],
+                         other_lang$conf.int[2],
+                         na_vacant$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for HHL variable")
+```
+
+
+```{r load tenures2new}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(angle = 0)) +
+  scale_x_discrete(name = "Houshold Language",
+                   labels = c("Spanish",
+                            "English only",
+                            "Other Indo-\nEuropean \nlanguages",
+                            "Asian and \nPacific Island \nlanguages",
+                            "Other language",
+                            "N/A \n(GQ/vacant)")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
+
+## Food Stamps (FS)
+
+```{r}
+unique(person_data_new$FS_label)
+```
+
+```{r}
+table(person_data_new$FS_label)
+knitr::kable(table(person_data_new$FS_label), caption = "Frequency Counts for FS Variable")
+```
+
+```{r}
+table(person_data_new$FS_label) / sum(table(person_data_new$FS_label))
+```
+
+
+```{r}
+mean(person_data_new$FS_label == "No")
+```
+
+```{r}
+t.test(person_data_new$FS_label == "No")
+```
+
+```{r}
+tenures3new <- unique(person_data_new$FS_label)
+tenures3new
+```
+
+
+```{r}
+no <- t.test(person_data_new$FS_label == tenures3new[1])
+yes <- t.test(person_data_new$FS_label == tenures3new[2])
+shares <- tibble(Tenure = c("No", 
+                            "Yes"),
+                 `Share` = c(no$estimate, 
+                             yes$estimate),
+                 Low = c(no$conf.int[1],
+                         yes$conf.int[1]),
+                 High = c(no$conf.int[2],
+                          yes$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for FS variable")
+```
+
+```{r load tenures3new}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  scale_x_discrete(labels = c("No", 
+                            "Yes")) +
+  scale_y_continuous(name = "Share of population \nreceiving Food Stamps (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
+
+
+
+
+
+## English language proficiency
+
+```{r}
+unique(person_data_new$ENG_label)
+```
+
+```{r}
+table(person_data_new$ENG_label)
+knitr::kable(table(person_data_new$ENG_label), caption = "Frequency Counts for ENG Variable")
+```
+
+```{r}
+table(person_data_new$ENG_label) / sum(table(person_data_new$ENG_label))
+```
+
+```{r}
+mean(person_data_new$ENG_label == "Not well")
+```
+
+```{r}
+t.test(person_data_new$ENG_label == "Not well")
+```
+
+
+```{r}
+tenures4new <- unique(person_data_new$ENG_label)
+tenures4new
+```
+
+
+
+```{r}
+well <- t.test(person_data_new$ENG_label == tenures4new[1])
+lessthan5years_onlyspeakseng <- t.test(person_data_new$ENG_label == tenures4new[2])
+very_well <- t.test(person_data_new$ENG_label == tenures4new[3])
+not_at_all <-  t.test(person_data_new$ENG_label == tenures4new[4])
+not_well <-  t.test(person_data_new$ENG_label == tenures4new[5])
+shares <- tibble(Tenure = c("Well", 
+                            "N/A (less than 5 years old/speaks only English)", 
+                            "Very well",
+                            "Not at all",
+                            "Not well"),
+                 `Share` = c(well$estimate, 
+                             lessthan5years_onlyspeakseng$estimate,
+                             very_well$estimate,
+                             not_at_all$estimate,
+                             not_well$estimate),
+                 Low = c(well$conf.int[1],
+                         lessthan5years_onlyspeakseng$conf.int[1],
+                         very_well$conf.int[1],
+                         not_at_all$conf.int[1],
+                         not_well$conf.int[1]),
+                 High = c(well$conf.int[2],
+                         lessthan5years_onlyspeakseng$conf.int[2],
+                         very_well$conf.int[2],
+                         not_at_all$conf.int[2],
+                         not_well$conf.int[2]))
+knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals for ENG variable")
+```
+
+```{r load tenures4new}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_solarized_2() +
+  scale_x_discrete(labels = c("Well", 
+                            "N/A \n(less than 5 years old/\nspeaks only English)", 
+                            "Very well",
+                            "Not at all",
+                            "Not well")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
+
 
