@@ -14,23 +14,25 @@ output:
 While working on assignment 3 I realized I needed to change some of my variables due to overly detailed variables that were making my analysis more complex.I still am interested in looking at whether there's a connection between one's profession, English language proficiency,household language and their income and income to poverty ratio. I stll narrowed down my analysis to person level data for Dallas County, Texas  from Public Use Microdata Sample (PUMAs) provided by the 2018 1 year American Community Survey. I have selected the following variables to explore this question:
 
 
-Class of Worker (COW) (categorical)
+- Class of Worker (COW) (categorical)
 
-English ability (ENG) (categorical)
+- English ability (ENG) (categorical)
 
-Household Language (HHL) (categorical)
+- Household Language (HHL) (categorical)
 
-Food Stamps (FS)(Categorical)
+- Food Stamps (FS)(Categorical)
 
-Total Person's Income (PINCP) (continuous)
+- Total Person's Income (PINCP) (continuous)
 
-Hours worked per week (WKHP) (continuous)
+- Hours worked per week (WKHP) (continuous)
 
-Income to Poverty Ratio (POVPIP) (continuous)
+- Income to Poverty Ratio (POVPIP) (continuous)
 
-Adjustment factor for income and earnings dollar amounts (6 implied decimal places) (ADJINC)(Continuous)*
+- Adjustment factor for income and earnings dollar amounts (6 implied decimal places) (ADJINC)(Continuous)*
 
 *used for PINCP Variable
+
+
 
 ## Variables I added and took away
 In place of the specific occupation variable, I used class of worker since this simplifies the occupations to the type of employee a person is as opposed to their particular occupation, therefore simplifying my analysis added food stamps to better understand who might be receiving public assistance of some sort since public assistance is usually used as an indicator of some type of financial hardship if not poverty. I also added household language as I wanted to see if there are some correlations there as it relates to languages and income/poverty. As for the variables I took away, race, sex, and specific occupation weren't necessarily adding to my analysis and if anything were complicating it further, particularly the specific occupation and race variables.
@@ -398,11 +400,6 @@ ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
                      labels = c("0", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%"))
 ```
-I noticed that the chart above does not include the following racial groups because the proportions and 95-percent confidence intervals are below 0.01:
-
-American Indian alone
-American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races
-Native Hawaiian and Other Pacific Islander alone
 
 
 
