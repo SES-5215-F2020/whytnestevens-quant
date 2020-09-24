@@ -409,6 +409,29 @@ ggplot(person_data_new, aes(x = HHL_label, y = PINCP)) +
                                               big.mark = ",")))
 ```
 
+
+```{r}
+pal <- wes_palette("Royal1", 100, type = "continuous")
+ggplot(person_data_new, aes(x = HHL_label, y = PINCP)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 0)) +
+  scale_fill_gradientn(colours = pal) +
+  scale_x_discrete(name = "Household Language",
+                   labels = c("Asian and \nPacific Island \nlanguages",
+                  "English \nonly", 
+                   "Other \nIndo-European \nlanguages",
+                   "Other \nlanguage",
+                   "Spanish")) +
+  scale_y_continuous(name = "Total person's income (USD)", 
+                     breaks = seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 500000, by = 50000),
+                                              big.mark = ",")))
+```
+
+
+
+
 ## Total Person's Income (PINCP) (continuous) and English ability (ENG) (categorical)
 
 ```{r}
@@ -481,6 +504,8 @@ differences <- TukeyHSD(anova_povpip_cow)
 as_tibble(cbind(pair = row.names(differences$COW_label),
                 differences$COW_label))
 ```
+
+
 
 
 ```{r}
@@ -886,7 +911,11 @@ chi_sq_hhl_fs2$observed
 chi_sq_hhl_fs2$expected
 ```
 
+```{r}
+C_diff_hhlfs2 <- chi_sq_hhl_fs2$observed - chi_sq_hhl_fs2$expected
 
+C_diff_hhlfs2_data <- as.data.frame(C_diff_hhlfs2)
+```
 
 
 
