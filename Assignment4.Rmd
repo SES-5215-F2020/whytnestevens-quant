@@ -1,0 +1,149 @@
+---
+title: "Assignment4"
+author: "Whytne Stevens"
+date: "9/24/2020"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load libraries}
+library(ggplot2)
+library(tidycensus)
+library(ggthemes)
+library(tidyverse)
+library(wesanderson)
+library(viridis)
+```
+
+
+```{r load data, results='hide'}
+person_data_new2 <- read.csv("persondatanew.csv")
+```
+
+# Regression Model for PINCP Variable
+```{r}
+model <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
+            data = person_data_new2)
+
+summary(model)
+```
+## Results
+The multiple R-squared values is 0.3175, Predicts about 32% of this model
+The coefficent estimate for WKHP is 1066.91
+The coefficent estimate for POVPIP is 131.88
+The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -12571.06
+The coefficent estimate for COW_labelFederal government employee is 84236.21 
+The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -11026.90
+The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is 23195.88
+The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is 5081.11
+The coefficent estimate for COW_labelState government employee is -3451.12
+The coefficent estimate for COW_labelWorking without pay in family business or farm is 7494.61
+The coefficent estimate for HHL_labelEnglish only is 6423.48
+The coefficent estimate for HHL_labelN/A (GQ/vacant)is 14286.91
+The coefficent estimate for HHL_labelOther Indo-European languages is 25831.83
+The coefficent estimate for HHL_labelOther language is 196.67
+The coefficent estimate for HHL_labelSpanish is 7466.24
+The coefficent estimate for ENG_labelNot at all is -14801.04
+The coefficent estimate for ENG_labelNot well is -4002.39
+The coefficent estimate for ENG_labelVery well is 3197.87
+The coefficent estimate for ENG_labelWell is -10545.02
+The coefficent estimate for FS_labelYes is -3615.81
+
+
+
+# Regression Model for WKHP Variable
+```{r}
+model2 <- lm(WKHP ~ COW_label + HHL_label + ENG_label + FS_label + PINCP + POVPIP, 
+            data = person_data_new2)
+
+summary(model2)
+```
+## Results
+The multiple R-squared values is 0.3175, Predicts about 32% of this model
+The coefficent estimate for PINCP is 1066.91
+The coefficent estimate for POVPIP is 131.88
+The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -12571.06
+The coefficent estimate for COW_labelFederal government employee is 84236.21 
+The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -11026.90
+The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is 23195.88
+The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is 5081.11
+The coefficent estimate for COW_labelState government employee is -3451.12
+The coefficent estimate for COW_labelWorking without pay in family business or farm is 7494.61
+The coefficent estimate for HHL_labelEnglish only is 6423.48
+The coefficent estimate for HHL_labelN/A (GQ/vacant)is 14286.91
+The coefficent estimate for HHL_labelOther Indo-European languages is 25831.83
+The coefficent estimate for HHL_labelOther language is 196.67
+The coefficent estimate for HHL_labelSpanish is 7466.24
+The coefficent estimate for ENG_labelNot at all is -14801.04
+The coefficent estimate for ENG_labelNot well is -4002.39
+The coefficent estimate for ENG_labelVery well is 3197.87
+The coefficent estimate for ENG_labelWell is -10545.02
+The coefficent estimate for FS_labelYes is -3615.81
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+
+# Regression Model for POVPIP Variable
+```{r}
+model3 <- lm(POVPIP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + PINCP, 
+            data = person_data_new2)
+
+summary(model3)
+```
+## Results
+The multiple R-squared values is 0.3175, Predicts about 32% of this model
+The coefficent estimate for WKHP is 1066.91
+The coefficent estimate for POVPIP is 131.88
+The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -12571.06
+The coefficent estimate for COW_labelFederal government employee is 84236.21 
+The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -11026.90
+The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is 23195.88
+The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is 5081.11
+The coefficent estimate for COW_labelState government employee is -3451.12
+The coefficent estimate for COW_labelWorking without pay in family business or farm is 7494.61
+The coefficent estimate for HHL_labelEnglish only is 6423.48
+The coefficent estimate for HHL_labelN/A (GQ/vacant)is 14286.91
+The coefficent estimate for HHL_labelOther Indo-European languages is 25831.83
+The coefficent estimate for HHL_labelOther language is 196.67
+The coefficent estimate for HHL_labelSpanish is 7466.24
+The coefficent estimate for ENG_labelNot at all is -14801.04
+The coefficent estimate for ENG_labelNot well is -4002.39
+The coefficent estimate for ENG_labelVery well is 3197.87
+The coefficent estimate for ENG_labelWell is -10545.02
+The coefficent estimate for FS_labelYes is -3615.81
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+The coefficent estimate for
+
+
+
+
+
+
+
+
+
+
+
+
+
+
