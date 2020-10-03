@@ -26,56 +26,59 @@ library(viridis)
 
 
 ```{r load data, results='hide'}
-person_data_new2 <- read.csv("persondatanew.csv")
+person_data_new2 <- read.csv("persondatanew.csv") %>%
+mutate(ENG_label = case_when(
+    ENG_label=="N/A (less than 5 years old/speaks only English)"~"1N/A (less than 5 years old/speaks only English)",
+    ENG_label=="Well"~"Well",
+    ENG_label=="Very well"~"Very well",
+    ENG_label=="Not well"~"Not well",
+    ENG_label=="Not at all"~"Not at all"),
+    HHL_label = case_when(
+    HHL_label=="English only"~"1English only",
+    HHL_label=="Asian and Pacific Island languages"~"Asian and Pacific Island languages",
+    HHL_label=="Other Indo-European languages" ~ "Other Indo-European languages",
+    HHL_label=="Other language" ~ "Other language",
+    HHL_label=="Spanish" ~ "Spanish"),
+    COW_label = case_when(
+    COW_label=="Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions" ~ "1Employee of a private for-profit company/business",
+    COW_label=="Employee of a private not-for-profit, tax-exempt, or charitable organization" ~ "Employee of a private not-for-profit organization",
+    COW_label=="Federal government employee" ~ "Federal government employee",
+    COW_label=="Local government employee (city, county, etc.)" ~ "Local government employee",
+    COW_label=="State government employee" ~ "State government employee",
+    COW_label=="Self-employed in own incorporated business, professional practice or farm"~"Self-employed in own incorporated business, professional practice or farm",
+    COW_label=="Self-employed in own not incorporated business, professional practice, or farm" ~ "Self-employed in own not incorporated business, professional practice, or farm",
+    COW_label=="Working without pay in family business or farm" ~ "Working without pay in family business or farm"),
+    FS_label = case_when(
+    FS_label=="No" ~ "1No",
+    FS_label=="Yes" ~ "Yes"))
+ 
+
 ```
+
+# Regression Model For Continuous Variables
+
+
 
 # Regression Model for PINCP Variable
 ```{r}
 model <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model)
 ```
 ## Results
-The multiple R-squared values is 0.3175, Predicts about 32% of this model
+The multiple R-squared values is 0.3169, Predicts about 32% of this model
 
-The coefficent estimate for WKHP is 1066.91
+Strong and Significant
+- COW_labelFederal government employee 84236.21
+- WKHP 1066.91 
+- POVPIP  131.88 
 
-The coefficent estimate for POVPIP is 131.88
+Weak
+- COW_labelSelf-employed in own incorporated business, professional practice or farm  23195.88
 
-The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -12571.06
-
-The coefficent estimate for COW_labelFederal government employee is 84236.21 
-
-The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -11026.90
-
-The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is 23195.88
-
-The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is 5081.11
-
-The coefficent estimate for COW_labelState government employee is -3451.12
-
-The coefficent estimate for COW_labelWorking without pay in family business or farm is 7494.61
-
-The coefficent estimate for HHL_labelEnglish only is 6423.48
-
-The coefficent estimate for HHL_labelN/A (GQ/vacant)is 14286.91
-
-The coefficent estimate for HHL_labelOther Indo-European languages is 25831.83
-
-The coefficent estimate for HHL_labelOther language is 196.67
-
-The coefficent estimate for HHL_labelSpanish is 7466.24
-
-The coefficent estimate for ENG_labelNot at all is -14801.04
-
-The coefficent estimate for ENG_labelNot well is -4002.39
-
-The coefficent estimate for ENG_labelVery well is 3197.87
-
-The coefficent estimate for ENG_labelWell is -10545.02
-
-The coefficent estimate for FS_labelYes is -3615.81
+Very Weak
+- HHL_labelOther Indo-European languages 19408.35
 
 
 
@@ -84,98 +87,47 @@ The coefficent estimate for FS_labelYes is -3615.81
 ```{r}
 model2 <- lm(WKHP ~ COW_label + HHL_label + ENG_label + FS_label + PINCP + POVPIP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model2)
 ```
 ## Results
-The multiple R-squared values is 0.128, Predicts about 13% of this model
+The multiple R-squared values is 0.1272, Predicts about 13% of this model
 
-The coefficent estimate for PINCP is 7.485e-05
+Strong and Significant
+- PINCP 0.00007485
 
-The coefficent estimate for POVPIP is 7.085e-03
+Weak
+- ENG_labelNot well 5.40207333
 
-The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -3.318e+00
+Very Weak
+- POVPIP  0.00708539
 
-The coefficent estimate for COW_labelFederal government employee is -5.833e+00
-
-The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -5.632e-01
-
-The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is -1.667e+00
-
-The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is -1.941e+00
-
-The coefficent estimate for COW_labelState government employee is -8.710e-02
-
-The coefficent estimate for COW_labelWorking without pay in family business or farm is -1.055e+01 
-
-The coefficent estimate for HHL_labelEnglish only is 4.067e-01
-
-The coefficent estimate for HHL_labelN/A (GQ/vacant) is -3.375e+00 
-
-The coefficent estimate for HHL_labelOther Indo-European languages is -1.628e+00
-
-The coefficent estimate for HHL_labelOther language is -2.844e+00
-
-The coefficent estimate for HHL_labelSpanish is -9.581e-01 
-
-The coefficent estimate for ENG_labelNot at all is 5.788e+00 
-
-The coefficent estimate for ENG_labelNot well is 5.402e+00
-
-The coefficent estimate for ENG_labelVery well is 1.182e+00
-
-The coefficent estimate for ENG_labelWell is 4.042e+00
-
-The coefficent estimate for FS_labelYes is 8.922e-01
 
 
 # Regression Model for POVPIP Variable
 ```{r}
 model3 <- lm(POVPIP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + PINCP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model3)
 ```
 ## Results
-The multiple R-squared values is 0.3523, Predicts about 35% of this model
+The multiple R-squared values is 0.3482, Predicts about 35% of this model
 
-The coefficent estimate for WKHP is 7.181e-01
+Strong and Significant
+- ENG_labelNot well, -108.5138605
+- FS_labelYes,  -81.7288664
+- PINCP, 0.0009376
 
-The coefficent estimate for PINCP is 9.376e-04
+Significant
+- COW_labelEmployee of a private not-for-profit organization, 67.0897929
 
-The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is 6.709e+01
+Weak
+- COW_labelLocal government employee,  43.7144380
+- COW_labelSelf-employed in own not incorporated business, professional practice, or farm -42.8613915
+- ENG_labelNot at all -92.0866650
 
-The coefficent estimate for COW_labelFederal government employee is 1.116e+01 
-
-The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is 4.371e+01
-
-The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is -1.619e+01
-
-The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is -4.286e+01
-
-The coefficent estimate for COW_labelState government employee is -1.202e+01 
-
-The coefficent estimate for COW_labelWorking without pay in family business or farm is 1.347e+02 
-
-The coefficent estimate for HHL_labelEnglish only is -3.297e+01
-
-The coefficent estimate for HHL_labelN/A (GQ/vacant) is -2.936e+02
-
-The coefficent estimate for HHL_labelOther Indo-European languages is -2.656e+01 
-
-The coefficent estimate for HHL_labelOther language is -1.343e+01
-
-The coefficent estimate for HHL_labelSpanish is -6.062e+01
-
-The coefficent estimate for ENG_labelNot at all is -9.209e+01
-
-The coefficent estimate for ENG_labelNot well is -1.085e+02
-
-The coefficent estimate for ENG_labelVery well is -2.487e+01
-
-The coefficent estimate for ENG_labelWell is -4.394e+01
-
-The coefficent estimate for FS_labelYes is -8.173e+01
-
+Very Weak
+- WKHP 0.7180711
 
 
