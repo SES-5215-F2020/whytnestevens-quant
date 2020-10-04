@@ -51,7 +51,6 @@ mutate(ENG_label = case_when(
     FS_label = case_when(
     FS_label=="No" ~ "1No",
     FS_label=="Yes" ~ "Yes"))
- 
 
 ```
 
@@ -67,19 +66,28 @@ options(scipen = 999)
 summary(model)
 ```
 ## Results
-The multiple R-squared values is 0.3169, Predicts about 32% of this model
+The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model
 
 Strong and Significant
-- COW_labelFederal government employee 84236.21
-- WKHP 1066.91 
-- POVPIP  131.88 
+-COW_labelFederal government employee, with a coefficient estimate of 84236.21
+- WKHP, with a coefficient estimate of 1066.91 
+- POVPIP, with a coefficient estimate of 131.88  
+
+When controlled for Employee of a private for-profit company/business, Federal Government Employees make about $84,000 more in income than those in the other COW categories. In addtion, one's income increases by 1066 dollars for every addtional hour they work and their income to poverty ratio increases by a factor of 132 as their income increases
+
+
 
 Weak
-- COW_labelSelf-employed in own incorporated business, professional practice or farm  23195.88
+- COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88
+
+When controlled for Employee of a private for-profit company/business, people who are Self-employed in own incorporated business, professional practice or farm make about $23,000 more in income than those in the other COW categories. 
+
+
 
 Very Weak
-- HHL_labelOther Indo-European languages 19408.35
+- HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35
 
+When controlled for English only, people whose houshold language is under the Other Indo-European languages category make about $19,000 more in income than those in the other HHL categories. 
 
 
 
@@ -94,13 +102,19 @@ summary(model2)
 The multiple R-squared values is 0.1272, Predicts about 13% of this model
 
 Strong and Significant
-- PINCP 0.00007485
+- PINCP, with a coefficient estimate of 0.00007485
+
+
 
 Weak
-- ENG_labelNot well 5.40207333
+- ENG_labelNot well, with a coefficient estimate of 5.40207333
+
+When controlled for N/A (less than 5 years old/speaks only English), people whose English language proficiency is Not well work about 5 hours more than those in the other ENG categories
+
+
 
 Very Weak
-- POVPIP  0.00708539
+- POVPIP, with a coefficient estimate of 0.00708539
 
 
 
@@ -115,19 +129,36 @@ summary(model3)
 The multiple R-squared values is 0.3482, Predicts about 35% of this model
 
 Strong and Significant
-- ENG_labelNot well, -108.5138605
-- FS_labelYes,  -81.7288664
-- PINCP, 0.0009376
+- ENG_labelNot well, with a coefficient estimate of -108.5138605
+- FS_labelYes, with a coefficient estimate of -81.7288664
+- PINCP, with a coefficient estimate of 0.0009376
+
+When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not well is less than those in the other ENG categories by a factor of 109. When controlled for No, the income to poverty ratio for people whose receive Food Stamps is less than those who don't receive Food Stamps by a factor of 82
+
+
 
 Significant
-- COW_labelEmployee of a private not-for-profit organization, 67.0897929
+- COW_labelEmployee of a private not-for-profit organization, with a coefficient estimate of 67.0897929
+
+When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Employees of a private not-for-profit organization is greater than those in the other ENG categories by a factor of 67.
+
+
+
 
 Weak
-- COW_labelLocal government employee,  43.7144380
-- COW_labelSelf-employed in own not incorporated business, professional practice, or farm -42.8613915
-- ENG_labelNot at all -92.0866650
+- COW_labelLocal government employee, with a coefficient estimate of 43.7144380
+- COW_labelSelf-employed in own not incorporated business, professional practice, or farm, with a coefficient estimate of -42.8613915
+- ENG_labelNot at all, with a coefficient estimate of -92.0866650
+
+When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Local government employees is greater than those in the other COW categories by a factor of 44.  When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Self-employed in own not incorporated business, professional practice, or farm is less than those in the other COW categories by a factor of 43. When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not at all less than those in the other ENG categories by a factor of 92
+
+
+
 
 Very Weak
-- WKHP 0.7180711
+- WKHP, with a coefficient estimate of 0.7180711
+
+
+
 
 

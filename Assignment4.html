@@ -1538,23 +1538,50 @@ div.tocify {
 library(tidycensus)
 library(ggthemes)
 library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages -------------------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.3.0 --</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</code></pre>
 <pre><code>## v tibble  3.0.3     v dplyr   1.0.2
 ## v tidyr   1.1.2     v stringr 1.4.0
 ## v readr   1.3.1     v forcats 0.5.0
 ## v purrr   0.3.4</code></pre>
-<pre><code>## -- Conflicts ----------------------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(wesanderson)
 library(viridis)</code></pre>
 <pre><code>## Loading required package: viridisLite</code></pre>
-<pre class="r"><code>person_data_new2 &lt;- read.csv(&quot;persondatanew.csv&quot;)</code></pre>
+<pre class="r"><code>person_data_new2 &lt;- read.csv(&quot;persondatanew.csv&quot;) %&gt;%
+mutate(ENG_label = case_when(
+    ENG_label==&quot;N/A (less than 5 years old/speaks only English)&quot;~&quot;1N/A (less than 5 years old/speaks only English)&quot;,
+    ENG_label==&quot;Well&quot;~&quot;Well&quot;,
+    ENG_label==&quot;Very well&quot;~&quot;Very well&quot;,
+    ENG_label==&quot;Not well&quot;~&quot;Not well&quot;,
+    ENG_label==&quot;Not at all&quot;~&quot;Not at all&quot;),
+    HHL_label = case_when(
+    HHL_label==&quot;English only&quot;~&quot;1English only&quot;,
+    HHL_label==&quot;Asian and Pacific Island languages&quot;~&quot;Asian and Pacific Island languages&quot;,
+    HHL_label==&quot;Other Indo-European languages&quot; ~ &quot;Other Indo-European languages&quot;,
+    HHL_label==&quot;Other language&quot; ~ &quot;Other language&quot;,
+    HHL_label==&quot;Spanish&quot; ~ &quot;Spanish&quot;),
+    COW_label = case_when(
+    COW_label==&quot;Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions&quot; ~ &quot;1Employee of a private for-profit company/business&quot;,
+    COW_label==&quot;Employee of a private not-for-profit, tax-exempt, or charitable organization&quot; ~ &quot;Employee of a private not-for-profit organization&quot;,
+    COW_label==&quot;Federal government employee&quot; ~ &quot;Federal government employee&quot;,
+    COW_label==&quot;Local government employee (city, county, etc.)&quot; ~ &quot;Local government employee&quot;,
+    COW_label==&quot;State government employee&quot; ~ &quot;State government employee&quot;,
+    COW_label==&quot;Self-employed in own incorporated business, professional practice or farm&quot;~&quot;Self-employed in own incorporated business, professional practice or farm&quot;,
+    COW_label==&quot;Self-employed in own not incorporated business, professional practice, or farm&quot; ~ &quot;Self-employed in own not incorporated business, professional practice, or farm&quot;,
+    COW_label==&quot;Working without pay in family business or farm&quot; ~ &quot;Working without pay in family business or farm&quot;),
+    FS_label = case_when(
+    FS_label==&quot;No&quot; ~ &quot;1No&quot;,
+    FS_label==&quot;Yes&quot; ~ &quot;Yes&quot;))</code></pre>
+<div id="regression-model-for-continuous-variables" class="section level1">
+<h1>Regression Model For Continuous Variables</h1>
+</div>
 <div id="regression-model-for-pincp-variable" class="section level1">
 <h1>Regression Model for PINCP Variable</h1>
 <pre class="r"><code>model &lt;- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model)</code></pre>
 <pre><code>## 
 ## Call:
@@ -1563,23 +1590,22 @@ summary(model)</code></pre>
 ## 
 ## Residuals:
 ##    Min     1Q Median     3Q    Max 
-## -93808 -18713  -2908  10446 407815 
+## -93808 -18715  -2953  10456 407815 
 ## 
 ## Coefficients:
 ##                                                                                          Estimate
-## (Intercept)                                                                             -46448.70
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization   -12571.06
+## (Intercept)                                                                             -40025.22
+## COW_labelEmployee of a private not-for-profit organization                              -12571.06
 ## COW_labelFederal government employee                                                     84236.21
-## COW_labelLocal government employee (city, county, etc.)                                 -11026.90
+## COW_labelLocal government employee                                                      -11026.90
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm       23195.88
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm   5081.11
 ## COW_labelState government employee                                                       -3451.12
 ## COW_labelWorking without pay in family business or farm                                   7494.61
-## HHL_labelEnglish only                                                                     6423.48
-## HHL_labelN/A (GQ/vacant)                                                                 14286.91
-## HHL_labelOther Indo-European languages                                                   25831.83
-## HHL_labelOther language                                                                    196.67
-## HHL_labelSpanish                                                                          7466.24
+## HHL_labelAsian and Pacific Island languages                                              -6423.48
+## HHL_labelOther Indo-European languages                                                   19408.35
+## HHL_labelOther language                                                                  -6226.81
+## HHL_labelSpanish                                                                          1042.76
 ## ENG_labelNot at all                                                                     -14801.04
 ## ENG_labelNot well                                                                        -4002.39
 ## ENG_labelVery well                                                                        3197.87
@@ -1588,19 +1614,18 @@ summary(model)</code></pre>
 ## WKHP                                                                                      1066.91
 ## POVPIP                                                                                     131.88
 ##                                                                                         Std. Error
-## (Intercept)                                                                               12645.39
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization      8337.01
+## (Intercept)                                                                                8178.86
+## COW_labelEmployee of a private not-for-profit organization                                 8337.01
 ## COW_labelFederal government employee                                                      16194.11
-## COW_labelLocal government employee (city, county, etc.)                                    7397.80
+## COW_labelLocal government employee                                                         7397.80
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm        11452.27
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm    8199.24
 ## COW_labelState government employee                                                        12173.86
 ## COW_labelWorking without pay in family business or farm                                   31772.43
-## HHL_labelEnglish only                                                                     10309.59
-## HHL_labelN/A (GQ/vacant)                                                                  45934.66
-## HHL_labelOther Indo-European languages                                                    11259.77
-## HHL_labelOther language                                                                   14191.09
-## HHL_labelSpanish                                                                           7503.63
+## HHL_labelAsian and Pacific Island languages                                               10309.59
+## HHL_labelOther Indo-European languages                                                    11241.20
+## HHL_labelOther language                                                                   14287.95
+## HHL_labelSpanish                                                                           8302.77
 ## ENG_labelNot at all                                                                       15186.12
 ## ENG_labelNot well                                                                         10255.56
 ## ENG_labelVery well                                                                         8483.74
@@ -1609,19 +1634,18 @@ summary(model)</code></pre>
 ## WKHP                                                                                        156.28
 ## POVPIP                                                                                       15.15
 ##                                                                                         t value
-## (Intercept)                                                                              -3.673
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    -1.508
+## (Intercept)                                                                              -4.894
+## COW_labelEmployee of a private not-for-profit organization                               -1.508
 ## COW_labelFederal government employee                                                      5.202
-## COW_labelLocal government employee (city, county, etc.)                                  -1.491
+## COW_labelLocal government employee                                                       -1.491
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm        2.025
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm   0.620
 ## COW_labelState government employee                                                       -0.283
 ## COW_labelWorking without pay in family business or farm                                   0.236
-## HHL_labelEnglish only                                                                     0.623
-## HHL_labelN/A (GQ/vacant)                                                                  0.311
-## HHL_labelOther Indo-European languages                                                    2.294
-## HHL_labelOther language                                                                   0.014
-## HHL_labelSpanish                                                                          0.995
+## HHL_labelAsian and Pacific Island languages                                              -0.623
+## HHL_labelOther Indo-European languages                                                    1.727
+## HHL_labelOther language                                                                  -0.436
+## HHL_labelSpanish                                                                          0.126
 ## ENG_labelNot at all                                                                      -0.975
 ## ENG_labelNot well                                                                        -0.390
 ## ENG_labelVery well                                                                        0.377
@@ -1629,39 +1653,37 @@ summary(model)</code></pre>
 ## FS_labelYes                                                                              -0.542
 ## WKHP                                                                                      6.827
 ## POVPIP                                                                                    8.705
-##                                                                                         Pr(&gt;|t|)
-## (Intercept)                                                                             0.000264
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization   0.132178
-## COW_labelFederal government employee                                                    2.81e-07
-## COW_labelLocal government employee (city, county, etc.)                                 0.136663
-## COW_labelSelf-employed in own incorporated business, professional practice or farm      0.043316
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm 0.535715
-## COW_labelState government employee                                                      0.776913
-## COW_labelWorking without pay in family business or farm                                 0.813613
-## HHL_labelEnglish only                                                                   0.533510
-## HHL_labelN/A (GQ/vacant)                                                                0.755901
-## HHL_labelOther Indo-European languages                                                  0.022166
-## HHL_labelOther language                                                                 0.988948
-## HHL_labelSpanish                                                                        0.320176
-## ENG_labelNot at all                                                                     0.330176
-## ENG_labelNot well                                                                       0.696495
-## ENG_labelVery well                                                                      0.706366
-## ENG_labelWell                                                                           0.297824
-## FS_labelYes                                                                             0.587766
-## WKHP                                                                                    2.35e-11
-## POVPIP                                                                                   &lt; 2e-16
+##                                                                                                     Pr(&gt;|t|)
+## (Intercept)                                                                                  0.0000013101129
+## COW_labelEmployee of a private not-for-profit organization                                            0.1322
+## COW_labelFederal government employee                                                         0.0000002814184
+## COW_labelLocal government employee                                                                    0.1367
+## COW_labelSelf-employed in own incorporated business, professional practice or farm                    0.0433
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm               0.5357
+## COW_labelState government employee                                                                    0.7769
+## COW_labelWorking without pay in family business or farm                                               0.8136
+## HHL_labelAsian and Pacific Island languages                                                           0.5335
+## HHL_labelOther Indo-European languages                                                                0.0848
+## HHL_labelOther language                                                                               0.6632
+## HHL_labelSpanish                                                                                      0.9001
+## ENG_labelNot at all                                                                                   0.3302
+## ENG_labelNot well                                                                                     0.6965
+## ENG_labelVery well                                                                                    0.7064
+## ENG_labelWell                                                                                         0.2978
+## FS_labelYes                                                                                           0.5878
+## WKHP                                                                                         0.0000000000235
+## POVPIP                                                                                  &lt; 0.0000000000000002
 ##                                                                                            
 ## (Intercept)                                                                             ***
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization      
+## COW_labelEmployee of a private not-for-profit organization                                 
 ## COW_labelFederal government employee                                                    ***
-## COW_labelLocal government employee (city, county, etc.)                                    
+## COW_labelLocal government employee                                                         
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm      *  
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm    
 ## COW_labelState government employee                                                         
 ## COW_labelWorking without pay in family business or farm                                    
-## HHL_labelEnglish only                                                                      
-## HHL_labelN/A (GQ/vacant)                                                                   
-## HHL_labelOther Indo-European languages                                                  *  
+## HHL_labelAsian and Pacific Island languages                                                
+## HHL_labelOther Indo-European languages                                                  .  
 ## HHL_labelOther language                                                                    
 ## HHL_labelSpanish                                                                           
 ## ENG_labelNot at all                                                                        
@@ -1675,37 +1697,25 @@ summary(model)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 44570 on 537 degrees of freedom
-## Multiple R-squared:  0.3175, Adjusted R-squared:  0.2934 
-## F-statistic: 13.15 on 19 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.3169, Adjusted R-squared:  0.294 
+## F-statistic: 13.84 on 18 and 537 DF,  p-value: &lt; 0.00000000000000022</code></pre>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared values is 0.3175, Predicts about 32% of this model</p>
-<p>The coefficent estimate for WKHP is 1066.91</p>
-<p>The coefficent estimate for POVPIP is 131.88</p>
-<p>The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -12571.06</p>
-<p>The coefficent estimate for COW_labelFederal government employee is 84236.21</p>
-<p>The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -11026.90</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is 23195.88</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is 5081.11</p>
-<p>The coefficent estimate for COW_labelState government employee is -3451.12</p>
-<p>The coefficent estimate for COW_labelWorking without pay in family business or farm is 7494.61</p>
-<p>The coefficent estimate for HHL_labelEnglish only is 6423.48</p>
-<p>The coefficent estimate for HHL_labelN/A (GQ/vacant)is 14286.91</p>
-<p>The coefficent estimate for HHL_labelOther Indo-European languages is 25831.83</p>
-<p>The coefficent estimate for HHL_labelOther language is 196.67</p>
-<p>The coefficent estimate for HHL_labelSpanish is 7466.24</p>
-<p>The coefficent estimate for ENG_labelNot at all is -14801.04</p>
-<p>The coefficent estimate for ENG_labelNot well is -4002.39</p>
-<p>The coefficent estimate for ENG_labelVery well is 3197.87</p>
-<p>The coefficent estimate for ENG_labelWell is -10545.02</p>
-<p>The coefficent estimate for FS_labelYes is -3615.81</p>
+<p>The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model</p>
+<p>Strong and Significant -COW_labelFederal government employee, with a coefficient estimate of 84236.21 - WKHP, with a coefficient estimate of 1066.91 - POVPIP, with a coefficient estimate of 131.88</p>
+<p>When controlled for Employee of a private for-profit company/business, Federal Government Employees make about $84,000 more in income than those in the other COW categories. In addtion, one’s income increases by 1066 dollars for every addtional hour they work and their income to poverty ratio increases by a factor of 132 as their income increases</p>
+<p>Weak - COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88</p>
+<p>When controlled for Employee of a private for-profit company/business, people who are Self-employed in own incorporated business, professional practice or farm make about $23,000 more in income than those in the other COW categories.</p>
+<p>Very Weak - HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35</p>
+<p>When controlled for English only, people whose houshold language is under the Other Indo-European languages category make about $19,000 more in income than those in the other HHL categories.</p>
 </div>
 </div>
 <div id="regression-model-for-wkhp-variable" class="section level1">
 <h1>Regression Model for WKHP Variable</h1>
 <pre class="r"><code>model2 &lt;- lm(WKHP ~ COW_label + HHL_label + ENG_label + FS_label + PINCP + POVPIP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model2)</code></pre>
 <pre><code>## 
 ## Call:
@@ -1714,65 +1724,62 @@ summary(model2)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -39.067  -3.849   1.717   5.214  42.388 
+## -39.067  -3.856   1.725   5.214  42.388 
 ## 
 ## Coefficients:
-##                                                                                           Estimate
-## (Intercept)                                                                              3.208e+01
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization   -3.318e+00
-## COW_labelFederal government employee                                                    -5.833e+00
-## COW_labelLocal government employee (city, county, etc.)                                 -5.632e-01
-## COW_labelSelf-employed in own incorporated business, professional practice or farm      -1.667e+00
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm -1.941e+00
-## COW_labelState government employee                                                      -8.710e-02
-## COW_labelWorking without pay in family business or farm                                 -1.055e+01
-## HHL_labelEnglish only                                                                    4.067e-01
-## HHL_labelN/A (GQ/vacant)                                                                -3.375e+00
-## HHL_labelOther Indo-European languages                                                  -1.628e+00
-## HHL_labelOther language                                                                 -2.844e+00
-## HHL_labelSpanish                                                                        -9.581e-01
-## ENG_labelNot at all                                                                      5.788e+00
-## ENG_labelNot well                                                                        5.402e+00
-## ENG_labelVery well                                                                       1.182e+00
-## ENG_labelWell                                                                            4.042e+00
-## FS_labelYes                                                                              8.922e-01
-## PINCP                                                                                    7.485e-05
-## POVPIP                                                                                   7.085e-03
-##                                                                                         Std. Error
-## (Intercept)                                                                              3.096e+00
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    2.208e+00
-## COW_labelFederal government employee                                                     4.389e+00
-## COW_labelLocal government employee (city, county, etc.)                                  1.963e+00
-## COW_labelSelf-employed in own incorporated business, professional practice or farm       3.044e+00
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  2.171e+00
-## COW_labelState government employee                                                       3.225e+00
-## COW_labelWorking without pay in family business or farm                                  8.404e+00
-## HHL_labelEnglish only                                                                    2.732e+00
-## HHL_labelN/A (GQ/vacant)                                                                 1.217e+01
-## HHL_labelOther Indo-European languages                                                   2.996e+00
-## HHL_labelOther language                                                                  3.757e+00
-## HHL_labelSpanish                                                                         1.989e+00
-## ENG_labelNot at all                                                                      4.018e+00
-## ENG_labelNot well                                                                        2.707e+00
-## ENG_labelVery well                                                                       2.247e+00
-## ENG_labelWell                                                                            2.677e+00
-## FS_labelYes                                                                              1.766e+00
-## PINCP                                                                                    1.096e-05
-## POVPIP                                                                                   4.276e-03
+##                                                                                             Estimate
+## (Intercept)                                                                              32.48758352
+## COW_labelEmployee of a private not-for-profit organization                               -3.31847573
+## COW_labelFederal government employee                                                     -5.83311910
+## COW_labelLocal government employee                                                       -0.56316892
+## COW_labelSelf-employed in own incorporated business, professional practice or farm       -1.66653839
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  -1.94105148
+## COW_labelState government employee                                                       -0.08709716
+## COW_labelWorking without pay in family business or farm                                 -10.55058819
+## HHL_labelAsian and Pacific Island languages                                              -0.40672634
+## HHL_labelOther Indo-European languages                                                   -2.03435326
+## HHL_labelOther language                                                                  -3.25055339
+## HHL_labelSpanish                                                                         -1.36486249
+## ENG_labelNot at all                                                                       5.78837925
+## ENG_labelNot well                                                                         5.40207333
+## ENG_labelVery well                                                                        1.18167266
+## ENG_labelWell                                                                             4.04220421
+## FS_labelYes                                                                               0.89224920
+## PINCP                                                                                     0.00007485
+## POVPIP                                                                                    0.00708539
+##                                                                                           Std. Error
+## (Intercept)                                                                               1.71373004
+## COW_labelEmployee of a private not-for-profit organization                                2.20825760
+## COW_labelFederal government employee                                                      4.38885895
+## COW_labelLocal government employee                                                        1.96335639
+## COW_labelSelf-employed in own incorporated business, professional practice or farm        3.04408063
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm   2.17089768
+## COW_labelState government employee                                                        3.22473246
+## COW_labelWorking without pay in family business or farm                                   8.40368483
+## HHL_labelAsian and Pacific Island languages                                               2.73163405
+## HHL_labelOther Indo-European languages                                                    2.98442241
+## HHL_labelOther language                                                                   3.78252401
+## HHL_labelSpanish                                                                          2.19840159
+## ENG_labelNot at all                                                                       4.01815254
+## ENG_labelNot well                                                                         2.70675849
+## ENG_labelVery well                                                                        2.24680910
+## ENG_labelWell                                                                             2.67719977
+## FS_labelYes                                                                               1.76576433
+## PINCP                                                                                     0.00001096
+## POVPIP                                                                                    0.00427566
 ##                                                                                         t value
-## (Intercept)                                                                              10.363
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    -1.503
+## (Intercept)                                                                              18.957
+## COW_labelEmployee of a private not-for-profit organization                               -1.503
 ## COW_labelFederal government employee                                                     -1.329
-## COW_labelLocal government employee (city, county, etc.)                                  -0.287
+## COW_labelLocal government employee                                                       -0.287
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm       -0.547
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  -0.894
 ## COW_labelState government employee                                                       -0.027
 ## COW_labelWorking without pay in family business or farm                                  -1.255
-## HHL_labelEnglish only                                                                     0.149
-## HHL_labelN/A (GQ/vacant)                                                                 -0.277
-## HHL_labelOther Indo-European languages                                                   -0.543
-## HHL_labelOther language                                                                  -0.757
-## HHL_labelSpanish                                                                         -0.482
+## HHL_labelAsian and Pacific Island languages                                              -0.149
+## HHL_labelOther Indo-European languages                                                   -0.682
+## HHL_labelOther language                                                                  -0.859
+## HHL_labelSpanish                                                                         -0.621
 ## ENG_labelNot at all                                                                       1.441
 ## ENG_labelNot well                                                                         1.996
 ## ENG_labelVery well                                                                        0.526
@@ -1780,38 +1787,36 @@ summary(model2)</code></pre>
 ## FS_labelYes                                                                               0.505
 ## PINCP                                                                                     6.827
 ## POVPIP                                                                                    1.657
-##                                                                                         Pr(&gt;|t|)
-## (Intercept)                                                                              &lt; 2e-16
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization     0.1335
-## COW_labelFederal government employee                                                      0.1844
-## COW_labelLocal government employee (city, county, etc.)                                   0.7743
-## COW_labelSelf-employed in own incorporated business, professional practice or farm        0.5843
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm   0.3717
-## COW_labelState government employee                                                        0.9785
-## COW_labelWorking without pay in family business or farm                                   0.2099
-## HHL_labelEnglish only                                                                     0.8817
-## HHL_labelN/A (GQ/vacant)                                                                  0.7816
-## HHL_labelOther Indo-European languages                                                    0.5872
-## HHL_labelOther language                                                                   0.4494
-## HHL_labelSpanish                                                                          0.6302
-## ENG_labelNot at all                                                                       0.1503
-## ENG_labelNot well                                                                         0.0465
-## ENG_labelVery well                                                                        0.5992
-## ENG_labelWell                                                                             0.1317
-## FS_labelYes                                                                               0.6136
-## PINCP                                                                                   2.35e-11
-## POVPIP                                                                                    0.0981
+##                                                                                                     Pr(&gt;|t|)
+## (Intercept)                                                                             &lt; 0.0000000000000002
+## COW_labelEmployee of a private not-for-profit organization                                            0.1335
+## COW_labelFederal government employee                                                                  0.1844
+## COW_labelLocal government employee                                                                    0.7743
+## COW_labelSelf-employed in own incorporated business, professional practice or farm                    0.5843
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm               0.3717
+## COW_labelState government employee                                                                    0.9785
+## COW_labelWorking without pay in family business or farm                                               0.2099
+## HHL_labelAsian and Pacific Island languages                                                           0.8817
+## HHL_labelOther Indo-European languages                                                                0.4957
+## HHL_labelOther language                                                                               0.3905
+## HHL_labelSpanish                                                                                      0.5350
+## ENG_labelNot at all                                                                                   0.1503
+## ENG_labelNot well                                                                                     0.0465
+## ENG_labelVery well                                                                                    0.5992
+## ENG_labelWell                                                                                         0.1317
+## FS_labelYes                                                                                           0.6136
+## PINCP                                                                                        0.0000000000235
+## POVPIP                                                                                                0.0981
 ##                                                                                            
 ## (Intercept)                                                                             ***
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization      
+## COW_labelEmployee of a private not-for-profit organization                                 
 ## COW_labelFederal government employee                                                       
-## COW_labelLocal government employee (city, county, etc.)                                    
+## COW_labelLocal government employee                                                         
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm         
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm    
 ## COW_labelState government employee                                                         
 ## COW_labelWorking without pay in family business or farm                                    
-## HHL_labelEnglish only                                                                      
-## HHL_labelN/A (GQ/vacant)                                                                   
+## HHL_labelAsian and Pacific Island languages                                                
 ## HHL_labelOther Indo-European languages                                                     
 ## HHL_labelOther language                                                                    
 ## HHL_labelSpanish                                                                           
@@ -1826,37 +1831,23 @@ summary(model2)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 11.8 on 537 degrees of freedom
-## Multiple R-squared:  0.128,  Adjusted R-squared:  0.09712 
-## F-statistic: 4.148 on 19 and 537 DF,  p-value: 1.506e-08</code></pre>
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.1272, Adjusted R-squared:  0.09798 
+## F-statistic: 4.349 on 18 and 537 DF,  p-value: 0.00000000886</code></pre>
 <div id="results-1" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared values is 0.128, Predicts about 13% of this model</p>
-<p>The coefficent estimate for PINCP is 7.485e-05</p>
-<p>The coefficent estimate for POVPIP is 7.085e-03</p>
-<p>The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is -3.318e+00</p>
-<p>The coefficent estimate for COW_labelFederal government employee is -5.833e+00</p>
-<p>The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is -5.632e-01</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is -1.667e+00</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is -1.941e+00</p>
-<p>The coefficent estimate for COW_labelState government employee is -8.710e-02</p>
-<p>The coefficent estimate for COW_labelWorking without pay in family business or farm is -1.055e+01</p>
-<p>The coefficent estimate for HHL_labelEnglish only is 4.067e-01</p>
-<p>The coefficent estimate for HHL_labelN/A (GQ/vacant) is -3.375e+00</p>
-<p>The coefficent estimate for HHL_labelOther Indo-European languages is -1.628e+00</p>
-<p>The coefficent estimate for HHL_labelOther language is -2.844e+00</p>
-<p>The coefficent estimate for HHL_labelSpanish is -9.581e-01</p>
-<p>The coefficent estimate for ENG_labelNot at all is 5.788e+00</p>
-<p>The coefficent estimate for ENG_labelNot well is 5.402e+00</p>
-<p>The coefficent estimate for ENG_labelVery well is 1.182e+00</p>
-<p>The coefficent estimate for ENG_labelWell is 4.042e+00</p>
-<p>The coefficent estimate for FS_labelYes is 8.922e-01</p>
+<p>The multiple R-squared values is 0.1272, Predicts about 13% of this model</p>
+<p>Strong and Significant - PINCP, with a coefficient estimate of 0.00007485</p>
+<p>Weak - ENG_labelNot well, with a coefficient estimate of 5.40207333</p>
+<p>When controlled for N/A (less than 5 years old/speaks only English), people whose English language proficiency is Not well work about 5 hours more than those in the other ENG categories</p>
+<p>Very Weak - POVPIP, with a coefficient estimate of 0.00708539</p>
 </div>
 </div>
 <div id="regression-model-for-povpip-variable" class="section level1">
 <h1>Regression Model for POVPIP Variable</h1>
 <pre class="r"><code>model3 &lt;- lm(POVPIP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + PINCP, 
             data = person_data_new2)
-
+options(scipen = 999)
 summary(model3)</code></pre>
 <pre><code>## 
 ## Call:
@@ -1864,66 +1855,63 @@ summary(model3)</code></pre>
 ##     WKHP + PINCP, data = person_data_new2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -301.317  -79.383    9.808   90.595  278.945 
+##     Min      1Q  Median      3Q     Max 
+## -301.32  -79.57   10.55   90.71  278.94 
 ## 
 ## Coefficients:
-##                                                                                           Estimate
-## (Intercept)                                                                              3.396e+02
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    6.709e+01
-## COW_labelFederal government employee                                                     1.116e+01
-## COW_labelLocal government employee (city, county, etc.)                                  4.371e+01
-## COW_labelSelf-employed in own incorporated business, professional practice or farm      -1.619e+01
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm -4.286e+01
-## COW_labelState government employee                                                      -1.202e+01
-## COW_labelWorking without pay in family business or farm                                  1.347e+02
-## HHL_labelEnglish only                                                                   -3.297e+01
-## HHL_labelN/A (GQ/vacant)                                                                -2.936e+02
-## HHL_labelOther Indo-European languages                                                  -2.656e+01
-## HHL_labelOther language                                                                 -1.343e+01
-## HHL_labelSpanish                                                                        -6.062e+01
-## ENG_labelNot at all                                                                     -9.209e+01
-## ENG_labelNot well                                                                       -1.085e+02
-## ENG_labelVery well                                                                      -2.487e+01
-## ENG_labelWell                                                                           -4.394e+01
-## FS_labelYes                                                                             -8.173e+01
-## WKHP                                                                                     7.181e-01
-## PINCP                                                                                    9.376e-04
-##                                                                                         Std. Error
-## (Intercept)                                                                              3.083e+01
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    2.209e+01
-## COW_labelFederal government employee                                                     4.425e+01
-## COW_labelLocal government employee (city, county, etc.)                                  1.968e+01
-## COW_labelSelf-employed in own incorporated business, professional practice or farm       3.065e+01
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  2.179e+01
-## COW_labelState government employee                                                       3.246e+01
-## COW_labelWorking without pay in family business or farm                                  8.452e+01
-## HHL_labelEnglish only                                                                    2.746e+01
-## HHL_labelN/A (GQ/vacant)                                                                 1.218e+02
-## HHL_labelOther Indo-European languages                                                   3.015e+01
-## HHL_labelOther language                                                                  3.784e+01
-## HHL_labelSpanish                                                                         1.985e+01
-## ENG_labelNot at all                                                                      4.033e+01
-## ENG_labelNot well                                                                        2.695e+01
-## ENG_labelVery well                                                                       2.260e+01
-## ENG_labelWell                                                                            2.694e+01
-## FS_labelYes                                                                              1.743e+01
-## WKHP                                                                                     4.333e-01
-## PINCP                                                                                    1.077e-04
+##                                                                                             Estimate
+## (Intercept)                                                                              306.6710872
+## COW_labelEmployee of a private not-for-profit organization                                67.0897929
+## COW_labelFederal government employee                                                      11.1617975
+## COW_labelLocal government employee                                                        43.7144380
+## COW_labelSelf-employed in own incorporated business, professional practice or farm       -16.1862391
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  -42.8613915
+## COW_labelState government employee                                                       -12.0247113
+## COW_labelWorking without pay in family business or farm                                  134.7401354
+## HHL_labelAsian and Pacific Island languages                                               32.9687565
+## HHL_labelOther Indo-European languages                                                     6.4084928
+## HHL_labelOther language                                                                   19.5363627
+## HHL_labelSpanish                                                                         -27.6503734
+## ENG_labelNot at all                                                                      -92.0866650
+## ENG_labelNot well                                                                       -108.5138605
+## ENG_labelVery well                                                                       -24.8675815
+## ENG_labelWell                                                                            -43.9389624
+## FS_labelYes                                                                              -81.7288664
+## WKHP                                                                                       0.7180711
+## PINCP                                                                                      0.0009376
+##                                                                                           Std. Error
+## (Intercept)                                                                               17.9357727
+## COW_labelEmployee of a private not-for-profit organization                                22.0883834
+## COW_labelFederal government employee                                                      44.2528000
+## COW_labelLocal government employee                                                        19.6764784
+## COW_labelSelf-employed in own incorporated business, professional practice or farm        30.6454688
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm   21.7924219
+## COW_labelState government employee                                                        32.4593806
+## COW_labelWorking without pay in family business or farm                                   84.5245346
+## HHL_labelAsian and Pacific Island languages                                               27.4632066
+## HHL_labelOther Indo-European languages                                                    30.0560188
+## HHL_labelOther language                                                                   38.0956624
+## HHL_labelSpanish                                                                          22.1071576
+## ENG_labelNot at all                                                                       40.3336952
+## ENG_labelNot well                                                                         26.9460551
+## ENG_labelVery well                                                                        22.5990744
+## ENG_labelWell                                                                             26.9419811
+## FS_labelYes                                                                               17.4269417
+## WKHP                                                                                       0.4333182
+## PINCP                                                                                      0.0001077
 ##                                                                                         t value
-## (Intercept)                                                                              11.015
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization     3.037
+## (Intercept)                                                                              17.098
+## COW_labelEmployee of a private not-for-profit organization                                3.037
 ## COW_labelFederal government employee                                                      0.252
-## COW_labelLocal government employee (city, county, etc.)                                   2.222
+## COW_labelLocal government employee                                                        2.222
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm       -0.528
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  -1.967
 ## COW_labelState government employee                                                       -0.370
 ## COW_labelWorking without pay in family business or farm                                   1.594
-## HHL_labelEnglish only                                                                    -1.200
-## HHL_labelN/A (GQ/vacant)                                                                 -2.409
-## HHL_labelOther Indo-European languages                                                   -0.881
-## HHL_labelOther language                                                                  -0.355
-## HHL_labelSpanish                                                                         -3.053
+## HHL_labelAsian and Pacific Island languages                                               1.200
+## HHL_labelOther Indo-European languages                                                    0.213
+## HHL_labelOther language                                                                   0.513
+## HHL_labelSpanish                                                                         -1.251
 ## ENG_labelNot at all                                                                      -2.283
 ## ENG_labelNot well                                                                        -4.027
 ## ENG_labelVery well                                                                       -1.100
@@ -1931,41 +1919,39 @@ summary(model3)</code></pre>
 ## FS_labelYes                                                                              -4.690
 ## WKHP                                                                                      1.657
 ## PINCP                                                                                     8.705
-##                                                                                         Pr(&gt;|t|)
-## (Intercept)                                                                              &lt; 2e-16
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization    0.00250
-## COW_labelFederal government employee                                                     0.80096
-## COW_labelLocal government employee (city, county, etc.)                                  0.02672
-## COW_labelSelf-employed in own incorporated business, professional practice or farm       0.59759
-## COW_labelSelf-employed in own not incorporated business, professional practice, or farm  0.04972
-## COW_labelState government employee                                                       0.71119
-## COW_labelWorking without pay in family business or farm                                  0.11150
-## HHL_labelEnglish only                                                                    0.23049
-## HHL_labelN/A (GQ/vacant)                                                                 0.01631
-## HHL_labelOther Indo-European languages                                                   0.37873
-## HHL_labelOther language                                                                  0.72271
-## HHL_labelSpanish                                                                         0.00238
-## ENG_labelNot at all                                                                      0.02281
-## ENG_labelNot well                                                                       6.46e-05
-## ENG_labelVery well                                                                       0.27166
-## ENG_labelWell                                                                            0.10350
-## FS_labelYes                                                                             3.47e-06
-## WKHP                                                                                     0.09807
-## PINCP                                                                                    &lt; 2e-16
+##                                                                                                     Pr(&gt;|t|)
+## (Intercept)                                                                             &lt; 0.0000000000000002
+## COW_labelEmployee of a private not-for-profit organization                                            0.0025
+## COW_labelFederal government employee                                                                  0.8010
+## COW_labelLocal government employee                                                                    0.0267
+## COW_labelSelf-employed in own incorporated business, professional practice or farm                    0.5976
+## COW_labelSelf-employed in own not incorporated business, professional practice, or farm               0.0497
+## COW_labelState government employee                                                                    0.7112
+## COW_labelWorking without pay in family business or farm                                               0.1115
+## HHL_labelAsian and Pacific Island languages                                                           0.2305
+## HHL_labelOther Indo-European languages                                                                0.8312
+## HHL_labelOther language                                                                               0.6083
+## HHL_labelSpanish                                                                                      0.2116
+## ENG_labelNot at all                                                                                   0.0228
+## ENG_labelNot well                                                                                 0.00006461
+## ENG_labelVery well                                                                                    0.2717
+## ENG_labelWell                                                                                         0.1035
+## FS_labelYes                                                                                       0.00000347
+## WKHP                                                                                                  0.0981
+## PINCP                                                                                   &lt; 0.0000000000000002
 ##                                                                                            
 ## (Intercept)                                                                             ***
-## COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization   ** 
+## COW_labelEmployee of a private not-for-profit organization                              ** 
 ## COW_labelFederal government employee                                                       
-## COW_labelLocal government employee (city, county, etc.)                                 *  
+## COW_labelLocal government employee                                                      *  
 ## COW_labelSelf-employed in own incorporated business, professional practice or farm         
 ## COW_labelSelf-employed in own not incorporated business, professional practice, or farm *  
 ## COW_labelState government employee                                                         
 ## COW_labelWorking without pay in family business or farm                                    
-## HHL_labelEnglish only                                                                      
-## HHL_labelN/A (GQ/vacant)                                                                *  
+## HHL_labelAsian and Pacific Island languages                                                
 ## HHL_labelOther Indo-European languages                                                     
 ## HHL_labelOther language                                                                    
-## HHL_labelSpanish                                                                        ** 
+## HHL_labelSpanish                                                                           
 ## ENG_labelNot at all                                                                     *  
 ## ENG_labelNot well                                                                       ***
 ## ENG_labelVery well                                                                         
@@ -1977,30 +1963,19 @@ summary(model3)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 118.8 on 537 degrees of freedom
-## Multiple R-squared:  0.3523, Adjusted R-squared:  0.3294 
-## F-statistic: 15.37 on 19 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.3482, Adjusted R-squared:  0.3264 
+## F-statistic: 15.94 on 18 and 537 DF,  p-value: &lt; 0.00000000000000022</code></pre>
 <div id="results-2" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared values is 0.3523, Predicts about 35% of this model</p>
-<p>The coefficent estimate for WKHP is 7.181e-01</p>
-<p>The coefficent estimate for PINCP is 9.376e-04</p>
-<p>The coefficent estimate for COW_labelEmployee of a private not-for-profit, tax-exempt, or charitable organization is 6.709e+01</p>
-<p>The coefficent estimate for COW_labelFederal government employee is 1.116e+01</p>
-<p>The coefficent estimate for COW_labelLocal government employee (city, county, etc.) is 4.371e+01</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own incorporated business, professional practice or farm is -1.619e+01</p>
-<p>The coefficent estimate for COW_labelSelf-employed in own not incorporated business, professional practice, or farm is -4.286e+01</p>
-<p>The coefficent estimate for COW_labelState government employee is -1.202e+01</p>
-<p>The coefficent estimate for COW_labelWorking without pay in family business or farm is 1.347e+02</p>
-<p>The coefficent estimate for HHL_labelEnglish only is -3.297e+01</p>
-<p>The coefficent estimate for HHL_labelN/A (GQ/vacant) is -2.936e+02</p>
-<p>The coefficent estimate for HHL_labelOther Indo-European languages is -2.656e+01</p>
-<p>The coefficent estimate for HHL_labelOther language is -1.343e+01</p>
-<p>The coefficent estimate for HHL_labelSpanish is -6.062e+01</p>
-<p>The coefficent estimate for ENG_labelNot at all is -9.209e+01</p>
-<p>The coefficent estimate for ENG_labelNot well is -1.085e+02</p>
-<p>The coefficent estimate for ENG_labelVery well is -2.487e+01</p>
-<p>The coefficent estimate for ENG_labelWell is -4.394e+01</p>
-<p>The coefficent estimate for FS_labelYes is -8.173e+01</p>
+<p>The multiple R-squared values is 0.3482, Predicts about 35% of this model</p>
+<p>Strong and Significant - ENG_labelNot well, with a coefficient estimate of -108.5138605 - FS_labelYes, with a coefficient estimate of -81.7288664 - PINCP, with a coefficient estimate of 0.0009376</p>
+<p>When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not well is less than those in the other ENG categories by a factor of 109. When controlled for No, the income to poverty ratio for people whose receive Food Stamps is less than those who don’t receive Food Stamps by a factor of 82</p>
+<p>Significant - COW_labelEmployee of a private not-for-profit organization, with a coefficient estimate of 67.0897929</p>
+<p>When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Employees of a private not-for-profit organization is greater than those in the other ENG categories by a factor of 67.</p>
+<p>Weak - COW_labelLocal government employee, with a coefficient estimate of 43.7144380 - COW_labelSelf-employed in own not incorporated business, professional practice, or farm, with a coefficient estimate of -42.8613915 - ENG_labelNot at all, with a coefficient estimate of -92.0866650</p>
+<p>When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Local government employees is greater than those in the other COW categories by a factor of 44. When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Self-employed in own not incorporated business, professional practice, or farm is less than those in the other COW categories by a factor of 43. When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not at all less than those in the other ENG categories by a factor of 92</p>
+<p>Very Weak - WKHP, with a coefficient estimate of 0.7180711</p>
 </div>
 </div>
 
