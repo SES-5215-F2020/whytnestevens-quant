@@ -9,6 +9,29 @@ output:
     toc_depth: 3
     toc_float: true
 ---
+# Assignment 4 Regression Model
+Continuing my investigation of looking at whether there's a connection between one's profession, English language proficiency, household language and their income and income to poverty ratio for people residing inDallas County, Texas I also ran a regression model for the variables I selected to explore this question, which are listed below:
+
+
+- Class of Worker (COW) (categorical)
+
+- English ability (ENG) (categorical)
+
+- Household Language (HHL) (categorical)
+
+- Food Stamps (FS)(Categorical)
+
+- Total Person's Income (PINCP) (continuous)
+
+- Hours worked per week (WKHP) (continuous)
+
+- Income to Poverty Ratio (POVPIP) (continuous)
+
+
+
+# Set Up
+Here I ran the libraries I needed for this analysis and also loaded my data. I mutated my data set as well to select the variable options in my categorical variables that I wanted to serve as controls while running the model
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -54,11 +77,9 @@ mutate(ENG_label = case_when(
 
 ```
 
-# Regression Model For Continuous Variables
 
 
-
-# Regression Model for PINCP Variable
+# Regression Model for Total Person's Income (PINCP) income Variable
 ```{r}
 model <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
             data = person_data_new2)
@@ -66,32 +87,42 @@ options(scipen = 999)
 summary(model)
 ```
 ## Results
-The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model
+The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model. The results for this model are listed below by significance:
+
+
+
 
 Strong and Significant
+
 -COW_labelFederal government employee, with a coefficient estimate of 84236.21
+
 - WKHP, with a coefficient estimate of 1066.91 
+
 - POVPIP, with a coefficient estimate of 131.88  
 
-When controlled for Employee of a private for-profit company/business, Federal Government Employees make about $84,000 more in income than those in the other COW categories. In addtion, one's income increases by 1066 dollars for every addtional hour they work and their income to poverty ratio increases by a factor of 132 as their income increases
+When controlled for 'Employee of a private for-profit company/business,' 'Federal Government Employees' make about $84,000 more in income than those in the other COW categories. In addition, one's income increases by 1066 dollars for every additional hour they work per week and their income to poverty ratio increases by a factor of 132 as their income increases.
+
 
 
 
 Weak
+
 - COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88
 
-When controlled for Employee of a private for-profit company/business, people who are Self-employed in own incorporated business, professional practice or farm make about $23,000 more in income than those in the other COW categories. 
+When controlled for 'Employee of a private for-profit company/business,' people who are 'Self-employed in own incorporated business, professional practice or farm' make about $23,000 more in income than those in the other COW categories. 
+
 
 
 
 Very Weak
+
 - HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35
 
-When controlled for English only, people whose houshold language is under the Other Indo-European languages category make about $19,000 more in income than those in the other HHL categories. 
+When controlled for 'English only,' people whose household language is under the 'Other Indo-European languages' category make about $19,000 more in income than those in the other HHL categories. 
 
 
 
-# Regression Model for WKHP Variable
+# Regression Model for Hours Worked Per Week (WKHP) Variable
 ```{r}
 model2 <- lm(WKHP ~ COW_label + HHL_label + ENG_label + FS_label + PINCP + POVPIP, 
             data = person_data_new2)
@@ -99,26 +130,38 @@ options(scipen = 999)
 summary(model2)
 ```
 ## Results
-The multiple R-squared values is 0.1272, Predicts about 13% of this model
+The multiple R-squared values is 0.1272, meaning that it predicts about 13% of this model. The results for this model are listed below by significance:
+
+
+
 
 Strong and Significant
+
 - PINCP, with a coefficient estimate of 0.00007485
+
+This tells us that for every 1 unit increase of hours worked per week, one's income increases by a factor of 0.00007485.
+
 
 
 
 Weak
+
 - ENG_labelNot well, with a coefficient estimate of 5.40207333
 
-When controlled for N/A (less than 5 years old/speaks only English), people whose English language proficiency is Not well work about 5 hours more than those in the other ENG categories
+When controlled for 'N/A (less than 5 years old/speaks only English),' people whose English language proficiency is 'Not well' work about 5 hours more per week than those in the other ENG categories.
+
 
 
 
 Very Weak
+
 - POVPIP, with a coefficient estimate of 0.00708539
 
+This tells us that for every 1 unit increase of hours worked per week, one's income to poverty ratio increases by a factor of 0.00708539.
 
 
-# Regression Model for POVPIP Variable
+
+# Regression Model for Income to Poverty Ratio (POVPIP) Variable
 ```{r}
 model3 <- lm(POVPIP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + PINCP, 
             data = person_data_new2)
@@ -126,39 +169,178 @@ options(scipen = 999)
 summary(model3)
 ```
 ## Results
-The multiple R-squared values is 0.3482, Predicts about 35% of this model
+The multiple R-squared values is 0.3482, meaning that it predicts about 35% of this model. The results for this model are listed below by significance:
+
+
+
 
 Strong and Significant
+
 - ENG_labelNot well, with a coefficient estimate of -108.5138605
+
 - FS_labelYes, with a coefficient estimate of -81.7288664
+
 - PINCP, with a coefficient estimate of 0.0009376
 
-When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not well is less than those in the other ENG categories by a factor of 109. When controlled for No, the income to poverty ratio for people whose receive Food Stamps is less than those who don't receive Food Stamps by a factor of 82
+When controlled for 'N/A (less than 5 years old/speaks only English),' the income to poverty ratio for people whose English language proficiency is 'Not well' decreases by a factor of 109 for every 1 unit of change in comparison to those in the other ENG categories. When controlled for 'No', the income to poverty ratio for people who receive Food Stamps decreases by a factor of 82 for every 1 unit of change in comparison to those who don't receive Food Stamps. For the PINCP variable, one's income increases by a factor of 0.0009376 for every 1 unit increase of income to poverty ratio.
+
 
 
 
 Significant
+
 - COW_labelEmployee of a private not-for-profit organization, with a coefficient estimate of 67.0897929
 
-When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Employees of a private not-for-profit organization is greater than those in the other ENG categories by a factor of 67.
+When controlled for 'Employee of a private for-profit company/business,' the income to poverty ratio for people who are 'Employees of a private not-for-profit organization' increases by a factor of 67 for every 1 unit of change in comparison to those in the other COW categories .
 
 
 
 
 Weak
+
 - COW_labelLocal government employee, with a coefficient estimate of 43.7144380
+
 - COW_labelSelf-employed in own not incorporated business, professional practice, or farm, with a coefficient estimate of -42.8613915
+
 - ENG_labelNot at all, with a coefficient estimate of -92.0866650
 
-When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Local government employees is greater than those in the other COW categories by a factor of 44.  When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Self-employed in own not incorporated business, professional practice, or farm is less than those in the other COW categories by a factor of 43. When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not at all less than those in the other ENG categories by a factor of 92
+When controlled for "Employee of a private for-profit company/business,' the income to poverty ratio for people who are 'Local government employees' increases by a factor of 44 for every 1 unit of change in comparison to those in the other COW categories. When controlled for 'Employee of a private for-profit company/business,' the income to poverty ratio for people who are 'Self-employed in own not incorporated business, professional practice, or farm" decreases by a factor of 43 for every 1 unit of change in comparison to those in the other COW categories.  When controlled for 'N/A (less than 5 years old/speaks only English),' the income to poverty ratio for people whose English language proficiency is 'Not at all' decreases by a factor of 92 for every 1 unit of change in comparison to those in the other ENG categories.
 
 
 
 
 Very Weak
+
 - WKHP, with a coefficient estimate of 0.7180711
 
+For the WKHP variable, one's hours worked per week increases by a factor of 0.7180711 for every 1 unit increase of income to poverty ratio.
 
 
 
 
+# Initial Takeaways
+The regression models for my continuous variables tell me that there isn't as strong relationship between some of the variables as I had thought. However, I did want to run a model for income (PINCP) where the only categorical variable would be a detailed list of all household languages spoken at home, reason being that there was a relationship between income and those who speak an Indo-European Language at home. Since Indo-European language is not specified, I wanted to run a model where languages were more detailed than a general grouping of languages. You can find this analysis below.
+
+
+
+# Regression Model analysis for Detailed Languages and Set Up
+
+Here I ran a regression model for just my PINCP variable and only used the Detailed Household Language (HHLANP) variable for my categorical variables.I set everything up below using the same processes I used to create my previous assignments
+
+```{r load person-level microdata variables}
+person_vars_2018 <- pums_variables %>%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %>%
+  filter(level == "person", year == 2018, survey == "acs1")
+```
+
+```{r load ACS area variables}
+area_vars_2018 <- load_variables(2018, "acs1")
+```
+
+```{r message=FALSE, results='hide'}
+dallas_county <- c("02301", "02302", "02303", "02304", "02308", "02317", "02318", "02319", "02320", "02321", "02322")
+```
+
+```{r load person-level data, results= 'hide'}
+person_data_langdetail <- get_pums(variables = c("PUMA",
+                                      "HHLANP",
+                                      "PINCP", 
+                                      "WKHP", 
+                                      "POVPIP",
+                                      "ADJINC"),
+                        state = "TX",
+                        year = 2018, 
+                        survey = "acs1",
+                        recode = TRUE) %>% 
+  filter(PUMA == dallas_county,
+         PINCP > 0,
+         WKHP > 0,
+         POVPIP > 0) %>%
+  select(HHLANP_label, PINCP, WKHP, POVPIP)
+```
+
+```{r load person_data_new}
+ head(person_data_langdetail, 1)
+ tail(person_data_langdetail, 596)
+```
+
+
+```{r write_csv}
+write_csv(person_data_langdetail, "persondatalangdetail.csv")
+```
+
+
+
+
+```{r load language data, results='hide'}
+detailedlang <- read.csv("persondatalangdetail.csv") %>%
+mutate(HHLANP_label = case_when(
+    HHLANP_label=="English only household"~"1English only household",
+    HHLANP_label=="Portuguese"~"Portuguese",
+    HHLANP_label=="Other languages of Asia" ~ "Other languages of Asias",
+    HHLANP_label=="Norwegian" ~ "Norwegian",
+    HHLANP_label=="Spanish" ~ "Spanish",
+    HHLANP_label=="Nepali"~"Nepali",
+    HHLANP_label=="Mongolian" ~ "Mongolian",
+    HHLANP_label=="Marathi" ~ "Marathi",
+    HHLANP_label=="Mandarin" ~ "Mandarin",
+    HHLANP_label=="Malayalam"~"Malayalam",
+    HHLANP_label=="Khmer" ~ "Khmer",
+    HHLANP_label=="Kannada" ~ "Kannada",
+    HHLANP_label=="Igbo" ~ "Igbo",
+    HHLANP_label=="Hungarian"~"Hungarian",
+    HHLANP_label=="Hindi" ~ "Hindi",
+    HHLANP_label=="Gujarati" ~ "Gujarati",
+    HHLANP_label=="German" ~ "German",
+    HHLANP_label=="French"~"French",
+    HHLANP_label=="Farsi" ~ "Farsi",
+    HHLANP_label=="Chinese" ~ "Chinese",
+    HHLANP_label=="Bengali" ~ "Bengali",
+    HHLANP_label=="Somali"~"Somali",
+    HHLANP_label=="Swahili" ~ "Swahili",
+    HHLANP_label=="Tagalog" ~ "Tagalog",
+    HHLANP_label=="Tamil" ~ "Tamil",
+    HHLANP_label=="Telugu"~"Telugu",
+    HHLANP_label=="Thai" ~ "Thai",
+    HHLANP_label=="Tigrinya" ~ "Tigrinya",
+    HHLANP_label=="Urdu" ~ "Urdu",
+    HHLANP_label=="Vietnamese" ~ "Vietnamese",
+    HHLANP_label=="Yoruba" ~ "Yoruba",
+    HHLANP_label=="Korean" ~ "Korean",
+    HHLANP_label=="Amharic" ~ "Amharic",
+    HHLANP_label=="Arabic" ~ "Arabic",
+    HHLANP_label=="Burmese" ~ "Burmese",
+    HHLANP_label=="Lao" ~ "Lao",
+    HHLANP_label=="Other Mande languages" ~ "Other Mande languages",
+    HHLANP_label=="Romanian" ~ "Romanian",
+    HHLANP_label=="Russian" ~ "Russian"))
+
+```
+
+
+
+# Regression Model for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables
+```{r}
+model_a <- lm(PINCP ~ HHLANP_label + WKHP + POVPIP, 
+            data = detailedlang)
+options(scipen = 999)
+summary(model_a)
+```
+## Results
+The multiple R-squared value for this model is 0.3352, meaning that it predicts about 34% of this model. The results for this model are listed below by significance:
+
+
+Strong and Significant
+
+- HHLANP_labelMarathi, with a coefficient estimate of 395515.48
+
+- WKHP, with a coefficient estimate of 683.58 
+
+- POVPIP, with a coefficient estimate of 147.99  
+
+When controlled for 'English only household,' people whose household language is under the 'Marathi' category make about $396,000 more in income than those in the other HHLANP categories. In addition, one's income increases by 684 dollars for every additional hour they work per week and their income to poverty ratio increases by a factor of 148 as their income increases.
+
+
+# Final Takeaways
+For this regression model there's strong relationship between income and those who speak Marathi, which is an Indo-European Language, at home. Perhaps this is the language contributing to that relationship between income and those who speak an Indo-European Language at home.

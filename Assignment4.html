@@ -1534,6 +1534,22 @@ div.tocify {
 </div>
 
 
+<div id="assignment-4-regression-model" class="section level1">
+<h1>Assignment 4 Regression Model</h1>
+<p>Continuing my investigation of looking at whether there’s a connection between one’s profession, English language proficiency, household language and their income and income to poverty ratio for people residing inDallas County, Texas I also ran a regression model for the variables I selected to explore this question, which are listed below:</p>
+<ul>
+<li><p>Class of Worker (COW) (categorical)</p></li>
+<li><p>English ability (ENG) (categorical)</p></li>
+<li><p>Household Language (HHL) (categorical)</p></li>
+<li><p>Food Stamps (FS)(Categorical)</p></li>
+<li><p>Total Person’s Income (PINCP) (continuous)</p></li>
+<li><p>Hours worked per week (WKHP) (continuous)</p></li>
+<li><p>Income to Poverty Ratio (POVPIP) (continuous)</p></li>
+</ul>
+</div>
+<div id="set-up" class="section level1">
+<h1>Set Up</h1>
+<p>Here I ran the libraries I needed for this analysis and also loaded my data. I mutated my data set as well to select the variable options in my categorical variables that I wanted to serve as controls while running the model</p>
 <pre class="r"><code>library(ggplot2)
 library(tidycensus)
 library(ggthemes)
@@ -1574,11 +1590,9 @@ mutate(ENG_label = case_when(
     FS_label = case_when(
     FS_label==&quot;No&quot; ~ &quot;1No&quot;,
     FS_label==&quot;Yes&quot; ~ &quot;Yes&quot;))</code></pre>
-<div id="regression-model-for-continuous-variables" class="section level1">
-<h1>Regression Model For Continuous Variables</h1>
 </div>
-<div id="regression-model-for-pincp-variable" class="section level1">
-<h1>Regression Model for PINCP Variable</h1>
+<div id="regression-model-for-total-persons-income-pincp-income-variable" class="section level1">
+<h1>Regression Model for Total Person’s Income (PINCP) income Variable</h1>
 <pre class="r"><code>model &lt;- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
             data = person_data_new2)
 options(scipen = 999)
@@ -1702,17 +1716,28 @@ summary(model)</code></pre>
 ## F-statistic: 13.84 on 18 and 537 DF,  p-value: &lt; 0.00000000000000022</code></pre>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model</p>
-<p>Strong and Significant -COW_labelFederal government employee, with a coefficient estimate of 84236.21 - WKHP, with a coefficient estimate of 1066.91 - POVPIP, with a coefficient estimate of 131.88</p>
-<p>When controlled for Employee of a private for-profit company/business, Federal Government Employees make about $84,000 more in income than those in the other COW categories. In addtion, one’s income increases by 1066 dollars for every addtional hour they work and their income to poverty ratio increases by a factor of 132 as their income increases</p>
-<p>Weak - COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88</p>
-<p>When controlled for Employee of a private for-profit company/business, people who are Self-employed in own incorporated business, professional practice or farm make about $23,000 more in income than those in the other COW categories.</p>
-<p>Very Weak - HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35</p>
-<p>When controlled for English only, people whose houshold language is under the Other Indo-European languages category make about $19,000 more in income than those in the other HHL categories.</p>
+<p>The multiple R-squared value for this model is 0.3169, meaning that it predicts about 32% of this model. The results for this model are listed below by significance:</p>
+<p>Strong and Significant</p>
+<p>-COW_labelFederal government employee, with a coefficient estimate of 84236.21</p>
+<ul>
+<li><p>WKHP, with a coefficient estimate of 1066.91</p></li>
+<li><p>POVPIP, with a coefficient estimate of 131.88</p></li>
+</ul>
+<p>When controlled for ‘Employee of a private for-profit company/business,’ ‘Federal Government Employees’ make about $84,000 more in income than those in the other COW categories. In addition, one’s income increases by 1066 dollars for every additional hour they work per week and their income to poverty ratio increases by a factor of 132 as their income increases.</p>
+<p>Weak</p>
+<ul>
+<li>COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88</li>
+</ul>
+<p>When controlled for ‘Employee of a private for-profit company/business,’ people who are ‘Self-employed in own incorporated business, professional practice or farm’ make about $23,000 more in income than those in the other COW categories.</p>
+<p>Very Weak</p>
+<ul>
+<li>HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35</li>
+</ul>
+<p>When controlled for ‘English only,’ people whose household language is under the ‘Other Indo-European languages’ category make about $19,000 more in income than those in the other HHL categories.</p>
 </div>
 </div>
-<div id="regression-model-for-wkhp-variable" class="section level1">
-<h1>Regression Model for WKHP Variable</h1>
+<div id="regression-model-for-hours-worked-per-week-wkhp-variable" class="section level1">
+<h1>Regression Model for Hours Worked Per Week (WKHP) Variable</h1>
 <pre class="r"><code>model2 &lt;- lm(WKHP ~ COW_label + HHL_label + ENG_label + FS_label + PINCP + POVPIP, 
             data = person_data_new2)
 options(scipen = 999)
@@ -1836,15 +1861,26 @@ summary(model2)</code></pre>
 ## F-statistic: 4.349 on 18 and 537 DF,  p-value: 0.00000000886</code></pre>
 <div id="results-1" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared values is 0.1272, Predicts about 13% of this model</p>
-<p>Strong and Significant - PINCP, with a coefficient estimate of 0.00007485</p>
-<p>Weak - ENG_labelNot well, with a coefficient estimate of 5.40207333</p>
-<p>When controlled for N/A (less than 5 years old/speaks only English), people whose English language proficiency is Not well work about 5 hours more than those in the other ENG categories</p>
-<p>Very Weak - POVPIP, with a coefficient estimate of 0.00708539</p>
+<p>The multiple R-squared values is 0.1272, meaning that it predicts about 13% of this model. The results for this model are listed below by significance:</p>
+<p>Strong and Significant</p>
+<ul>
+<li>PINCP, with a coefficient estimate of 0.00007485</li>
+</ul>
+<p>This tells us that for every 1 unit increase of hours worked per week, one’s income increases by a factor of 0.00007485.</p>
+<p>Weak</p>
+<ul>
+<li>ENG_labelNot well, with a coefficient estimate of 5.40207333</li>
+</ul>
+<p>When controlled for ‘N/A (less than 5 years old/speaks only English),’ people whose English language proficiency is ‘Not well’ work about 5 hours more per week than those in the other ENG categories.</p>
+<p>Very Weak</p>
+<ul>
+<li>POVPIP, with a coefficient estimate of 0.00708539</li>
+</ul>
+<p>This tells us that for every 1 unit increase of hours worked per week, one’s income to poverty ratio increases by a factor of 0.00708539.</p>
 </div>
 </div>
-<div id="regression-model-for-povpip-variable" class="section level1">
-<h1>Regression Model for POVPIP Variable</h1>
+<div id="regression-model-for-income-to-poverty-ratio-povpip-variable" class="section level1">
+<h1>Regression Model for Income to Poverty Ratio (POVPIP) Variable</h1>
 <pre class="r"><code>model3 &lt;- lm(POVPIP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + PINCP, 
             data = person_data_new2)
 options(scipen = 999)
@@ -1968,15 +2004,233 @@ summary(model3)</code></pre>
 ## F-statistic: 15.94 on 18 and 537 DF,  p-value: &lt; 0.00000000000000022</code></pre>
 <div id="results-2" class="section level2">
 <h2>Results</h2>
-<p>The multiple R-squared values is 0.3482, Predicts about 35% of this model</p>
-<p>Strong and Significant - ENG_labelNot well, with a coefficient estimate of -108.5138605 - FS_labelYes, with a coefficient estimate of -81.7288664 - PINCP, with a coefficient estimate of 0.0009376</p>
-<p>When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not well is less than those in the other ENG categories by a factor of 109. When controlled for No, the income to poverty ratio for people whose receive Food Stamps is less than those who don’t receive Food Stamps by a factor of 82</p>
-<p>Significant - COW_labelEmployee of a private not-for-profit organization, with a coefficient estimate of 67.0897929</p>
-<p>When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Employees of a private not-for-profit organization is greater than those in the other ENG categories by a factor of 67.</p>
-<p>Weak - COW_labelLocal government employee, with a coefficient estimate of 43.7144380 - COW_labelSelf-employed in own not incorporated business, professional practice, or farm, with a coefficient estimate of -42.8613915 - ENG_labelNot at all, with a coefficient estimate of -92.0866650</p>
-<p>When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Local government employees is greater than those in the other COW categories by a factor of 44. When controlled for Employee of a private for-profit company/business, the income to poverty ratio for people who are Self-employed in own not incorporated business, professional practice, or farm is less than those in the other COW categories by a factor of 43. When controlled for N/A (less than 5 years old/speaks only English), the income to poverty ratio for people whose English language proficiency is Not at all less than those in the other ENG categories by a factor of 92</p>
-<p>Very Weak - WKHP, with a coefficient estimate of 0.7180711</p>
+<p>The multiple R-squared values is 0.3482, meaning that it predicts about 35% of this model. The results for this model are listed below by significance:</p>
+<p>Strong and Significant</p>
+<ul>
+<li><p>ENG_labelNot well, with a coefficient estimate of -108.5138605</p></li>
+<li><p>FS_labelYes, with a coefficient estimate of -81.7288664</p></li>
+<li><p>PINCP, with a coefficient estimate of 0.0009376</p></li>
+</ul>
+<p>When controlled for ‘N/A (less than 5 years old/speaks only English),’ the income to poverty ratio for people whose English language proficiency is ‘Not well’ decreases by a factor of 109 for every 1 unit of change in comparison to those in the other ENG categories. When controlled for ‘No’, the income to poverty ratio for people who receive Food Stamps decreases by a factor of 82 for every 1 unit of change in comparison to those who don’t receive Food Stamps. For the PINCP variable, one’s income increases by a factor of 0.0009376 for every 1 unit increase of income to poverty ratio.</p>
+<p>Significant</p>
+<ul>
+<li>COW_labelEmployee of a private not-for-profit organization, with a coefficient estimate of 67.0897929</li>
+</ul>
+<p>When controlled for ‘Employee of a private for-profit company/business,’ the income to poverty ratio for people who are ‘Employees of a private not-for-profit organization’ increases by a factor of 67 for every 1 unit of change in comparison to those in the other COW categories .</p>
+<p>Weak</p>
+<ul>
+<li><p>COW_labelLocal government employee, with a coefficient estimate of 43.7144380</p></li>
+<li><p>COW_labelSelf-employed in own not incorporated business, professional practice, or farm, with a coefficient estimate of -42.8613915</p></li>
+<li><p>ENG_labelNot at all, with a coefficient estimate of -92.0866650</p></li>
+</ul>
+<p>When controlled for &quot;Employee of a private for-profit company/business,’ the income to poverty ratio for people who are ‘Local government employees’ increases by a factor of 44 for every 1 unit of change in comparison to those in the other COW categories. When controlled for ‘Employee of a private for-profit company/business,’ the income to poverty ratio for people who are ‘Self-employed in own not incorporated business, professional practice, or farm&quot; decreases by a factor of 43 for every 1 unit of change in comparison to those in the other COW categories. When controlled for ’N/A (less than 5 years old/speaks only English),’ the income to poverty ratio for people whose English language proficiency is ‘Not at all’ decreases by a factor of 92 for every 1 unit of change in comparison to those in the other ENG categories.</p>
+<p>Very Weak</p>
+<ul>
+<li>WKHP, with a coefficient estimate of 0.7180711</li>
+</ul>
+<p>For the WKHP variable, one’s hours worked per week increases by a factor of 0.7180711 for every 1 unit increase of income to poverty ratio.</p>
 </div>
+</div>
+<div id="initial-takeaways" class="section level1">
+<h1>Initial Takeaways</h1>
+<p>The regression models for my continuous variables tell me that there isn’t as strong relationship between some of the variables as I had thought. However, I did want to run a model for income (PINCP) where the only categorical variable would be a detailed list of all household languages spoken at home, reason being that there was a relationship between income and those who speak an Indo-European Language at home. Since Indo-European language is not specified, I wanted to run a model where languages were more detailed than a general grouping of languages. You can find this analysis below.</p>
+</div>
+<div id="regression-model-analysis-for-detailed-languages-and-set-up" class="section level1">
+<h1>Regression Model analysis for Detailed Languages and Set Up</h1>
+<p>Here I ran a regression model for just my PINCP variable and only used the Detailed Household Language (HHLANP) variable for my categorical variables.I set everything up below using the same processes I used to create my previous assignments</p>
+<pre class="r"><code>person_vars_2018 &lt;- pums_variables %&gt;%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %&gt;%
+  filter(level == &quot;person&quot;, year == 2018, survey == &quot;acs1&quot;)</code></pre>
+<pre class="r"><code>area_vars_2018 &lt;- load_variables(2018, &quot;acs1&quot;)</code></pre>
+<pre class="r"><code>dallas_county &lt;- c(&quot;02301&quot;, &quot;02302&quot;, &quot;02303&quot;, &quot;02304&quot;, &quot;02308&quot;, &quot;02317&quot;, &quot;02318&quot;, &quot;02319&quot;, &quot;02320&quot;, &quot;02321&quot;, &quot;02322&quot;)</code></pre>
+<pre class="r"><code>person_data_langdetail &lt;- get_pums(variables = c(&quot;PUMA&quot;,
+                                      &quot;HHLANP&quot;,
+                                      &quot;PINCP&quot;, 
+                                      &quot;WKHP&quot;, 
+                                      &quot;POVPIP&quot;,
+                                      &quot;ADJINC&quot;),
+                        state = &quot;TX&quot;,
+                        year = 2018, 
+                        survey = &quot;acs1&quot;,
+                        recode = TRUE) %&gt;% 
+  filter(PUMA == dallas_county,
+         PINCP &gt; 0,
+         WKHP &gt; 0,
+         POVPIP &gt; 0) %&gt;%
+  select(HHLANP_label, PINCP, WKHP, POVPIP)</code></pre>
+<pre><code>## Getting data from the 2018 1-year ACS Public Use Microdata Sample</code></pre>
+<pre><code>## Warning in PUMA == dallas_county: longer object length is not a multiple of
+## shorter object length</code></pre>
+<pre class="r"><code> head(person_data_langdetail, 1)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   HHLANP_label PINCP  WKHP POVPIP
+##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Spanish      30000    40    118</code></pre>
+<pre class="r"><code> tail(person_data_langdetail, 596)</code></pre>
+<pre><code>## # A tibble: 596 x 4
+##    HHLANP_label            PINCP  WKHP POVPIP
+##    &lt;chr&gt;                   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Spanish                 30000    40    118
+##  2 English only household  17000    40    378
+##  3 English only household  50000    40    472
+##  4 English only household  20000    40    113
+##  5 Spanish                 18300    40    404
+##  6 Norwegian               49100    10    501
+##  7 English only household 160000    55    501
+##  8 Spanish                 60000    50    240
+##  9 English only household  18100     1    501
+## 10 English only household  85000    48    501
+## # ... with 586 more rows</code></pre>
+<pre class="r"><code>write_csv(person_data_langdetail, &quot;persondatalangdetail.csv&quot;)</code></pre>
+<pre class="r"><code>detailedlang &lt;- read.csv(&quot;persondatalangdetail.csv&quot;) %&gt;%
+mutate(HHLANP_label = case_when(
+    HHLANP_label==&quot;English only household&quot;~&quot;1English only household&quot;,
+    HHLANP_label==&quot;Portuguese&quot;~&quot;Portuguese&quot;,
+    HHLANP_label==&quot;Other languages of Asia&quot; ~ &quot;Other languages of Asias&quot;,
+    HHLANP_label==&quot;Norwegian&quot; ~ &quot;Norwegian&quot;,
+    HHLANP_label==&quot;Spanish&quot; ~ &quot;Spanish&quot;,
+    HHLANP_label==&quot;Nepali&quot;~&quot;Nepali&quot;,
+    HHLANP_label==&quot;Mongolian&quot; ~ &quot;Mongolian&quot;,
+    HHLANP_label==&quot;Marathi&quot; ~ &quot;Marathi&quot;,
+    HHLANP_label==&quot;Mandarin&quot; ~ &quot;Mandarin&quot;,
+    HHLANP_label==&quot;Malayalam&quot;~&quot;Malayalam&quot;,
+    HHLANP_label==&quot;Khmer&quot; ~ &quot;Khmer&quot;,
+    HHLANP_label==&quot;Kannada&quot; ~ &quot;Kannada&quot;,
+    HHLANP_label==&quot;Igbo&quot; ~ &quot;Igbo&quot;,
+    HHLANP_label==&quot;Hungarian&quot;~&quot;Hungarian&quot;,
+    HHLANP_label==&quot;Hindi&quot; ~ &quot;Hindi&quot;,
+    HHLANP_label==&quot;Gujarati&quot; ~ &quot;Gujarati&quot;,
+    HHLANP_label==&quot;German&quot; ~ &quot;German&quot;,
+    HHLANP_label==&quot;French&quot;~&quot;French&quot;,
+    HHLANP_label==&quot;Farsi&quot; ~ &quot;Farsi&quot;,
+    HHLANP_label==&quot;Chinese&quot; ~ &quot;Chinese&quot;,
+    HHLANP_label==&quot;Bengali&quot; ~ &quot;Bengali&quot;,
+    HHLANP_label==&quot;Somali&quot;~&quot;Somali&quot;,
+    HHLANP_label==&quot;Swahili&quot; ~ &quot;Swahili&quot;,
+    HHLANP_label==&quot;Tagalog&quot; ~ &quot;Tagalog&quot;,
+    HHLANP_label==&quot;Tamil&quot; ~ &quot;Tamil&quot;,
+    HHLANP_label==&quot;Telugu&quot;~&quot;Telugu&quot;,
+    HHLANP_label==&quot;Thai&quot; ~ &quot;Thai&quot;,
+    HHLANP_label==&quot;Tigrinya&quot; ~ &quot;Tigrinya&quot;,
+    HHLANP_label==&quot;Urdu&quot; ~ &quot;Urdu&quot;,
+    HHLANP_label==&quot;Vietnamese&quot; ~ &quot;Vietnamese&quot;,
+    HHLANP_label==&quot;Yoruba&quot; ~ &quot;Yoruba&quot;,
+    HHLANP_label==&quot;Korean&quot; ~ &quot;Korean&quot;,
+    HHLANP_label==&quot;Amharic&quot; ~ &quot;Amharic&quot;,
+    HHLANP_label==&quot;Arabic&quot; ~ &quot;Arabic&quot;,
+    HHLANP_label==&quot;Burmese&quot; ~ &quot;Burmese&quot;,
+    HHLANP_label==&quot;Lao&quot; ~ &quot;Lao&quot;,
+    HHLANP_label==&quot;Other Mande languages&quot; ~ &quot;Other Mande languages&quot;,
+    HHLANP_label==&quot;Romanian&quot; ~ &quot;Romanian&quot;,
+    HHLANP_label==&quot;Russian&quot; ~ &quot;Russian&quot;))</code></pre>
+</div>
+<div id="regression-model-for-pincp-variable-using-the-detailed-household-language-hhlanp-variable-for-my-categorical-variables" class="section level1">
+<h1>Regression Model for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables</h1>
+<pre class="r"><code>model_a &lt;- lm(PINCP ~ HHLANP_label + WKHP + POVPIP, 
+            data = detailedlang)
+options(scipen = 999)
+summary(model_a)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PINCP ~ HHLANP_label + WKHP + POVPIP, data = detailedlang)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -88779 -19551  -3482  10168 395715 
+## 
+## Coefficients:
+##                                       Estimate Std. Error t value
+## (Intercept)                          -28999.45    8213.42  -3.531
+## HHLANP_labelAmharic                    7090.61   45159.03   0.157
+## HHLANP_labelArabic                    -4623.12   31972.54  -0.145
+## HHLANP_labelBengali                   15515.86   31905.83   0.486
+## HHLANP_labelBurmese                  -10430.60   45129.66  -0.231
+## HHLANP_labelChinese                  -16652.83   31927.00  -0.522
+## HHLANP_labelFrench                      -20.65   20302.75  -0.001
+## HHLANP_labelGujarati                 -29882.97   31946.85  -0.935
+## HHLANP_labelHindi                     27386.73   26119.90   1.049
+## HHLANP_labelIgbo                        153.50   20301.18   0.008
+## HHLANP_labelKhmer                    -15906.29   31913.48  -0.498
+## HHLANP_labelKorean                     7279.49   26097.81   0.279
+## HHLANP_labelLao                      -22763.62   45073.09  -0.505
+## HHLANP_labelMalayalam                -11571.49   20293.21  -0.570
+## HHLANP_labelMandarin                   3419.61   31979.75   0.107
+## HHLANP_labelMarathi                  395515.48   45072.77   8.775
+## HHLANP_labelNepali                     7097.13   45269.52   0.157
+## HHLANP_labelNorwegian                 -2877.07   45353.54  -0.063
+## HHLANP_labelOther languages of Asias  -3556.63   45060.51  -0.079
+## HHLANP_labelOther Mande languages     22529.88   45308.09   0.497
+## HHLANP_labelPortuguese                 8494.41   45154.45   0.188
+## HHLANP_labelRomanian                 -34066.61   45084.79  -0.756
+## HHLANP_labelRussian                   29187.11   45204.47   0.646
+## HHLANP_labelSpanish                   -5507.83    4276.03  -1.288
+## HHLANP_labelSwahili                  -19117.36   45075.90  -0.424
+## HHLANP_labelTagalog                   -1463.03   15209.24  -0.096
+## HHLANP_labelTamil                     -9072.88   31984.47  -0.284
+## HHLANP_labelTelugu                    14411.91   20278.97   0.711
+## HHLANP_labelThai                     -28493.31   45054.81  -0.632
+## HHLANP_labelUrdu                      35876.17   22658.44   1.583
+## HHLANP_labelVietnamese               -15386.88   16109.64  -0.955
+## HHLANP_labelYoruba                    -1522.96   22703.72  -0.067
+## WKHP                                    683.58     158.69   4.308
+## POVPIP                                  147.99      13.76  10.755
+##                                                  Pr(&gt;|t|)    
+## (Intercept)                                      0.000448 ***
+## HHLANP_labelAmharic                              0.875290    
+## HHLANP_labelArabic                               0.885081    
+## HHLANP_labelBengali                              0.626943    
+## HHLANP_labelBurmese                              0.817302    
+## HHLANP_labelChinese                              0.602161    
+## HHLANP_labelFrench                               0.999189    
+## HHLANP_labelGujarati                             0.349986    
+## HHLANP_labelHindi                                0.294859    
+## HHLANP_labelIgbo                                 0.993970    
+## HHLANP_labelKhmer                                0.618384    
+## HHLANP_labelKorean                               0.780400    
+## HHLANP_labelLao                                  0.613730    
+## HHLANP_labelMalayalam                            0.568760    
+## HHLANP_labelMandarin                             0.914882    
+## HHLANP_labelMarathi                  &lt; 0.0000000000000002 ***
+## HHLANP_labelNepali                               0.875478    
+## HHLANP_labelNorwegian                            0.949441    
+## HHLANP_labelOther languages of Asias             0.937116    
+## HHLANP_labelOther Mande languages                0.619201    
+## HHLANP_labelPortuguese                           0.850851    
+## HHLANP_labelRomanian                             0.450198    
+## HHLANP_labelRussian                              0.518757    
+## HHLANP_labelSpanish                              0.198252    
+## HHLANP_labelSwahili                              0.671644    
+## HHLANP_labelTagalog                              0.923401    
+## HHLANP_labelTamil                                0.776771    
+## HHLANP_labelTelugu                               0.477576    
+## HHLANP_labelThai                                 0.527373    
+## HHLANP_labelUrdu                                 0.113905    
+## HHLANP_labelVietnamese                           0.339920    
+## HHLANP_labelYoruba                               0.946542    
+## WKHP                                            0.0000195 ***
+## POVPIP                               &lt; 0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 44980 on 562 degrees of freedom
+## Multiple R-squared:  0.3352, Adjusted R-squared:  0.2962 
+## F-statistic: 8.588 on 33 and 562 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<div id="results-3" class="section level2">
+<h2>Results</h2>
+<p>The multiple R-squared value for this model is 0.3352, meaning that it predicts about 34% of this model. The results for this model are listed below by significance:</p>
+<p>Strong and Significant</p>
+<ul>
+<li><p>HHLANP_labelMarathi, with a coefficient estimate of 395515.48</p></li>
+<li><p>WKHP, with a coefficient estimate of 683.58</p></li>
+<li><p>POVPIP, with a coefficient estimate of 147.99</p></li>
+</ul>
+<p>When controlled for ‘English only household,’ people whose household language is under the ‘Marathi’ category make about $396,000 more in income than those in the other HHLANP categories. In addition, one’s income increases by 684 dollars for every additional hour they work per week and their income to poverty ratio increases by a factor of 148 as their income increases.</p>
+</div>
+</div>
+<div id="final-takeaways" class="section level1">
+<h1>Final Takeaways</h1>
+<p>For this regression model there’s strong relationship between income and those who speak Marathi, which is an Indo-European Language, at home. Perhaps this is the language contributing to that relationship between income and those who speak an Indo-European Language at home.</p>
 </div>
 
 
