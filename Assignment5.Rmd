@@ -1,0 +1,356 @@
+---
+title: "Assignment5"
+author: "Whytne Stevens"
+date: "10/4/2020"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load libraries}
+library(ggplot2)
+library(tidycensus)
+library(ggthemes)
+library(tidyverse)
+library(wesanderson)
+library(viridis)
+library(jtools)
+library(interactions)
+library(knitr)
+```
+COW_labelFederal government employee, with a coefficient estimate of 84236.21
+WKHP, with a coefficient estimate of 1066.91 
+POVPIP, with a coefficient estimate of 131.88  
+COW_labelSelf-employed in own incorporated business, professional practice or farm, with a coefficient estimate of 23195.88
+HHL_labelOther Indo-European languages, with a coefficient estimate of 19408.35
+WKHP, est: -4782.5 , p value 0.00058, strength ***
+COW_labelFederal government employee:HHL_labelOther Indo-European languages, est: 225495.4, p value 0.0000000252, strength  ***
+COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelOther Indo-European languages, est: -115593.0  , p value 0.00399, strength  ** 
+COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelSpanish, est: -58086.7, p value 0.06049, strength  .
+WKHP:log(POVPIP), est:  1035.9 , p value 0.0000150129, strength  ***
+
+
+```{r load data, results='hide'}
+person_data_new2 <- read.csv("persondatanew.csv") %>%
+mutate(ENG_label = case_when(
+    ENG_label=="N/A (less than 5 years old/speaks only English)"~"1N/A (less than 5 years old/speaks only English)",
+    ENG_label=="Well"~"Well",
+    ENG_label=="Very well"~"Very well",
+    ENG_label=="Not well"~"Not well",
+    ENG_label=="Not at all"~"Not at all"),
+    HHL_label = case_when(
+    HHL_label=="English only"~"1English only",
+    HHL_label=="Asian and Pacific Island languages"~"Asian and Pacific Island languages",
+    HHL_label=="Other Indo-European languages" ~ "Other Indo-European languages",
+    HHL_label=="Other language" ~ "Other language",
+    HHL_label=="Spanish" ~ "Spanish"),
+    COW_label = case_when(
+    COW_label=="Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions" ~ "1Employee of a private for-profit company/business",
+    COW_label=="Employee of a private not-for-profit, tax-exempt, or charitable organization" ~ "Employee of a private not-for-profit organization",
+    COW_label=="Federal government employee" ~ "Federal government employee",
+    COW_label=="Local government employee (city, county, etc.)" ~ "Local government employee",
+    COW_label=="State government employee" ~ "State government employee",
+    COW_label=="Self-employed in own incorporated business, professional practice or farm"~"Self-employed in own incorporated business, professional practice or farm",
+    COW_label=="Self-employed in own not incorporated business, professional practice, or farm" ~ "Self-employed in own not incorporated business, professional practice, or farm",
+    COW_label=="Working without pay in family business or farm" ~ "Working without pay in family business or farm"),
+    FS_label = case_when(
+    FS_label=="No" ~ "1No",
+    FS_label=="Yes" ~ "Yes"))
+
+```
+
+# Regression Models For PINCP Variable from Initial Dataset
+
+
+
+## Initial Regression Model for PINCP Variable and Results
+```{r}
+model1 <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + POVPIP, 
+            data = person_data_new2)
+options(scipen = 999)
+summary(model1)
+```
+
+## Regression Model for PINCP Variable w/ log transformation for WKHP variable and Results
+```{r}
+model2 <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + log(WKHP) + POVPIP, 
+            data = person_data_new2)
+
+summary(model2)
+```
+
+## Regression Model for PINCP Variable w/ log transformation for POVPIP variable and Results
+```{r}
+model3 <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + log(POVPIP), 
+            data = person_data_new2)
+
+summary(model3)
+```
+
+
+## Regression Model for PINCP Variable w/ interaction items and Results
+```{r}
+model4 <- lm(PINCP ~ COW_label + HHL_label + ENG_label + FS_label + WKHP + log(POVPIP) +
+               log(POVPIP):COW_label + COW_label:HHL_label + HHL_label:ENG_label + ENG_label:FS_label + FS_label:WKHP +
+               WKHP:log(POVPIP), 
+            data = person_data_new2)
+
+summary(model4)
+```
+## Results
+WKHP, est: -4782.5 , p value 0.00058, strength ***
+COW_labelFederal government employee:HHL_labelOther Indo-European languages, est: 225495.4, p value 0.0000000252, strength  ***
+COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelOther Indo-European languages, est: -115593.0  , p value 0.00399, strength  ** 
+COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelSpanish, est: -58086.7, p value 0.06049, strength  .
+WKHP:log(POVPIP), est:  1035.9 , p value 0.0000150129, strength  ***
+
+## Model fit for Models 1-4 and Results
+```{r}
+ModelFit <- tibble(model = c(1, 2, 3, 4),
+                   R_square = c(summary(model1)$adj.r.squared,
+                                summary(model2)$adj.r.squared,
+                                summary(model3)$adj.r.squared,
+                                summary(model4)$adj.r.squared))
+
+ggplot(ModelFit, aes(x = model, y = R_square)) +
+  geom_line() +
+  scale_x_continuous(name = "",
+                   breaks = breaks <- seq(1, 4, by = 1),
+                   labels = paste("Model", breaks)) +
+  scale_y_continuous(name = "Adjusted R-squared value") +
+  theme_bw()
+```
+
+```{r}
+coeff_names <- c("Weekly work hours" = "WKHP",
+                 "Income to Poverty Ratio" = "POVPIP",
+                 "Federal Government Employee" = 
+                   "COW_labelFederal government employee",
+                 "Self Employed in own incoporated business, professional practice or farm(compared to other types of workers/employees)" = "COW_labelSelf-employed in own incorporated business, professional practice or farm",
+                 "Houshold language is an Asian/Pacific Island language(compared to other categories of household languages)" = 
+                   "HHL_labelAsian and Pacific Island languages",
+                 "Houshold language is Spanish(compared to other categories of household languages)" = 
+                   "HHL_labelSpanish",
+                 "Houshold language is an other indo-european language(compared to other categories of household languages)" = 
+                   "HHL_labelOther Indo-European languages",
+                 "Houshold language is an other language(compared to other categories of household languages)" = 
+                   "HHL_labelOther language",
+                 "Has no English langauge proficiency(compared to other categories of English langauge proficiencies)" = 
+                   "ENG_labelNot at all",
+                 "English langauge proficiency is not well(compared to other categories of English langauge proficiencies)" = 
+                   "ENG_labelNot well",
+                 "English langauge proficiency is very well(compared to other categories of English langauge proficiencies)" = 
+                   "ENG_labelVery well",
+                 "English langauge proficiency is well(compared to other categories of English langauge proficiencies)" = 
+                   "ENG_labelWell",
+                 "Interaction:\nFederal Government Employee and Other Indo-European languages as a household language" = 
+                    "COW_labelFederal government employee:HHL_labelOther Indo-European languages",
+                 "Interaction:\nSelf Employed in own incoporated business, professional practice or farm and Other Indo-European languages as a household language" = 
+                    "COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelOther Indo-European languages",
+                 "Interaction:\nSelf Employed in own incoporated business, professional practice or farm and Spanish as household language" = 
+                    "COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelSpanish",
+                 "Interaction:\nHours worked per week and log-transformed income to poverty ratio" = 
+                    "WKHP:log(POVPIP)")
+
+export_summs(model1, model4, 
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial model", "Preferred model"),
+             coefs = coeff_names)
+```
+
+
+
+
+
+
+
+
+
+```{r}
+coeff_desc <- c("Weekly work hours" = "WKHP",
+                 "Income to Poverty Ratio" = "POVPIP",
+                 "Federal Government Employee" = 
+                   "COW_labelFederal government employee",
+                 "Self Employed in own incoporated business, professional practice or farm(compared to other types of workers/employees)" = "COW_labelSelf-employed in own incorporated business, professional practice or farm",
+                 "Houshold language is an other indo-european languae(compared to other categories of household languages)" = 
+                   "HHL_labelOther Indo-European languages",
+                 "Interaction:\nFederal Government Employee and Other Indo-European languages as a household language" = 
+                    "COW_labelFederal government employee:HHL_labelOther Indo-European languages",
+                 "Interaction:\nSelf Employed in own incoporated business, professional practice or farm and Other Indo-European languages as a household language" = 
+                    "COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelOther Indo-European languages",
+                 "Interaction:\nSelf Employed in own incoporated business, professional practice or farm and Spanish as household language" = 
+                    "COW_labelSelf-employed in own incorporated business, professional practice or farm:HHL_labelSpanish",
+                 "Interaction:\nHours worked per week and log-transformed income to poverty ratio" = 
+                    "WKHP:log(POVPIP)")
+
+plot_coefs(model4, 
+           coefs = coeff_desc,
+           plot.distributions = TRUE,
+           rescale.distributions = TRUE) +
+  scale_x_continuous(name = "Effect on predicted income")
+```
+
+
+
+
+
+# Regression Models for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables
+
+
+
+
+```{r load language data, results='hide'}
+detailedlang <- read.csv("persondatalangdetail.csv") %>%
+mutate(HHLANP_label = case_when(
+    HHLANP_label=="English only household"~"1English only household",
+    HHLANP_label=="Portuguese"~"Portuguese",
+    HHLANP_label=="Other languages of Asia" ~ "Other languages of Asias",
+    HHLANP_label=="Norwegian" ~ "Norwegian",
+    HHLANP_label=="Spanish" ~ "Spanish",
+    HHLANP_label=="Nepali"~"Nepali",
+    HHLANP_label=="Mongolian" ~ "Mongolian",
+    HHLANP_label=="Marathi" ~ "Marathi",
+    HHLANP_label=="Mandarin" ~ "Mandarin",
+    HHLANP_label=="Malayalam"~"Malayalam",
+    HHLANP_label=="Khmer" ~ "Khmer",
+    HHLANP_label=="Kannada" ~ "Kannada",
+    HHLANP_label=="Igbo" ~ "Igbo",
+    HHLANP_label=="Hungarian"~"Hungarian",
+    HHLANP_label=="Hindi" ~ "Hindi",
+    HHLANP_label=="Gujarati" ~ "Gujarati",
+    HHLANP_label=="German" ~ "German",
+    HHLANP_label=="French"~"French",
+    HHLANP_label=="Farsi" ~ "Farsi",
+    HHLANP_label=="Chinese" ~ "Chinese",
+    HHLANP_label=="Bengali" ~ "Bengali",
+    HHLANP_label=="Somali"~"Somali",
+    HHLANP_label=="Swahili" ~ "Swahili",
+    HHLANP_label=="Tagalog" ~ "Tagalog",
+    HHLANP_label=="Tamil" ~ "Tamil",
+    HHLANP_label=="Telugu"~"Telugu",
+    HHLANP_label=="Thai" ~ "Thai",
+    HHLANP_label=="Tigrinya" ~ "Tigrinya",
+    HHLANP_label=="Urdu" ~ "Urdu",
+    HHLANP_label=="Vietnamese" ~ "Vietnamese",
+    HHLANP_label=="Yoruba" ~ "Yoruba",
+    HHLANP_label=="Korean" ~ "Korean",
+    HHLANP_label=="Amharic" ~ "Amharic",
+    HHLANP_label=="Arabic" ~ "Arabic",
+    HHLANP_label=="Burmese" ~ "Burmese",
+    HHLANP_label=="Lao" ~ "Lao",
+    HHLANP_label=="Other Mande languages" ~ "Other Mande languages",
+    HHLANP_label=="Romanian" ~ "Romanian",
+    HHLANP_label=="Russian" ~ "Russian"))
+
+```
+
+
+
+
+
+
+## Initial Regression Model for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+
+
+```{r}
+model5 <- lm(PINCP ~ HHLANP_label + WKHP + POVPIP, 
+            data = detailedlang)
+options(scipen = 999)
+summary(model5)
+```
+
+## Initial Regression Model for PINCP Variable w/ log transformation for POVPIP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+```{r}
+model6 <- lm(PINCP ~ HHLANP_label + WKHP + log(POVPIP), 
+            data = detailedlang)
+
+summary(model6)
+```
+
+## Regression Model for PINCP Variable w/ log transformation for WKHP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+```{r}
+model7 <- lm(PINCP ~ HHLANP_label + log(WKHP) + POVPIP, 
+            data = detailedlang)
+
+summary(model7)
+```
+
+
+## Regression Model for PINCP Variable w/ interaction items, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+```{r}
+model8 <- lm(PINCP ~ HHLANP_label + WKHP + log(POVPIP) +
+               log(POVPIP):HHLANP_label + HHLANP_label:WKHP +
+               WKHP:log(POVPIP), 
+             data = detailedlang)
+
+summary(model8)
+```
+
+## Model fit for Models 5-8 and Results
+```{r}
+ModelFit2 <- tibble(model = c(1, 2, 3, 4),
+                   R_square = c(summary(model5)$adj.r.squared,
+                                summary(model6)$adj.r.squared,
+                                summary(model7)$adj.r.squared,
+                                summary(model8)$adj.r.squared))
+
+ggplot(ModelFit2, aes(x = model, y = R_square)) +
+  geom_line() +
+  scale_x_continuous(name = "",
+                   breaks = breaks <- seq(1, 4, by = 1),
+                   labels = paste("Model", breaks)) +
+  scale_y_continuous(name = "Adjusted R-squared value") +
+  theme_bw()
+```
+
+
+{r, echo = FALSE}
+
+```{r}
+coeff_names2 <- c("Weekly work hours" = "WKHP",
+                 "Income to Poverty Ratio" = "POVPIP",
+                 "Houshold language is Marathi(compared to other categories of detailed household languages)" = 
+                   "HHLANP_labelMarathi")
+
+export_summs(model5, model5, 
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial model", "Preferred model"),
+             coefs = coeff_names2)
+```
+
+
+HHLANP_labelMarathi                  395515.48   45072.77   8.775 < 0.0000000000000002 ***
+WKHP                                    683.58     158.69   4.308            0.0000195 ***
+POVPIP                                  147.99      13.76  10.755 < 0.0000000000000002 ***
+
+
+
+
+```{r}
+coeff_desc <- c("Weekly work hours" = "WKHP",
+                 "Income to Poverty Ratio" = "POVPIP",
+                 "Houshold language is Marathi\n(compared to other categories \nof detailed household languages)" = 
+                   "HHLANP_labelMarathi")
+
+plot_coefs(model5, 
+           coefs = coeff_desc,
+           plot.distributions = TRUE,
+           rescale.distributions = TRUE) +
+  scale_x_continuous(name = "Effect on predicted income")
+```
+
+
+
+
+
