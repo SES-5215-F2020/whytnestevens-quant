@@ -10,6 +10,7 @@ output:
     toc_float: true
 ---
 
+For this assignment, I'm continuing my language and income analysis for Dallas County, Texas. I'm using my dataset that exactly denotes one's household language. For my analysis, I'll be focusing on the HHLANP_labelMarathi category for all the models I'm running below. Here, I've loaded relevant r libraries and my dataset as usual
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -29,13 +30,6 @@ library(knitr)
 ```
 
 
-
-
-
-# Regression Models for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables
-
-
-Here I repeated the same processes as above but for my dataset that contained detailed information about the household languages. For my analysis, I'll be focusing on the HHLANP_labelMarathi category for all the models I'm running below
 
 ```{r load language data, results='hide'}
 detailedlang <- read.csv("persondatalangdetail.csv") %>%
@@ -87,7 +81,7 @@ mutate(HHLANP_label = case_when(
 
 
 
-## Initial Regression Model for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+# Initial Regression Model for PINCP Variable using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
 
 
 ```{r}
@@ -100,7 +94,7 @@ This is the original regression model I ran in assignment 4 for this dataset. To
 
 
 
-## Regression Model for PINCP Variable w/ log transformation for POVPIP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+# Regression Model for PINCP Variable w/ log transformation for POVPIP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
 ```{r}
 model6 <- lm(PINCP ~ HHLANP_label + WKHP + log(POVPIP), 
             data = detailedlang)
@@ -110,7 +104,7 @@ summary(model6)
 With this model the results differ somewhat from the initial model above. For example the multiple R-squared value for this model is 0.2964 (predicting about 30% of the model) while for the initial model it was 0.3352 (predicting about 34% of the model).  For people whose household language is under the 'Marathi' category, this model shows that they make about $400,000 more in income than those in the other HHLANP categories, in comparison to the initial model where that number was 396,000.Therefore there's only a 4,000 dollar difference in the models
 
 
-## Regression Model for PINCP Variable w/ log transformation for WKHP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+# Regression Model for PINCP Variable w/ log transformation for WKHP variable, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
 ```{r}
 model7 <- lm(PINCP ~ HHLANP_label + log(WKHP) + POVPIP, 
             data = detailedlang)
@@ -119,7 +113,7 @@ summary(model7)
 ```
 For this model, the multiple R-squared value is 0.334 (predicting about 33% of the model) while for the initial model it was 0.3352 (predicting about 34% of the model).  For people whose household language is under the 'Marathi' category, this model shows that they make about $394,000 more in income than those in the other HHLANP categories, in comparison to the initial model where that number was 396,000.Therefore there's only a 2,000 dollar difference in the models
 
-## Regression Model for PINCP Variable w/ interaction items, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
+# Regression Model for PINCP Variable w/ interaction items, using the Detailed Household Language (HHLANP) variable for my categorical variables and Results
 ```{r}
 model8 <- lm(PINCP ~ HHLANP_label + WKHP + log(POVPIP) +
                log(POVPIP):HHLANP_label + HHLANP_label:WKHP +
@@ -132,7 +126,7 @@ summary(model8)
 For this model, the multiple R-squared value is 0.3552 (predicting about 36% of the model) while for the initial model it was 0.3352 (predicting about 34% of the model).  For people whose household language is under the 'Marathi' category, this model shows that they make about $399,000 more in income than those in the other HHLANP categories, in comparison to the initial model where that number was 396,000.Therefore there's only a 3,000 dollar difference in the models
 
 
-## Model fit for Models 5-8 and Results
+# Model fit for Models 5-8 and Results
 
 After running these models, I then plotted them below to see which one had the best fit for my dataset:
 
