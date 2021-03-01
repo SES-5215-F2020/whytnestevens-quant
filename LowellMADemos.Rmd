@@ -1,0 +1,404 @@
+---
+title: "LowellMADemos"
+author: "Whytne Stevens"
+date: "2/28/2021"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+---
+
+# Lowell, MA Demos
+Below are the variables that could help us understand the urban design conditions on the ground:
+
+- Class of Worker (COW) (categorical)
+
+- Detailed Household Language (HHLANP) (categorical)
+
+- Total Person's Income (PINCP) (continuous)
+
+- Means of Transportation to Work (JWTRNS)
+
+- Household/Family Type (includes cohabitation)(HHT2)
+
+- Recoded Detailed Ancestry (ANC1P)
+
+- Place of Birth (POBP)
+
+- When Structure First Built (YBL)
+
+- School Enrollment (SCH)
+
+- Disability (DIS)
+
+- Vision Difficulty (DEYE)
+
+- Hearing Difficulty (DEAR)
+
+- Self-care Difficulty (DDRS)
+
+- Ambulatory (physical) Difficulty (DPHY)
+
+- Cognitive Difficulty (DREM)
+
+- Independent Living Difficulty (DOUT)
+
+- Grandparents Responsible for Grandchildren (GCR)
+
+- Presence of People 18 and under in Household (R18) 
+
+- Presence of People 65 and older in Household (R65)
+
+- Presence of Subfamilies in Household (PSF)
+
+- Number of People in Household (NP)
+
+- Presence of Non Relative in Household (NR)
+
+- Number of People in Family (NPF)
+
+- Lot Size (ACR)             
+
+- Travel Time to Work (JWMNP) 
+
+- Hours worked per week (WKHP) (continuous)
+
+- Income to Poverty Ratio (POVPIP) (continuous)
+
+- Adjustment factor for income and earnings dollar amounts (6 implied decimal places) (ADJINC)(Continuous)*
+
+*used for PINCP Variable
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+```{r load libraries}
+library(ggplot2)
+library(tidycensus)
+library(ggthemes)
+library(tidyverse)
+```
+
+```{r load person-level microdata variables}
+person_vars_2018 <- pums_variables %>%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %>%
+  filter(level == "person", year == 2018, survey == "acs1")
+```
+
+```{r load ACS area variables}
+area_vars_2018 <- load_variables(2018, "acs1")
+```
+
+```{r message=FALSE, results='hide'}
+lowell <- c("00502")
+```
+
+```{r load person-level data, results= 'hide'}
+lowelldemos <- get_pums(variables = c("JWTR",
+                                      "HHT",
+                                      "ANC1P",
+                                      "POBP",
+                                      "YBL", 
+                                      "SCH", 
+                                      "DIS",
+                                      "DEYE",
+                                      "DEAR",
+                                      "DDRS",
+                                      "DPHY",
+                                      "DREM",
+                                      "DOUT",
+                                      "GCR",
+                                      "R18", 
+                                      "R65", 
+                                      "PSF",
+                                      "NP",
+                                      "NR",
+                                      "NPF",
+                                      "ACR", 
+                                      "JWMNP", 
+                                      "COW",
+                                      "SOCP",
+                                      "LANP",
+                                      "PINCP", 
+                                      "WKHP", 
+                                      "POVPIP",
+                                      "ADJINC"),
+                        state = "MA",
+                        year = 2018, 
+                        survey = "acs1",
+                        recode = TRUE) %>% 
+  filter(PINCP > 0,
+         WKHP > 0,
+         POVPIP > 0) %>%
+  select(JWTR_label, HHT_label, ANC1P_label, POBP_label, YBL_label, SCH_label, DIS_label, DEYE_label, DEAR_label, DDRS_label, DPHY_label, DREM_label, DOUT_label, GCR_label, R18_label, R65_label, PSF_label, NP, NR_label, NPF, ACR_label, JWMNP, COW_label, SOCP_label, LANP_label, PINCP, WKHP, POVPIP)
+```
+
+```{r load lowelldemos}
+ head(lowelldemos, 1)
+ tail(lowelldemos, 596)
+```
+## Saving Data
+Lastly, I saved my data to a csv file:
+
+```{r write_csv}
+write_csv(lowelldemos, "lowelldemos.csv")
+```
+
+# Frequency Counts For Categorical Variables
+
+```{r}
+unique(lowelldemos$JWTR_label)
+```
+
+```{r}
+table(lowelldemos$JWTR_label)
+knitr::kable(table(lowelldemos$JWTR_label), caption = "Frequency Counts for JWTR Variable")
+```
+
+```{r}
+unique(lowelldemos$HHT_label)
+```
+
+```{r}
+table(lowelldemos$HHT_label)
+knitr::kable(table(lowelldemos$HHT_label), caption = "Frequency Counts for HHT Variable")
+```
+
+```{r}
+unique(lowelldemos$ANC1P_label)
+```
+
+```{r}
+table(lowelldemos$ANC1P_label)
+knitr::kable(table(lowelldemos$ANC1P_label), caption = "Frequency Counts for ANC1P Variable")
+```
+
+```{r}
+unique(lowelldemos$POBP_label)
+```
+
+```{r}
+table(lowelldemos$POBP_label)
+knitr::kable(table(lowelldemos$POBP_label), caption = "Frequency Counts for POBP Variable")
+```
+
+```{r}
+unique(lowelldemos$YBL_label)
+```
+
+```{r}
+table(lowelldemos$YBL_label)
+knitr::kable(table(lowelldemos$YBL_label), caption = "Frequency Counts for YBL Variable")
+```
+
+```{r}
+unique(lowelldemos$SCH_label)
+```
+
+```{r}
+table(lowelldemos$SCH_label)
+knitr::kable(table(lowelldemos$SCH_label), caption = "Frequency Counts for SCH Variable")
+```
+
+```{r}
+unique(lowelldemos$DIS_label)
+```
+
+```{r}
+table(lowelldemos$DIS_label)
+knitr::kable(table(lowelldemos$DIS_label), caption = "Frequency Counts for DIS Variable")
+```
+
+```{r}
+unique(lowelldemos$DEYE_label)
+```
+
+```{r}
+table(lowelldemos$DEYE_label)
+knitr::kable(table(lowelldemos$DEYE_label), caption = "Frequency Counts for DEYE Variable")
+```
+
+```{r}
+unique(lowelldemos$DEAR_label)
+```
+
+```{r}
+table(lowelldemos$DEAR_label)
+knitr::kable(table(lowelldemos$DEAR_label), caption = "Frequency Counts for DEAR Variable")
+```
+
+```{r}
+unique(lowelldemos$DDRS_label)
+```
+
+```{r}
+table(lowelldemos$DDRS_label)
+knitr::kable(table(lowelldemos$DDRS_label), caption = "Frequency Counts for DDRS Variable")
+```
+
+```{r}
+unique(lowelldemos$DPHY_label)
+```
+
+```{r}
+table(lowelldemos$DPHY_label)
+knitr::kable(table(lowelldemos$DPHY_label), caption = "Frequency Counts for DPHY Variable")
+```
+
+```{r}
+unique(lowelldemos$DREM_label)
+```
+
+```{r}
+table(lowelldemos$DREM_label)
+knitr::kable(table(lowelldemos$DREM_label), caption = "Frequency Counts for DREM Variable")
+```
+
+```{r}
+unique(lowelldemos$DOUT_label)
+```
+
+```{r}
+table(lowelldemos$DOUT_label)
+knitr::kable(table(lowelldemos$DOUT_label), caption = "Frequency Counts for DOUT Variable")
+```
+
+```{r}
+unique(lowelldemos$GCR_label)
+```
+
+```{r}
+table(lowelldemos$GCR_label)
+knitr::kable(table(lowelldemos$GCR_label), caption = "Frequency Counts for GCR Variable")
+```
+
+```{r}
+unique(lowelldemos$R18_label)
+```
+
+```{r}
+table(lowelldemos$R18_label)
+knitr::kable(table(lowelldemos$R18_label), caption = "Frequency Counts for R18 Variable")
+```
+
+```{r}
+unique(lowelldemos$R65_label)
+```
+
+```{r}
+table(lowelldemos$R65_label)
+knitr::kable(table(lowelldemos$R65_label), caption = "Frequency Counts for R65 Variable")
+```
+
+```{r}
+unique(lowelldemos$PSF_label)
+```
+
+```{r}
+table(lowelldemos$PSF_label)
+knitr::kable(table(lowelldemos$PSF_label), caption = "Frequency Counts for PSF Variable")
+```
+
+```{r}
+unique(lowelldemos$NR_label)
+```
+
+```{r}
+table(lowelldemos$NR_label)
+knitr::kable(table(lowelldemos$NR5_label), caption = "Frequency Counts for NR Variable")
+```
+
+```{r}
+unique(lowelldemos$ACR_label)
+```
+
+```{r}
+table(lowelldemos$ACR_label)
+knitr::kable(table(lowelldemos$ACR_label), caption = "Frequency Counts for ACR Variable")
+```
+
+```{r}
+unique(lowelldemos$COW_label)
+```
+
+```{r}
+table(lowelldemos$COW_label)
+knitr::kable(table(lowelldemos$COW_label), caption = "Frequency Counts for COW Variable")
+```
+
+```{r}
+unique(lowelldemos$SOCP_label)
+```
+
+```{r}
+table(lowelldemos$SOCP_label)
+knitr::kable(table(lowelldemos$SOCP_label), caption = "Frequency Counts for SOCP Variable")
+```
+
+```{r}
+unique(lowelldemos$LANP_label)
+```
+
+```{r}
+table(lowelldemos$LANP_label)
+knitr::kable(table(lowelldemos$LANP_label), caption = "Frequency Counts for LANP Variable")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
