@@ -1652,6 +1652,7 @@ library(tidyverse)</code></pre>
 <pre class="r"><code>lowelldemos &lt;- get_pums(variables = c(&quot;JWTR&quot;,
                                       &quot;HHT&quot;,
                                       &quot;ANC1P&quot;,
+                                      &quot;RAC1P&quot;,
                                       &quot;POBP&quot;,
                                       &quot;YBL&quot;, 
                                       &quot;SCH&quot;, 
@@ -1685,38 +1686,38 @@ library(tidyverse)</code></pre>
   filter(PINCP &gt; 0,
          WKHP &gt; 0,
          POVPIP &gt; 0) %&gt;%
-  select(JWTR_label, HHT_label, ANC1P_label, POBP_label, YBL_label, SCH_label, DIS_label, DEYE_label, DEAR_label, DDRS_label, DPHY_label, DREM_label, DOUT_label, GCR_label, R18_label, R65_label, PSF_label, NP, NR_label, NPF, ACR_label, JWMNP, COW_label, SOCP_label, LANP_label, PINCP, WKHP, POVPIP)</code></pre>
+  select(JWTR_label, HHT_label, ANC1P_label, RAC1P_label, POBP_label, YBL_label, SCH_label, DIS_label, DEYE_label, DEAR_label, DDRS_label, DPHY_label, DREM_label, DOUT_label, GCR_label, R18_label, R65_label, PSF_label, NP, NR_label, NPF, ACR_label, JWMNP, COW_label, SOCP_label, LANP_label, PINCP, WKHP, POVPIP)</code></pre>
 <pre class="r"><code> head(lowelldemos, 1)</code></pre>
-<pre><code>## # A tibble: 1 x 28
-##   JWTR_label HHT_label ANC1P_label POBP_label YBL_label SCH_label DIS_label
-##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;    
-## 1 Subway or~ N/A (GQ/~ Irish       Massachus~ N/A (GQ)  No, has ~ Without ~
-## # ... with 21 more variables: DEYE_label &lt;chr&gt;, DEAR_label &lt;chr&gt;,
-## #   DDRS_label &lt;chr&gt;, DPHY_label &lt;chr&gt;, DREM_label &lt;chr&gt;, DOUT_label &lt;chr&gt;,
-## #   GCR_label &lt;chr&gt;, R18_label &lt;chr&gt;, R65_label &lt;chr&gt;, PSF_label &lt;chr&gt;,
-## #   NP &lt;dbl&gt;, NR_label &lt;chr&gt;, NPF &lt;dbl&gt;, ACR_label &lt;chr&gt;, JWMNP &lt;dbl&gt;,
-## #   COW_label &lt;chr&gt;, SOCP_label &lt;chr&gt;, LANP_label &lt;chr&gt;, PINCP &lt;dbl&gt;,
-## #   WKHP &lt;dbl&gt;, POVPIP &lt;dbl&gt;</code></pre>
-<pre class="r"><code> tail(lowelldemos, 596)</code></pre>
-<pre><code>## # A tibble: 596 x 28
-##    JWTR_label HHT_label ANC1P_label POBP_label YBL_label SCH_label DIS_label
-##    &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;    
-##  1 Car, truc~ Married ~ Italian     Massachus~ 1939 or ~ No, has ~ Without ~
-##  2 Car, truc~ Nonfamil~ English     District ~ 1939 or ~ No, has ~ Without ~
-##  3 Car, truc~ Married ~ Not report~ Massachus~ 1939 or ~ No, has ~ Without ~
-##  4 Car, truc~ Married ~ Not report~ Massachus~ 1939 or ~ No, has ~ Without ~
-##  5 Car, truc~ Nonfamil~ Not report~ Michigan/~ 2016      No, has ~ Without ~
-##  6 Car, truc~ Nonfamil~ Not report~ Florida/FL 2016      No, has ~ Without ~
-##  7 Subway or~ Married ~ French Can~ Rhode Isl~ 1939 or ~ No, has ~ Without ~
-##  8 Subway or~ Married ~ Chilean     Chile      1939 or ~ No, has ~ Without ~
-##  9 Subway or~ Married ~ Chilean     Massachus~ 1939 or ~ Yes, pub~ Without ~
-## 10 Subway or~ Married ~ Chilean     Massachus~ 1939 or ~ No, has ~ Without ~
-## # ... with 586 more rows, and 21 more variables: DEYE_label &lt;chr&gt;,
+<pre><code>## # A tibble: 1 x 29
+##   JWTR_label HHT_label ANC1P_label RAC1P_label POBP_label YBL_label SCH_label
+##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;    
+## 1 Subway or~ N/A (GQ/~ Irish       White alone Massachus~ N/A (GQ)  No, has ~
+## # ... with 22 more variables: DIS_label &lt;chr&gt;, DEYE_label &lt;chr&gt;,
 ## #   DEAR_label &lt;chr&gt;, DDRS_label &lt;chr&gt;, DPHY_label &lt;chr&gt;, DREM_label &lt;chr&gt;,
 ## #   DOUT_label &lt;chr&gt;, GCR_label &lt;chr&gt;, R18_label &lt;chr&gt;, R65_label &lt;chr&gt;,
 ## #   PSF_label &lt;chr&gt;, NP &lt;dbl&gt;, NR_label &lt;chr&gt;, NPF &lt;dbl&gt;, ACR_label &lt;chr&gt;,
 ## #   JWMNP &lt;dbl&gt;, COW_label &lt;chr&gt;, SOCP_label &lt;chr&gt;, LANP_label &lt;chr&gt;,
 ## #   PINCP &lt;dbl&gt;, WKHP &lt;dbl&gt;, POVPIP &lt;dbl&gt;</code></pre>
+<pre class="r"><code> tail(lowelldemos, 596)</code></pre>
+<pre><code>## # A tibble: 596 x 29
+##    JWTR_label HHT_label ANC1P_label RAC1P_label POBP_label YBL_label SCH_label
+##    &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;    
+##  1 N/A (not ~ Married ~ Uncodable ~ White alone Michigan/~ 1960 to ~ Yes, pri~
+##  2 Taxicab    Nonfamil~ American    White alone Massachus~ 1980 to ~ No, has ~
+##  3 Car, truc~ Married ~ English     White alone Massachus~ 1950 to ~ No, has ~
+##  4 Railroad   Married ~ Irish       White alone Maine/ME   1950 to ~ No, has ~
+##  5 Car, truc~ Married ~ English     White alone Connectic~ 1940 to ~ No, has ~
+##  6 Car, truc~ Married ~ French Can~ White alone Massachus~ 1940 to ~ No, has ~
+##  7 Car, truc~ Nonfamil~ European    White alone Virginia/~ 1980 to ~ No, has ~
+##  8 Car, truc~ Married ~ Not report~ White alone Minnesota~ 2013      No, has ~
+##  9 N/A (not ~ Nonfamil~ Irish       White alone Connectic~ 1939 or ~ No, has ~
+## 10 Car, truc~ Married ~ German      White alone Pennsylva~ 1950 to ~ No, has ~
+## # ... with 586 more rows, and 22 more variables: DIS_label &lt;chr&gt;,
+## #   DEYE_label &lt;chr&gt;, DEAR_label &lt;chr&gt;, DDRS_label &lt;chr&gt;, DPHY_label &lt;chr&gt;,
+## #   DREM_label &lt;chr&gt;, DOUT_label &lt;chr&gt;, GCR_label &lt;chr&gt;, R18_label &lt;chr&gt;,
+## #   R65_label &lt;chr&gt;, PSF_label &lt;chr&gt;, NP &lt;dbl&gt;, NR_label &lt;chr&gt;, NPF &lt;dbl&gt;,
+## #   ACR_label &lt;chr&gt;, JWMNP &lt;dbl&gt;, COW_label &lt;chr&gt;, SOCP_label &lt;chr&gt;,
+## #   LANP_label &lt;chr&gt;, PINCP &lt;dbl&gt;, WKHP &lt;dbl&gt;, POVPIP &lt;dbl&gt;</code></pre>
 <div id="saving-data" class="section level2">
 <h2>Saving Data</h2>
 <p>Lastly, I saved my data to a csv file:</p>
@@ -1725,6 +1726,8 @@ library(tidyverse)</code></pre>
 </div>
 <div id="frequency-counts-for-categorical-variables" class="section level1">
 <h1>Frequency Counts For Categorical Variables</h1>
+<div id="means-of-transportation-to-work-jwtr" class="section level2">
+<h2>Means of Transportation to Work (JWTR)</h2>
 <pre class="r"><code>unique(lowelldemos$JWTR_label)</code></pre>
 <pre><code>##  [1] &quot;Subway or elevated&quot;                                                                                                                                                      
 ##  [2] &quot;Car, truck, or van&quot;                                                                                                                                                      
@@ -1767,9 +1770,9 @@ library(tidyverse)</code></pre>
 ##                                                                                                                                                                     1441 
 ##                                                                                                                                                           Worked at home 
 ##                                                                                                                                                                     1910</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$JWTR_label), caption = &quot;Frequency Counts for JWTR Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$JWTR_label), caption = &quot;Frequency Counts for Means of Transportation to Work (JWTR) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for JWTR Variable</caption>
+<caption>Frequency Counts for Means of Transportation to Work (JWTR) Variable</caption>
 <colgroup>
 <col width="96%"></col>
 <col width="3%"></col>
@@ -1835,6 +1838,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="householdfamily-type-hht" class="section level2">
+<h2>Household/Family Type (HHT)</h2>
 <pre class="r"><code>unique(lowelldemos$HHT_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/vacant)&quot;                                              
 ## [2] &quot;Nonfamily household: Male householder: Not living alone&quot;      
@@ -1862,9 +1868,9 @@ library(tidyverse)</code></pre>
 ##                                                          4169 
 ##   Other family household: Male householder, no spouse present 
 ##                                                          1682</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$HHT_label), caption = &quot;Frequency Counts for HHT Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$HHT_label), caption = &quot;Frequency Counts for Household/Family Type (HHT) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for HHT Variable</caption>
+<caption>Frequency Counts for Household/Family Type (HHT) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -1906,6 +1912,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="recoded-detailed-ancestry-anc1p" class="section level2">
+<h2>Recoded Detailed Ancestry (ANC1P)</h2>
 <pre class="r"><code>unique(lowelldemos$ANC1P_label)</code></pre>
 <pre><code>##   [1] &quot;Irish&quot;                     &quot;Filipino&quot;                 
 ##   [3] &quot;Irish Scotch&quot;              &quot;Not reported&quot;             
@@ -1993,24 +2002,24 @@ library(tidyverse)</code></pre>
 ## [167] &quot;Other West Indian&quot;         &quot;Algerian&quot;                 
 ## [169] &quot;Liberian&quot;                  &quot;Malaysian&quot;                
 ## [171] &quot;Assyrian&quot;                  &quot;New Zealander&quot;            
-## [173] &quot;Central American&quot;          &quot;Hong Kong&quot;                
-## [175] &quot;Other Arab&quot;                &quot;Germanic&quot;                 
-## [177] &quot;Guamanian&quot;                 &quot;Bolivian&quot;                 
-## [179] &quot;Pennsylvania German&quot;       &quot;Afro American&quot;            
-## [181] &quot;Jordanian&quot;                 &quot;Basque&quot;                   
-## [183] &quot;Texas&quot;                     &quot;Fijian&quot;                   
-## [185] &quot;Appalachian&quot;               &quot;Burmese&quot;                  
-## [187] &quot;Polynesian&quot;                &quot;Samoan&quot;                   
-## [189] &quot;Okinawan&quot;                  &quot;Western African&quot;          
-## [191] &quot;Maltese&quot;                   &quot;Sierra Leonean&quot;           
-## [193] &quot;Belizean&quot;                  &quot;Bengali&quot;                  
-## [195] &quot;Mongolian&quot;                 &quot;South American&quot;           
-## [197] &quot;Yugoslavian&quot;               &quot;St Lucia Islander&quot;        
-## [199] &quot;Moldavian&quot;                 &quot;Congolese&quot;                
-## [201] &quot;Pacific Islander&quot;          &quot;Punjabi&quot;                  
-## [203] &quot;Afro&quot;                      &quot;Zimbabwean&quot;               
-## [205] &quot;Bahamian&quot;                  &quot;Macedonian&quot;               
-## [207] &quot;North American&quot;            &quot;Flemish&quot;</code></pre>
+## [173] &quot;Central American&quot;          &quot;Bengali&quot;                  
+## [175] &quot;Hong Kong&quot;                 &quot;Mongolian&quot;                
+## [177] &quot;South American&quot;            &quot;Afro American&quot;            
+## [179] &quot;Other Arab&quot;                &quot;Basque&quot;                   
+## [181] &quot;Yugoslavian&quot;               &quot;St Lucia Islander&quot;        
+## [183] &quot;Pennsylvania German&quot;       &quot;Moldavian&quot;                
+## [185] &quot;Congolese&quot;                 &quot;Pacific Islander&quot;         
+## [187] &quot;Belizean&quot;                  &quot;Punjabi&quot;                  
+## [189] &quot;Afro&quot;                      &quot;Zimbabwean&quot;               
+## [191] &quot;Bahamian&quot;                  &quot;Jordanian&quot;                
+## [193] &quot;Macedonian&quot;                &quot;Maltese&quot;                  
+## [195] &quot;Germanic&quot;                  &quot;North American&quot;           
+## [197] &quot;Flemish&quot;                   &quot;Polynesian&quot;               
+## [199] &quot;Western African&quot;           &quot;Guamanian&quot;                
+## [201] &quot;Bolivian&quot;                  &quot;Texas&quot;                    
+## [203] &quot;Fijian&quot;                    &quot;Appalachian&quot;              
+## [205] &quot;Burmese&quot;                   &quot;Samoan&quot;                   
+## [207] &quot;Okinawan&quot;                  &quot;Sierra Leonean&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$ANC1P_label)</code></pre>
 <pre><code>## 
 ##                   Acadian                   African          African American 
@@ -2153,9 +2162,9 @@ library(tidyverse)</code></pre>
 ##                        92                       554                         1 
 ##                Zimbabwean 
 ##                         2</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$ANC1P_label), caption = &quot;Frequency Counts for ANC1P Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$ANC1P_label), caption = &quot;Frequency Counts for Recoded Detailed Ancestry (ANC1P) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for ANC1P Variable</caption>
+<caption>Frequency Counts for Recoded Detailed Ancestry (ANC1P) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -2997,6 +3006,94 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="recoded-detailed-race-code-rac1p" class="section level2">
+<h2>Recoded Detailed Race Code (RAC1P)</h2>
+<pre class="r"><code>unique(lowelldemos$RAC1P_label)</code></pre>
+<pre><code>## [1] &quot;White alone&quot;                                                                                                              
+## [2] &quot;Asian alone&quot;                                                                                                              
+## [3] &quot;Black or African American alone&quot;                                                                                          
+## [4] &quot;American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races&quot;
+## [5] &quot;Two or More Races&quot;                                                                                                        
+## [6] &quot;American Indian alone&quot;                                                                                                    
+## [7] &quot;Some Other Race alone&quot;                                                                                                    
+## [8] &quot;Native Hawaiian and Other Pacific Islander alone&quot;                                                                         
+## [9] &quot;Alaska Native alone&quot;</code></pre>
+<pre class="r"><code>table(lowelldemos$RAC1P_label)</code></pre>
+<pre><code>## 
+##                                                                                                       Alaska Native alone 
+##                                                                                                                         1 
+##                                                                                                     American Indian alone 
+##                                                                                                                        43 
+## American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races 
+##                                                                                                                        18 
+##                                                                                                               Asian alone 
+##                                                                                                                      2476 
+##                                                                                           Black or African American alone 
+##                                                                                                                      2082 
+##                                                                          Native Hawaiian and Other Pacific Islander alone 
+##                                                                                                                        17 
+##                                                                                                     Some Other Race alone 
+##                                                                                                                      1118 
+##                                                                                                         Two or More Races 
+##                                                                                                                       828 
+##                                                                                                               White alone 
+##                                                                                                                     31603</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$RAC1P_label), caption = &quot;Frequency Counts for Recoded Detailed Race Code (RAC1P) Variable&quot;)</code></pre>
+<table>
+<caption>Frequency Counts for Recoded Detailed Race Code (RAC1P) Variable</caption>
+<colgroup>
+<col width="95%"></col>
+<col width="4%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Alaska Native alone</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">American Indian alone</td>
+<td align="right">43</td>
+</tr>
+<tr class="odd">
+<td align="left">American Indian and Alaska Native tribes specified; or American Indian or Alaska Native, not specified and no other races</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">Asian alone</td>
+<td align="right">2476</td>
+</tr>
+<tr class="odd">
+<td align="left">Black or African American alone</td>
+<td align="right">2082</td>
+</tr>
+<tr class="even">
+<td align="left">Native Hawaiian and Other Pacific Islander alone</td>
+<td align="right">17</td>
+</tr>
+<tr class="odd">
+<td align="left">Some Other Race alone</td>
+<td align="right">1118</td>
+</tr>
+<tr class="even">
+<td align="left">Two or More Races</td>
+<td align="right">828</td>
+</tr>
+<tr class="odd">
+<td align="left">White alone</td>
+<td align="right">31603</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="place-of-birth-pobp" class="section level2">
+<h2>Place of Birth (POBP)</h2>
 <pre class="r"><code>unique(lowelldemos$POBP_label)</code></pre>
 <pre><code>##   [1] &quot;Massachusetts/MA&quot;                                        
 ##   [2] &quot;New York/NY&quot;                                             
@@ -3182,27 +3279,27 @@ library(tidyverse)</code></pre>
 ## [182] &quot;North Dakota/ND&quot;                                         
 ## [183] &quot;Zambia&quot;                                                  
 ## [184] &quot;Croatia&quot;                                                 
-## [185] &quot;Bhutan&quot;                                                  
-## [186] &quot;Bolivia&quot;                                                 
-## [187] &quot;Saudi Arabia&quot;                                            
-## [188] &quot;West Indies&quot;                                             
-## [189] &quot;Czechoslovakia&quot;                                          
-## [190] &quot;Bahamas&quot;                                                 
-## [191] &quot;Other US Island Areas, Oceania, Not Specified, or at Sea&quot;
-## [192] &quot;Tunisia&quot;                                                 
-## [193] &quot;Congo&quot;                                                   
+## [185] &quot;Democratic Republic of Congo (Zaire)&quot;                    
+## [186] &quot;Czechoslovakia&quot;                                          
+## [187] &quot;Azerbaijan&quot;                                              
+## [188] &quot;Other Europe, Not Specified&quot;                             
+## [189] &quot;Bolivia&quot;                                                 
+## [190] &quot;West Indies&quot;                                             
+## [191] &quot;St. Vincent &amp; the Grenadines&quot;                            
+## [192] &quot;Bahamas&quot;                                                 
+## [193] &quot;Belize&quot;                                                  
 ## [194] &quot;Uzbekistan&quot;                                              
-## [195] &quot;Grenada&quot;                                                 
-## [196] &quot;Asia&quot;                                                    
-## [197] &quot;Azerbaijan&quot;                                              
-## [198] &quot;Belize&quot;                                                  
-## [199] &quot;Mongolia&quot;                                                
-## [200] &quot;Democratic Republic of Congo (Zaire)&quot;                    
-## [201] &quot;Other Europe, Not Specified&quot;                             
-## [202] &quot;St. Vincent &amp; the Grenadines&quot;                            
-## [203] &quot;Czech Republic&quot;                                          
-## [204] &quot;Latvia&quot;                                                  
-## [205] &quot;South America&quot;</code></pre>
+## [195] &quot;Czech Republic&quot;                                          
+## [196] &quot;Latvia&quot;                                                  
+## [197] &quot;South America&quot;                                           
+## [198] &quot;Tunisia&quot;                                                 
+## [199] &quot;Bhutan&quot;                                                  
+## [200] &quot;Saudi Arabia&quot;                                            
+## [201] &quot;Other US Island Areas, Oceania, Not Specified, or at Sea&quot;
+## [202] &quot;Congo&quot;                                                   
+## [203] &quot;Grenada&quot;                                                 
+## [204] &quot;Asia&quot;                                                    
+## [205] &quot;Mongolia&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$POBP_label)</code></pre>
 <pre><code>## 
 ##                                              Afghanistan 
@@ -3615,9 +3712,9 @@ library(tidyverse)</code></pre>
 ##                                                        2 
 ##                                                 Zimbabwe 
 ##                                                        7</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$POBP_label), caption = &quot;Frequency Counts for POBP Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$POBP_label), caption = &quot;Frequency Counts for Place of Birth (POBP) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for POBP Variable</caption>
+<caption>Frequency Counts for Place of Birth (POBP) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4447,6 +4544,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="when-structure-first-built-ybl" class="section level2">
+<h2>When Structure First Built (YBL)</h2>
 <pre class="r"><code>unique(lowelldemos$YBL_label)</code></pre>
 <pre><code>##  [1] &quot;N/A (GQ)&quot;        &quot;2015&quot;            &quot;1990 to 1999&quot;    &quot;2012&quot;           
 ##  [5] &quot;1960 to 1969&quot;    &quot;1950 to 1959&quot;    &quot;1939 or earlier&quot; &quot;1940 to 1949&quot;   
@@ -4466,9 +4566,9 @@ library(tidyverse)</code></pre>
 ##             153             164             220             239             257 
 ##            2017            2018        N/A (GQ) 
 ##             102              19             269</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$YBL_label), caption = &quot;Frequency Counts for YBL Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$YBL_label), caption = &quot;Frequency Counts for When Structure First Built (YBL) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for YBL Variable</caption>
+<caption>Frequency Counts for When Structure First Built (YBL) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4570,6 +4670,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="school-enrollment-sch" class="section level2">
+<h2>School Enrollment (SCH)</h2>
 <pre class="r"><code>unique(lowelldemos$SCH_label)</code></pre>
 <pre><code>## [1] &quot;No, has not attended in the last 3 months&quot;    
 ## [2] &quot;Yes, private school or college or home school&quot;
@@ -4582,9 +4685,9 @@ library(tidyverse)</code></pre>
 ##                                          1720 
 ##          Yes, public school or public college 
 ##                                          2544</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$SCH_label), caption = &quot;Frequency Counts for SCH Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$SCH_label), caption = &quot;Frequency Counts for School Enrollment (SCH) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for SCH Variable</caption>
+<caption>Frequency Counts for School Enrollment (SCH) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4606,15 +4709,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="disability-dis" class="section level2">
+<h2>Disability (DIS)</h2>
 <pre class="r"><code>unique(lowelldemos$DIS_label)</code></pre>
 <pre><code>## [1] &quot;Without a disability&quot; &quot;With a disability&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DIS_label)</code></pre>
 <pre><code>## 
 ##    With a disability Without a disability 
 ##                 2206                35980</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DIS_label), caption = &quot;Frequency Counts for DIS Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DIS_label), caption = &quot;Frequency Counts for Disability (DIS) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DIS Variable</caption>
+<caption>Frequency Counts for Disability (DIS) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4632,15 +4738,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="vision-difficulty-deye" class="section level2">
+<h2>Vision Difficulty (DEYE)</h2>
 <pre class="r"><code>unique(lowelldemos$DEYE_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DEYE_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 37764   422</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DEYE_label), caption = &quot;Frequency Counts for DEYE Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DEYE_label), caption = &quot;Frequency Counts for Vision Difficulty (DEYE) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DEYE Variable</caption>
+<caption>Frequency Counts for Vision Difficulty (DEYE) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4658,15 +4767,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="hearing-difficulty-dear" class="section level2">
+<h2>Hearing Difficulty (DEAR)</h2>
 <pre class="r"><code>unique(lowelldemos$DEAR_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DEAR_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 37535   651</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DEAR_label), caption = &quot;Frequency Counts for DEAR Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DEAR_label), caption = &quot;Frequency Counts for Hearing Difficulty (DEAR) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DEAR Variable</caption>
+<caption>Frequency Counts for Hearing Difficulty (DEAR) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4684,15 +4796,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="self-care-difficulty-ddrs" class="section level2">
+<h2>Self-care Difficulty (DDRS)</h2>
 <pre class="r"><code>unique(lowelldemos$DDRS_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DDRS_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 38024   162</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DDRS_label), caption = &quot;Frequency Counts for DDRS Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DDRS_label), caption = &quot;Frequency Counts for Self-care Difficulty (DDRS) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DDRS Variable</caption>
+<caption>Frequency Counts for Self-care Difficulty (DDRS) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4710,15 +4825,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ambulatory-physical-difficulty-dphy" class="section level2">
+<h2>Ambulatory (physical) Difficulty (DPHY)</h2>
 <pre class="r"><code>unique(lowelldemos$DPHY_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DPHY_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 37528   658</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DPHY_label), caption = &quot;Frequency Counts for DPHY Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DPHY_label), caption = &quot;Frequency Counts for Ambulatory (physical) Difficulty (DPHY) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DPHY Variable</caption>
+<caption>Frequency Counts for Ambulatory (physical) Difficulty (DPHY) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4736,15 +4854,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="cognitive-difficulty-drem" class="section level2">
+<h2>Cognitive Difficulty (DREM)</h2>
 <pre class="r"><code>unique(lowelldemos$DREM_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DREM_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 37449   737</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DREM_label), caption = &quot;Frequency Counts for DREM Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DREM_label), caption = &quot;Frequency Counts for Cognitive Difficulty (DREM) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DREM Variable</caption>
+<caption>Frequency Counts for Cognitive Difficulty (DREM) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4762,15 +4883,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="independent-living-difficulty-dout" class="section level2">
+<h2>Independent Living Difficulty (DOUT)</h2>
 <pre class="r"><code>unique(lowelldemos$DOUT_label)</code></pre>
 <pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$DOUT_label)</code></pre>
 <pre><code>## 
 ##    No   Yes 
 ## 37762   424</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$DOUT_label), caption = &quot;Frequency Counts for DOUT Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$DOUT_label), caption = &quot;Frequency Counts for Independent Living Difficulty (DOUT) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for DOUT Variable</caption>
+<caption>Frequency Counts for Independent Living Difficulty (DOUT) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4788,6 +4912,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="grandparents-responsible-for-grandchildren-gcr" class="section level2">
+<h2>Grandparents Responsible for Grandchildren (GCR)</h2>
 <pre class="r"><code>unique(lowelldemos$GCR_label)</code></pre>
 <pre><code>## [1] &quot;N/A (less than 30 years/institutional GQ/grandparent not living with grandchild)&quot;
 ## [2] &quot;No&quot;                                                                              
@@ -4800,9 +4927,9 @@ library(tidyverse)</code></pre>
 ##                                                                              391 
 ##                                                                              Yes 
 ##                                                                              184</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$GCR_label), caption = &quot;Frequency Counts for GCR Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$GCR_label), caption = &quot;Frequency Counts for Grandparents Responsible for Grandchildren (GCR) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for GCR Variable</caption>
+<caption>Frequency Counts for Grandparents Responsible for Grandchildren (GCR) Variable</caption>
 <colgroup>
 <col width="93%"></col>
 <col width="6%"></col>
@@ -4828,6 +4955,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="presence-of-people-18-and-under-in-household-r18" class="section level2">
+<h2>Presence of People 18 and under in Household (R18)</h2>
 <pre class="r"><code>unique(lowelldemos$R18_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/vacant)&quot;                        
 ## [2] &quot;No person under 18 in household&quot;        
@@ -4838,9 +4968,9 @@ library(tidyverse)</code></pre>
 ##                                   13494                                     269 
 ##         No person under 18 in household 
 ##                                   24423</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$R18_label), caption = &quot;Frequency Counts for R18 Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$R18_label), caption = &quot;Frequency Counts for Presence of People 18 and under in Household (R18) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for R18 Variable</caption>
+<caption>Frequency Counts for Presence of People 18 and under in Household (R18) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4862,6 +4992,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="presence-of-people-65-and-older-in-household-r65" class="section level2">
+<h2>Presence of People 65 and older in Household (R65)</h2>
 <pre class="r"><code>unique(lowelldemos$R65_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/vacant)&quot;               &quot;No person 65 and over&quot;        
 ## [3] &quot;2 or more persons 65 and over&quot; &quot;1 person 65 and over&quot;</code></pre>
@@ -4871,9 +5004,9 @@ library(tidyverse)</code></pre>
 ##                          4667                          2703 
 ##               N/A (GQ/vacant)         No person 65 and over 
 ##                           269                         30547</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$R65_label), caption = &quot;Frequency Counts for R65 Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$R65_label), caption = &quot;Frequency Counts for Presence of People 65 and older in Household (R65) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for R65 Variable</caption>
+<caption>Frequency Counts for Presence of People 65 and older in Household (R65) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4899,15 +5032,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="presence-of-subfamilies-in-household-psf" class="section level2">
+<h2>Presence of Subfamilies in Household (PSF)</h2>
 <pre class="r"><code>unique(lowelldemos$PSF_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/vacant)&quot;       &quot;No subfamilies&quot;        &quot;1 or more subfamilies&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$PSF_label)</code></pre>
 <pre><code>## 
 ## 1 or more subfamilies       N/A (GQ/vacant)        No subfamilies 
 ##                  1654                   269                 36263</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$PSF_label), caption = &quot;Frequency Counts for PSF Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$PSF_label), caption = &quot;Frequency Counts for Presence of Subfamilies in Household (PSF) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for PSF Variable</caption>
+<caption>Frequency Counts for Presence of Subfamilies in Household (PSF) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4929,15 +5065,18 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="presence-of-non-relative-in-household-nr" class="section level2">
+<h2>Presence of Non Relative in Household (NR)</h2>
 <pre class="r"><code>unique(lowelldemos$NR_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/vacant)&quot;        &quot;1 or more nonrelatives&quot; &quot;None&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$NR_label)</code></pre>
 <pre><code>## 
 ## 1 or more nonrelatives        N/A (GQ/vacant)                   None 
 ##                   6781                    269                  31136</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$NR5_label), caption = &quot;Frequency Counts for NR Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$NR5_label), caption = &quot;Frequency Counts for Presence of Non Relative in Household (NR) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for NR Variable</caption>
+<caption>Frequency Counts for Presence of Non Relative in Household (NR) Variable</caption>
 <thead>
 <tr class="header">
 <th align="right">Freq</th>
@@ -4946,6 +5085,9 @@ library(tidyverse)</code></pre>
 <tbody>
 </tbody>
 </table>
+</div>
+<div id="lot-size-acr" class="section level2">
+<h2>Lot Size (ACR)</h2>
 <pre class="r"><code>unique(lowelldemos$ACR_label)</code></pre>
 <pre><code>## [1] &quot;N/A (GQ/not a one-family house or mobile home)&quot;
 ## [2] &quot;House on less than one acre&quot;                   
@@ -4961,9 +5103,9 @@ library(tidyverse)</code></pre>
 ##                                            569 
 ## N/A (GQ/not a one-family house or mobile home) 
 ##                                          12604</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$ACR_label), caption = &quot;Frequency Counts for ACR Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$ACR_label), caption = &quot;Frequency Counts for Lot Size (ACR) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for ACR Variable</caption>
+<caption>Frequency Counts for Lot Size (ACR) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -4989,6 +5131,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="class-of-worker-cow" class="section level2">
+<h2>Class of Worker (COW)</h2>
 <pre class="r"><code>unique(lowelldemos$COW_label)</code></pre>
 <pre><code>## [1] &quot;Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions&quot;
 ## [2] &quot;Employee of a private not-for-profit, tax-exempt, or charitable organization&quot;                                
@@ -5016,9 +5161,9 @@ library(tidyverse)</code></pre>
 ##                                                                                                         1413 
 ##                                                               Working without pay in family business or farm 
 ##                                                                                                           96</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$COW_label), caption = &quot;Frequency Counts for COW Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$COW_label), caption = &quot;Frequency Counts for Class of Worker (COW) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for COW Variable</caption>
+<caption>Frequency Counts for Class of Worker (COW) Variable</caption>
 <colgroup>
 <col width="94%"></col>
 <col width="5%"></col>
@@ -5064,6 +5209,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="standard-occupational-classification-socp" class="section level2">
+<h2>Standard Occupational Classification (SOCP)</h2>
 <pre class="r"><code>unique(lowelldemos$SOCP_label)</code></pre>
 <pre><code>##   [1] &quot;TRN-Transportation Service Attendants&quot;                                                                    
 ##   [2] &quot;EDU-Postsecondary Teachers&quot;                                                                               
@@ -5547,41 +5695,41 @@ library(tidyverse)</code></pre>
 ## [480] &quot;SCI-Agricultural And Food Scientists&quot;                                                                     
 ## [481] &quot;SCI-Chemical Technicians&quot;                                                                                 
 ## [482] &quot;EXT-Underground Mining Machine Operators&quot;                                                                 
-## [483] &quot;ENT-Disc Jockeys, Except Radio&quot;                                                                           
-## [484] &quot;RPR-Riggers&quot;                                                                                              
-## [485] &quot;Grinding, Lapping, Polishing, And Buffing Machine Tool Setters, Operators, And Tenders, Metal and Plastic&quot;
-## [486] &quot;TRN-Other Transportation Workers&quot;                                                                         
-## [487] &quot;PRT-Transportation Security Screeners&quot;                                                                    
-## [488] &quot;PRD-Power Plant Operators, Distributors, And Dispatchers&quot;                                                 
-## [489] &quot;PRD-Tire Builders&quot;                                                                                        
-## [490] &quot;MED-Opticians, Dispensing&quot;                                                                                
-## [491] &quot;ENG-Surveyors, Cartographers, And Photogrammetrists&quot;                                                      
-## [492] &quot;SCI-Environmental Science And Geoscience Technicians, And Nuclear Technicians&quot;                            
-## [493] &quot;PRT-Animal Control Workers&quot;                                                                               
-## [494] &quot;ENT-Court Reporters And Simultaneous Captioners&quot;                                                          
-## [495] &quot;PRD-Metal Furnace Operators, Tenders, Pourers, And Casters&quot;                                               
-## [496] &quot;PRD-Other Woodworkers&quot;                                                                                    
-## [497] &quot;PRS-Morticians, Undertakers, And Funeral Arrangers&quot;                                                       
-## [498] &quot;EXT-Explosives Workers, Ordnance Handling Experts, And Blasters&quot;                                          
-## [499] &quot;OFF-Credit Authorizers, Checkers, And Clerks&quot;                                                             
-## [500] &quot;PRD-Miscellaneous Plant And System Operators&quot;                                                             
-## [501] &quot;TRN-Sailors And Marine Oilers, And Ship Engineers&quot;                                                        
-## [502] &quot;MED-Healthcare Diagnosing Or Treating Practitioners, All Other&quot;                                           
-## [503] &quot;SCI-Conservation Scientists And Foresters&quot;                                                                
-## [504] &quot;PRD-Woodworking Machine Setters, Operators, And Tenders, Except Sawing&quot;                                   
-## [505] &quot;CON-Glaziers&quot;                                                                                             
-## [506] &quot;RPR-Automotive Glass Installers And Repairers&quot;                                                            
-## [507] &quot;OFF-Meter Readers, Utilities&quot;                                                                             
-## [508] &quot;MIL-Military Officer Special And Tactical Operations Leaders&quot;                                             
-## [509] &quot;BUS-Buyers And Purchasing Agents, Farm Products&quot;                                                          
-## [510] &quot;RPR-Maintenance Workers, Machinery&quot;                                                                       
-## [511] &quot;FFF-Forest And Conservation Workers&quot;                                                                      
-## [512] &quot;RPR-Coin, Vending, And Amusement Machine Servicers And Repairers&quot;                                         
-## [513] &quot;CON-Solar Photovoltaic Installers&quot;                                                                        
-## [514] &quot;EXT-Other Extraction Workers&quot;                                                                             
-## [515] &quot;MGR-Emergency Management Directors&quot;                                                                       
-## [516] &quot;PRD-Adhesive Bonding Machine Operators And Tenders&quot;                                                       
-## [517] &quot;PRD-Upholsterers&quot;</code></pre>
+## [483] &quot;PRD-Other Woodworkers&quot;                                                                                    
+## [484] &quot;BUS-Buyers And Purchasing Agents, Farm Products&quot;                                                          
+## [485] &quot;RPR-Maintenance Workers, Machinery&quot;                                                                       
+## [486] &quot;FFF-Forest And Conservation Workers&quot;                                                                      
+## [487] &quot;RPR-Coin, Vending, And Amusement Machine Servicers And Repairers&quot;                                         
+## [488] &quot;CON-Solar Photovoltaic Installers&quot;                                                                        
+## [489] &quot;CON-Glaziers&quot;                                                                                             
+## [490] &quot;PRT-Transportation Security Screeners&quot;                                                                    
+## [491] &quot;PRD-Power Plant Operators, Distributors, And Dispatchers&quot;                                                 
+## [492] &quot;OFF-Credit Authorizers, Checkers, And Clerks&quot;                                                             
+## [493] &quot;OFF-Meter Readers, Utilities&quot;                                                                             
+## [494] &quot;EXT-Other Extraction Workers&quot;                                                                             
+## [495] &quot;TRN-Sailors And Marine Oilers, And Ship Engineers&quot;                                                        
+## [496] &quot;MED-Opticians, Dispensing&quot;                                                                                
+## [497] &quot;ENG-Surveyors, Cartographers, And Photogrammetrists&quot;                                                      
+## [498] &quot;PRS-Morticians, Undertakers, And Funeral Arrangers&quot;                                                       
+## [499] &quot;MGR-Emergency Management Directors&quot;                                                                       
+## [500] &quot;PRD-Adhesive Bonding Machine Operators And Tenders&quot;                                                       
+## [501] &quot;PRD-Upholsterers&quot;                                                                                         
+## [502] &quot;SCI-Environmental Science And Geoscience Technicians, And Nuclear Technicians&quot;                            
+## [503] &quot;ENT-Disc Jockeys, Except Radio&quot;                                                                           
+## [504] &quot;RPR-Riggers&quot;                                                                                              
+## [505] &quot;Grinding, Lapping, Polishing, And Buffing Machine Tool Setters, Operators, And Tenders, Metal and Plastic&quot;
+## [506] &quot;TRN-Other Transportation Workers&quot;                                                                         
+## [507] &quot;PRD-Tire Builders&quot;                                                                                        
+## [508] &quot;PRT-Animal Control Workers&quot;                                                                               
+## [509] &quot;ENT-Court Reporters And Simultaneous Captioners&quot;                                                          
+## [510] &quot;PRD-Metal Furnace Operators, Tenders, Pourers, And Casters&quot;                                               
+## [511] &quot;EXT-Explosives Workers, Ordnance Handling Experts, And Blasters&quot;                                          
+## [512] &quot;PRD-Miscellaneous Plant And System Operators&quot;                                                             
+## [513] &quot;MED-Healthcare Diagnosing Or Treating Practitioners, All Other&quot;                                           
+## [514] &quot;SCI-Conservation Scientists And Foresters&quot;                                                                
+## [515] &quot;PRD-Woodworking Machine Setters, Operators, And Tenders, Except Sawing&quot;                                   
+## [516] &quot;RPR-Automotive Glass Installers And Repairers&quot;                                                            
+## [517] &quot;MIL-Military Officer Special And Tactical Operations Leaders&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$SOCP_label)</code></pre>
 <pre><code>## 
 ##                                     BUS-Agents And Business Managers Of Artists, Performers, And Athletes 
@@ -6618,9 +6766,9 @@ library(tidyverse)</code></pre>
 ##                                                                                                         9 
 ##                                                                     TRN-Transportation Service Attendants 
 ##                                                                                                        17</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$SOCP_label), caption = &quot;Frequency Counts for SOCP Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$SOCP_label), caption = &quot;Frequency Counts for Standard Occupational Classification (SOCP) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for SOCP Variable</caption>
+<caption>Frequency Counts for Standard Occupational Classification (SOCP) Variable</caption>
 <colgroup>
 <col width="95%"></col>
 <col width="4%"></col>
@@ -8702,6 +8850,9 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="language-spoken-at-home-lanp" class="section level2">
+<h2>Language Spoken at Home (LANP)</h2>
 <pre class="r"><code>unique(lowelldemos$LANP_label)</code></pre>
 <pre><code>##   [1] NA                                          
 ##   [2] &quot;Korean&quot;                                    
@@ -8792,19 +8943,19 @@ library(tidyverse)</code></pre>
 ##  [87] &quot;Pakistan N.E.C.&quot;                           
 ##  [88] &quot;Min Nan Chinese&quot;                           
 ##  [89] &quot;Edoid languages&quot;                           
-##  [90] &quot;Other English-based Creole languages&quot;      
-##  [91] &quot;Shona&quot;                                     
-##  [92] &quot;Czech&quot;                                     
-##  [93] &quot;Norwegian&quot;                                 
-##  [94] &quot;India N.E.C.&quot;                              
-##  [95] &quot;Cebuano&quot;                                   
-##  [96] &quot;Burmese&quot;                                   
-##  [97] &quot;Other languages of Africa&quot;                 
-##  [98] &quot;Karen languages&quot;                           
-##  [99] &quot;Malay&quot;                                     
-## [100] &quot;Latvian&quot;                                   
-## [101] &quot;Swiss German&quot;                              
-## [102] &quot;Samoan&quot;</code></pre>
+##  [90] &quot;Karen languages&quot;                           
+##  [91] &quot;Other English-based Creole languages&quot;      
+##  [92] &quot;Norwegian&quot;                                 
+##  [93] &quot;Malay&quot;                                     
+##  [94] &quot;Shona&quot;                                     
+##  [95] &quot;Other languages of Africa&quot;                 
+##  [96] &quot;Latvian&quot;                                   
+##  [97] &quot;Swiss German&quot;                              
+##  [98] &quot;Czech&quot;                                     
+##  [99] &quot;Samoan&quot;                                    
+## [100] &quot;India N.E.C.&quot;                              
+## [101] &quot;Cebuano&quot;                                   
+## [102] &quot;Burmese&quot;</code></pre>
 <pre class="r"><code>table(lowelldemos$LANP_label)</code></pre>
 <pre><code>## 
 ##                                  Afrikaans 
@@ -9009,9 +9160,9 @@ library(tidyverse)</code></pre>
 ##                                          3 
 ##                                     Yoruba 
 ##                                         16</code></pre>
-<pre class="r"><code>knitr::kable(table(lowelldemos$LANP_label), caption = &quot;Frequency Counts for LANP Variable&quot;)</code></pre>
+<pre class="r"><code>knitr::kable(table(lowelldemos$LANP_label), caption = &quot;Frequency Counts for Language Spoken at Home (LANP) Variable&quot;)</code></pre>
 <table>
-<caption>Frequency Counts for LANP Variable</caption>
+<caption>Frequency Counts for Language Spoken at Home (LANP) Variable</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -9425,6 +9576,7 @@ library(tidyverse)</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 

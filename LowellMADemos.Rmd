@@ -103,6 +103,7 @@ lowell <- c("00502")
 lowelldemos <- get_pums(variables = c("JWTR",
                                       "HHT",
                                       "ANC1P",
+                                      "RAC1P",
                                       "POBP",
                                       "YBL", 
                                       "SCH", 
@@ -136,7 +137,7 @@ lowelldemos <- get_pums(variables = c("JWTR",
   filter(PINCP > 0,
          WKHP > 0,
          POVPIP > 0) %>%
-  select(JWTR_label, HHT_label, ANC1P_label, POBP_label, YBL_label, SCH_label, DIS_label, DEYE_label, DEAR_label, DDRS_label, DPHY_label, DREM_label, DOUT_label, GCR_label, R18_label, R65_label, PSF_label, NP, NR_label, NPF, ACR_label, JWMNP, COW_label, SOCP_label, LANP_label, PINCP, WKHP, POVPIP)
+  select(JWTR_label, HHT_label, ANC1P_label, RAC1P_label, POBP_label, YBL_label, SCH_label, DIS_label, DEYE_label, DEAR_label, DDRS_label, DPHY_label, DREM_label, DOUT_label, GCR_label, R18_label, R65_label, PSF_label, NP, NR_label, NPF, ACR_label, JWMNP, COW_label, SOCP_label, LANP_label, PINCP, WKHP, POVPIP)
 ```
 
 ```{r load lowelldemos}
@@ -152,14 +153,18 @@ write_csv(lowelldemos, "lowelldemos.csv")
 
 # Frequency Counts For Categorical Variables
 
+## Means of Transportation to Work (JWTR)
+
 ```{r}
 unique(lowelldemos$JWTR_label)
 ```
 
 ```{r}
 table(lowelldemos$JWTR_label)
-knitr::kable(table(lowelldemos$JWTR_label), caption = "Frequency Counts for JWTR Variable")
+knitr::kable(table(lowelldemos$JWTR_label), caption = "Frequency Counts for Means of Transportation to Work (JWTR) Variable")
 ```
+
+## Household/Family Type (HHT)
 
 ```{r}
 unique(lowelldemos$HHT_label)
@@ -167,8 +172,10 @@ unique(lowelldemos$HHT_label)
 
 ```{r}
 table(lowelldemos$HHT_label)
-knitr::kable(table(lowelldemos$HHT_label), caption = "Frequency Counts for HHT Variable")
+knitr::kable(table(lowelldemos$HHT_label), caption = "Frequency Counts for Household/Family Type (HHT) Variable")
 ```
+
+## Recoded Detailed Ancestry (ANC1P)
 
 ```{r}
 unique(lowelldemos$ANC1P_label)
@@ -176,8 +183,21 @@ unique(lowelldemos$ANC1P_label)
 
 ```{r}
 table(lowelldemos$ANC1P_label)
-knitr::kable(table(lowelldemos$ANC1P_label), caption = "Frequency Counts for ANC1P Variable")
+knitr::kable(table(lowelldemos$ANC1P_label), caption = "Frequency Counts for Recoded Detailed Ancestry (ANC1P) Variable")
 ```
+
+## Recoded Detailed Race Code (RAC1P)
+
+```{r}
+unique(lowelldemos$RAC1P_label)
+```
+
+```{r}
+table(lowelldemos$RAC1P_label)
+knitr::kable(table(lowelldemos$RAC1P_label), caption = "Frequency Counts for Recoded Detailed Race Code (RAC1P) Variable")
+```
+
+## Place of Birth (POBP)
 
 ```{r}
 unique(lowelldemos$POBP_label)
@@ -185,8 +205,10 @@ unique(lowelldemos$POBP_label)
 
 ```{r}
 table(lowelldemos$POBP_label)
-knitr::kable(table(lowelldemos$POBP_label), caption = "Frequency Counts for POBP Variable")
+knitr::kable(table(lowelldemos$POBP_label), caption = "Frequency Counts for Place of Birth (POBP) Variable")
 ```
+
+## When Structure First Built (YBL)
 
 ```{r}
 unique(lowelldemos$YBL_label)
@@ -194,8 +216,10 @@ unique(lowelldemos$YBL_label)
 
 ```{r}
 table(lowelldemos$YBL_label)
-knitr::kable(table(lowelldemos$YBL_label), caption = "Frequency Counts for YBL Variable")
+knitr::kable(table(lowelldemos$YBL_label), caption = "Frequency Counts for When Structure First Built (YBL) Variable")
 ```
+
+## School Enrollment (SCH)
 
 ```{r}
 unique(lowelldemos$SCH_label)
@@ -203,8 +227,10 @@ unique(lowelldemos$SCH_label)
 
 ```{r}
 table(lowelldemos$SCH_label)
-knitr::kable(table(lowelldemos$SCH_label), caption = "Frequency Counts for SCH Variable")
+knitr::kable(table(lowelldemos$SCH_label), caption = "Frequency Counts for School Enrollment (SCH) Variable")
 ```
+
+## Disability (DIS)
 
 ```{r}
 unique(lowelldemos$DIS_label)
@@ -212,8 +238,10 @@ unique(lowelldemos$DIS_label)
 
 ```{r}
 table(lowelldemos$DIS_label)
-knitr::kable(table(lowelldemos$DIS_label), caption = "Frequency Counts for DIS Variable")
+knitr::kable(table(lowelldemos$DIS_label), caption = "Frequency Counts for Disability (DIS) Variable")
 ```
+
+## Vision Difficulty (DEYE)
 
 ```{r}
 unique(lowelldemos$DEYE_label)
@@ -221,8 +249,10 @@ unique(lowelldemos$DEYE_label)
 
 ```{r}
 table(lowelldemos$DEYE_label)
-knitr::kable(table(lowelldemos$DEYE_label), caption = "Frequency Counts for DEYE Variable")
+knitr::kable(table(lowelldemos$DEYE_label), caption = "Frequency Counts for Vision Difficulty (DEYE) Variable")
 ```
+
+## Hearing Difficulty (DEAR)
 
 ```{r}
 unique(lowelldemos$DEAR_label)
@@ -230,8 +260,10 @@ unique(lowelldemos$DEAR_label)
 
 ```{r}
 table(lowelldemos$DEAR_label)
-knitr::kable(table(lowelldemos$DEAR_label), caption = "Frequency Counts for DEAR Variable")
+knitr::kable(table(lowelldemos$DEAR_label), caption = "Frequency Counts for Hearing Difficulty (DEAR) Variable")
 ```
+
+## Self-care Difficulty (DDRS)
 
 ```{r}
 unique(lowelldemos$DDRS_label)
@@ -239,8 +271,10 @@ unique(lowelldemos$DDRS_label)
 
 ```{r}
 table(lowelldemos$DDRS_label)
-knitr::kable(table(lowelldemos$DDRS_label), caption = "Frequency Counts for DDRS Variable")
+knitr::kable(table(lowelldemos$DDRS_label), caption = "Frequency Counts for Self-care Difficulty (DDRS) Variable")
 ```
+
+## Ambulatory (physical) Difficulty (DPHY)
 
 ```{r}
 unique(lowelldemos$DPHY_label)
@@ -248,8 +282,10 @@ unique(lowelldemos$DPHY_label)
 
 ```{r}
 table(lowelldemos$DPHY_label)
-knitr::kable(table(lowelldemos$DPHY_label), caption = "Frequency Counts for DPHY Variable")
+knitr::kable(table(lowelldemos$DPHY_label), caption = "Frequency Counts for Ambulatory (physical) Difficulty (DPHY) Variable")
 ```
+
+## Cognitive Difficulty (DREM)
 
 ```{r}
 unique(lowelldemos$DREM_label)
@@ -257,8 +293,10 @@ unique(lowelldemos$DREM_label)
 
 ```{r}
 table(lowelldemos$DREM_label)
-knitr::kable(table(lowelldemos$DREM_label), caption = "Frequency Counts for DREM Variable")
+knitr::kable(table(lowelldemos$DREM_label), caption = "Frequency Counts for Cognitive Difficulty (DREM) Variable")
 ```
+
+## Independent Living Difficulty (DOUT)
 
 ```{r}
 unique(lowelldemos$DOUT_label)
@@ -266,8 +304,10 @@ unique(lowelldemos$DOUT_label)
 
 ```{r}
 table(lowelldemos$DOUT_label)
-knitr::kable(table(lowelldemos$DOUT_label), caption = "Frequency Counts for DOUT Variable")
+knitr::kable(table(lowelldemos$DOUT_label), caption = "Frequency Counts for Independent Living Difficulty (DOUT) Variable")
 ```
+
+## Grandparents Responsible for Grandchildren (GCR)
 
 ```{r}
 unique(lowelldemos$GCR_label)
@@ -275,8 +315,10 @@ unique(lowelldemos$GCR_label)
 
 ```{r}
 table(lowelldemos$GCR_label)
-knitr::kable(table(lowelldemos$GCR_label), caption = "Frequency Counts for GCR Variable")
+knitr::kable(table(lowelldemos$GCR_label), caption = "Frequency Counts for Grandparents Responsible for Grandchildren (GCR) Variable")
 ```
+
+## Presence of People 18 and under in Household (R18)
 
 ```{r}
 unique(lowelldemos$R18_label)
@@ -284,8 +326,10 @@ unique(lowelldemos$R18_label)
 
 ```{r}
 table(lowelldemos$R18_label)
-knitr::kable(table(lowelldemos$R18_label), caption = "Frequency Counts for R18 Variable")
+knitr::kable(table(lowelldemos$R18_label), caption = "Frequency Counts for Presence of People 18 and under in Household (R18) Variable")
 ```
+
+## Presence of People 65 and older in Household (R65)
 
 ```{r}
 unique(lowelldemos$R65_label)
@@ -293,8 +337,10 @@ unique(lowelldemos$R65_label)
 
 ```{r}
 table(lowelldemos$R65_label)
-knitr::kable(table(lowelldemos$R65_label), caption = "Frequency Counts for R65 Variable")
+knitr::kable(table(lowelldemos$R65_label), caption = "Frequency Counts for Presence of People 65 and older in Household (R65) Variable")
 ```
+
+## Presence of Subfamilies in Household (PSF)
 
 ```{r}
 unique(lowelldemos$PSF_label)
@@ -302,8 +348,10 @@ unique(lowelldemos$PSF_label)
 
 ```{r}
 table(lowelldemos$PSF_label)
-knitr::kable(table(lowelldemos$PSF_label), caption = "Frequency Counts for PSF Variable")
+knitr::kable(table(lowelldemos$PSF_label), caption = "Frequency Counts for Presence of Subfamilies in Household (PSF) Variable")
 ```
+
+## Presence of Non Relative in Household (NR)
 
 ```{r}
 unique(lowelldemos$NR_label)
@@ -311,8 +359,10 @@ unique(lowelldemos$NR_label)
 
 ```{r}
 table(lowelldemos$NR_label)
-knitr::kable(table(lowelldemos$NR5_label), caption = "Frequency Counts for NR Variable")
+knitr::kable(table(lowelldemos$NR5_label), caption = "Frequency Counts for Presence of Non Relative in Household (NR) Variable")
 ```
+
+## Lot Size (ACR)
 
 ```{r}
 unique(lowelldemos$ACR_label)
@@ -320,8 +370,10 @@ unique(lowelldemos$ACR_label)
 
 ```{r}
 table(lowelldemos$ACR_label)
-knitr::kable(table(lowelldemos$ACR_label), caption = "Frequency Counts for ACR Variable")
+knitr::kable(table(lowelldemos$ACR_label), caption = "Frequency Counts for Lot Size (ACR) Variable")
 ```
+
+## Class of Worker (COW)
 
 ```{r}
 unique(lowelldemos$COW_label)
@@ -329,8 +381,10 @@ unique(lowelldemos$COW_label)
 
 ```{r}
 table(lowelldemos$COW_label)
-knitr::kable(table(lowelldemos$COW_label), caption = "Frequency Counts for COW Variable")
+knitr::kable(table(lowelldemos$COW_label), caption = "Frequency Counts for Class of Worker (COW) Variable")
 ```
+
+## Standard Occupational Classification (SOCP)
 
 ```{r}
 unique(lowelldemos$SOCP_label)
@@ -338,8 +392,10 @@ unique(lowelldemos$SOCP_label)
 
 ```{r}
 table(lowelldemos$SOCP_label)
-knitr::kable(table(lowelldemos$SOCP_label), caption = "Frequency Counts for SOCP Variable")
+knitr::kable(table(lowelldemos$SOCP_label), caption = "Frequency Counts for Standard Occupational Classification (SOCP) Variable")
 ```
+
+## Language Spoken at Home (LANP)
 
 ```{r}
 unique(lowelldemos$LANP_label)
@@ -347,7 +403,7 @@ unique(lowelldemos$LANP_label)
 
 ```{r}
 table(lowelldemos$LANP_label)
-knitr::kable(table(lowelldemos$LANP_label), caption = "Frequency Counts for LANP Variable")
+knitr::kable(table(lowelldemos$LANP_label), caption = "Frequency Counts for Language Spoken at Home (LANP) Variable")
 ```
 
 
