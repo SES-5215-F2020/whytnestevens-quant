@@ -80,8 +80,9 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```{r load libraries}
 library(ggplot2)
 library(tidycensus)
-library(ggthemes)
 library(tidyverse)
+library(ggthemes)
+library("wesanderson")
 ```
 
 ```{r load person-level microdata variables}
@@ -406,8 +407,137 @@ table(lowelldemos$LANP_label)
 knitr::kable(table(lowelldemos$LANP_label), caption = "Frequency Counts for Language Spoken at Home (LANP) Variable")
 ```
 
+# Continuous Variables
+
+## Hours worked per week
+```{r}
+WKHP_summary <- summary(lowelldemos$WKHP)
+
+WKHP_summary
+```
 
 
+```{r}
+paste("The sample mean for hours worked per week is",
+      prettyNum(mean(lowelldemos$WKHP), digits = 1), "hours per week.")
+paste("The sample median for hours worked per week is",
+      prettyNum(median(lowelldemos$WKHP), digits = 1), "hours per week.")  
+paste("The sample standard deviation for hours worked per week is",
+      prettyNum(sd(lowelldemos$WKHP), digits = 1), "hours per week.")
+paste("The sample interquartile range for hours worked per week is",
+      quantile(lowelldemos$WKHP)["25%"], "to", quantile(lowelldemos$WKHP)["75%"], "hours per week.")
+```
+
+
+```{r}
+conf_int_wkhp <- t.test(lowelldemos$WKHP)
+
+conf_int_wkhp
+```
+
+
+```{r}
+paste("The 95-percent confidence interval for hours worked per week  is",
+      prettyNum(conf_int_wkhp$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_wkhp$conf.int[2], digits = 1), "hours per week.")
+```
+
+
+```{r}
+hist_wkhp <- ggplot(lowelldemos, aes(x = WKHP)) +
+  geom_histogram()
+hist_wkhp
+```
+
+```{r}
+hist_wkhp + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 100, y = 14750, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_wkhp$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_wkhp$conf.int[2], digits = 1),
+                         "hours per week.",
+                         "\nSample mean:", 
+                         prettyNum(mean(WKHP_summary), digits = 1), "hours per week.",
+                         "\nSample median:",
+                         prettyNum(median(WKHP_summary), digits = 1), "hours per week.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(WKHP_summary), digits = 1), "hours per week.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(WKHP_summary)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(WKHP_summary)["75%"], digits = 1),
+                         "hours per week."),
+           hjust = 1, vjust = 1) 
+```
+
+## Travel Time to Work
+```{r}
+JWMNP_summary <- summary(lowelldemos$JWMNP)
+
+JWMNP_summary
+```
+
+
+```{r}
+paste("The sample mean for travel time to work is",
+      prettyNum(mean(lowelldemos$JWMNP), digits = 1), "minutes a day.")
+paste("The sample median for travel time to work is",
+      prettyNum(median(lowelldemos$JWMNP), digits = 1), "minutes a day.")  
+paste("The sample standard deviation for travel time to work is",
+      prettyNum(sd(lowelldemos$JWMNP), digits = 1), "minutes a day.")
+paste("The sample interquartile range for travel time to work is",
+      quantile(lowelldemos$JWMNP)["25%"], "to", quantile(lowelldemos$JWMNP)["75%"], "minutes a day.")
+```
+
+
+```{r}
+conf_int_jwmnp <- t.test(lowelldemos$JWMNP)
+
+conf_int_jwmnp
+```
+
+
+```{r}
+paste("The 95-percent confidence interval for travel time to work is",
+      prettyNum(conf_int_wkhp$conf.int[1], digits = 1), "to",
+      prettyNum(conf_int_wkhp$conf.int[2], digits = 1), "minutes a day.")
+```
+
+
+```{r}
+hist_jwmnp <- ggplot(lowelldemos, aes(x = JWMNP)) +
+  geom_histogram()
+hist_jwmnp
+```
+
+```{r}
+hist_jwmnp + 
+  theme_solarized_2() +
+  scale_x_continuous(name = "Travel time to work in minutes") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 150, y = 7200, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(conf_int_jwmnp$conf.int[1], digits = 1),
+                         "to",
+                         prettyNum(conf_int_jwmnp$conf.int[2], digits = 1),
+                         "minutes a day.",
+                         "\nSample mean:", 
+                         prettyNum(mean(JWMNP_summary), digits = 1), "minutes a day.",
+                         "\nSample median:",
+                         prettyNum(median(JWMNP_summary), digits = 1), "minutes a day.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(JWMNP_summary), digits = 1), "minutes a day.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(JWMNP_summary)["25%"], digits = 1),
+                         "to",
+                         prettyNum(quantile(JWMNP_summary)["75%"], digits = 1),
+                         "minutes a day."),
+           hjust = 1, vjust = 1) 
+```
 
 
 
